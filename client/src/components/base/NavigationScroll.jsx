@@ -1,3 +1,4 @@
+import { tools } from '@lib/tools';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -12,6 +13,19 @@ export const NavigationScroll = ({ children }) => {
       left: 0,
       behavior: 'smooth'
     });
+
+    let item = null;
+    tools.forEach((tool) => {
+      if (tool.children?.length > 0) {
+        tool.children.forEach((child) => {
+          if (child.href === pathname) item = child;
+        });
+      } else {
+        if (tool.href === pathname) item = tool;
+      }
+    });
+
+    if (item) document.title = item?.label;
   }, [pathname]);
 
   return children || null;

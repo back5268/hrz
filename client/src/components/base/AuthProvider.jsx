@@ -1,5 +1,5 @@
 import { getInfoApi } from '@api';
-import { Loadingz } from '@components/core';
+import { ProgressSpinnerz } from '@components/core';
 import { useUserState } from '@store';
 import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -7,37 +7,46 @@ import { useNavigate } from 'react-router-dom';
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const { setUserInfo, loadingz } = useUserState();
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const checkAuth = async () => {
     try {
       const response = await getInfoApi();
       if (response) {
         setUserInfo(response);
+        navigate('/');
       } else {
         localStorage.removeItem('token');
-        navigate('/auth/signin');
+        navigate('/auth/sign-in');
       }
     } catch (error) {
-      navigate('/auth/signin');
+      navigate('/auth/sign-in');
       return false;
     } finally {
       setTimeout(() => {
-        setIsLoading(false);
+        setLoading(false);
       }, 1000);
     }
   };
 
   useEffect(() => {
-    setIsLoading(true);
+    setLoading(true);
     const token = localStorage.getItem('token');
-    if (token) {
-      checkAuth();
-    } else {
-      setIsLoading(false);
-      navigate('/auth/signin');
+    if (token) checkAuth();
+    else {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+      navigate('/auth/sign-in');
     }
   }, [loadingz]);
 
-  return <Fragment>{isLoading ? <Loadingz className="h-8 w-8 border-4" /> : children}</Fragment>;
+  if (loading)
+    return (
+      <div className="absolute w-full h-full bg-black opacity-30 z-10 flex justify-center items-center">
+        <ProgressSpinnerz style={{ width: '50px', height: '50px' }} strokeWidth="6" animationDuration="1s" />
+      </div>
+    );
+
+  return <Fragment>{children}</Fragment>;
 };

@@ -12,7 +12,7 @@ export const DataTablez = (props) => {
       rows={10}
       dataKey="id"
       filterDisplay="menu"
-      emptyMessage="No customers found."
+      emptyMessage="Không có dữ liệu."
       {...prop}
     >
       {children}

@@ -18,7 +18,7 @@ export const LazyLoading = () => {
   return (
     loading && (
       <div className="fixed z-[1050] inset-x-0 top-0 h-2">
-        <ProgressBarz className="animate-progress" />
+        <ProgressBarz mode="indeterminate" style={{ height: '6px' }}></ProgressBarz>
       </div>
     )
   );

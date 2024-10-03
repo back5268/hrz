@@ -1,10 +1,12 @@
 import { InputSwitch } from 'primereact/inputswitch';
 
-export const Switchz = () => {
+export const Switchz = (props) => {
+  const { label, ...prop } = props;
+
   return (
     <div>
-      <h5>Input Switch</h5>
-      <InputSwitch />
+      <h5>{label}</h5>
+      <InputSwitch {...prop} />
     </div>
   );
 };

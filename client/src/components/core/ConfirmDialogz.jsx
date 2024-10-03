@@ -1,5 +1,5 @@
 import { ConfirmDialog } from 'primereact/confirmdialog';
 
-export const ConfirmDialogz = () => {
-  return <ConfirmDialog />;
+export const ConfirmDialogz = ({ ...prop }) => {
+  return <ConfirmDialog {...prop} />;
 };

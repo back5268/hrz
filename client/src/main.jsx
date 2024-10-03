@@ -6,9 +6,7 @@ import { AuthProvider, LazyLoading, NavigationScroll, ScrollToTop, Toastify } fr
 import { ConfirmDialogz } from '@components/core';
 
 import App from './App';
-import 'primereact/resources/themes/mdc-light-indigo/theme.css';
 import 'primereact/resources/primereact.css';
-import 'primeflex/primeflex.css';
 import './styles/index.css';
 import './styles/editor.css';
 

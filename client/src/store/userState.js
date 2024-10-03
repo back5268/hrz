@@ -1,28 +1,19 @@
 import { create } from 'zustand';
 
 export const INITIAL_USER_INFO = {
-  username: '',
-  name: '',
-  email: '',
-  bio: '',
-  address: '',
-  type: '',
+  role: '',
 };
 
 const useUserState = create((set, get) => ({
   userInfo: INITIAL_USER_INFO,
   isAuthenticated: false,
-  type: false,
-  projects: [],
-  tools: [],
+  role: false,
   loadingz: false,
-  project: localStorage.getItem('project'),
-  setUserInfo: (data) => set({ ...data, isAuthenticated: true, type: data.userInfo?.type }),
-  clearUserInfo: () => set({ userInfo: INITIAL_USER_INFO, isAuthenticated: false, type: false, projects: [], tools: [] }),
-  setProject: (project) => set({ project }),
+  setUserInfo: (data) => set({ userInfo: data, isAuthenticated: true, role: data.role }),
+  clearUserInfo: () => set({ userInfo: INITIAL_USER_INFO, isAuthenticated: false, role: false }),
   setLoadingz: () => {
-    const isLoading = get().loadingz;
-    set({ loadingz: !isLoading });
+    const loading = get().loadingz;
+    set({ loadingz: !loading });
   }
 }));
 

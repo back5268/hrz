@@ -45,7 +45,8 @@ export const sendMail = async ({ to, subject, text, html, attachments = [], proj
 
   try {
     await transporter.sendMail(mailOptions);
+    return { status: 1 };
   } catch (error) {
-    console.log(error);
+    return { status: 0, mess: error.toString() };
   }
 };

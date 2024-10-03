@@ -1,5 +1,45 @@
-export const Layout = () => {
+import React, { useEffect, useState } from 'react';
+import { useToastState, useUserState } from '@store';
+import { SideBar } from './SideBar';
+import { TopBar } from './TopBar';
+
+export const Layout = ({ children }) => {
+  const [showSidebar, setShowSidebar] = useState(true);
+  const { clearUserInfo, setLoadingz } = useUserState();
+  const { showToast } = useToastState();
+
+  const onSignOut = () => {
+    clearUserInfo();
+    localStorage.removeItem('token');
+    setTimeout(() => {
+      showToast({ title: 'Đăng xuất thành công', severity: 'success' });
+    }, 1000);
+    setLoadingz();
+  };
+
+  useEffect(() => {
+    const checkWindowSize = () => {
+      if (window.innerWidth < 1024) setShowSidebar(false);
+      else setShowSidebar(true);
+    };
+    checkWindowSize();
+    window.addEventListener('resize', checkWindowSize);
+    return () => {
+      window.removeEventListener('resize', checkWindowSize);
+    };
+  }, []);
+
   return (
-    <div>index</div>
-  )
-}
+    <div className="antialiased">
+      {showSidebar && (
+        <div
+          onClick={() => setShowSidebar(false)}
+          className="fixed inset-x-0 inset-y-0 bg-black bg-opacity-50 z-30 w-screen h-screen block lg:hidden"
+        ></div>
+      )}
+      <TopBar showSidebar={showSidebar} setShowSidebar={setShowSidebar} onSignOut={onSignOut} />
+      <SideBar showSidebar={showSidebar} onSignOut={onSignOut} />
+      <div className={`relative transition-all duration-500 ease-in-out p-6 mt-20 ${showSidebar ? 'lg:ml-[18rem]' : ''}`}>{children}</div>
+    </div>
+  );
+};
