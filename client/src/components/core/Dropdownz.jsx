@@ -1,6 +1,6 @@
 import { Dropdown } from 'primereact/dropdown';
 
-export const Dropdownz = (props) => {
+const Dropdownz = (props) => {
   const {
     id,
     label = '',
@@ -30,6 +30,22 @@ export const Dropdownz = (props) => {
         <label htmlFor={id}>{label}</label>
       </span>
       {errors[id] && <small className="w-full ml-2 text-red-600">{errors[id].message}</small>}
+    </div>
+  );
+};
+
+export const Dropdownzz = ({ ...prop }) => {
+  return (
+    <div className="p-2 w-full md:w-6/12 lg:w-3/12">
+      <Dropdownz {...prop} />
+    </div>
+  );
+};
+
+export const DropdownFormz = ({ ...prop }) => {
+  return (
+    <div className="p-2 w-full lg:w-6/12">
+      <Dropdownz {...prop} />
     </div>
   );
 };

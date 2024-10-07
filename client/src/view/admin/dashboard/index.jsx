@@ -1,5 +1,5 @@
 export const DashBoard = () => {
   return (
-    <div>DashBoard</div>
+    <div className="min-h-screen">DashBoard</div>
   )
 }

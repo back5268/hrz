@@ -1,6 +1,5 @@
 import { Column } from 'primereact/column';
 
-export const Columnz = (props) => {
-  const { ...prop } = props;
+export const Columnz = ({ ...prop }) => {
   return <Column {...prop} />;
 };

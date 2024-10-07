@@ -1,61 +1,65 @@
 export const tools = [
-  { label: 'Trang chủ', icon: '', href: '/' },
+  { label: 'Trang chủ', icon: 'Squares2X2Icon', route: '/' },
   {
     label: 'Quản lý nhân sự',
-    icon: '',
-    children: [
+    icon: 'UsersIcon',
+    items: [
       {
         label: 'Quản lý chức vụ',
-        href: '/positions'
+        route: '/positions'
       },
       {
         label: 'Quản lý phòng ban',
-        href: '/departments'
+        route: '/departments'
       },
       {
         label: 'Thông tin nhân sự',
-        href: '/personnels'
+        route: '/personnels'
       },
       {
         label: 'Quản lý hợp đồng',
-        href: '/contracts'
+        route: '/contracts'
       }
     ]
   },
   {
     label: 'Quản lý chấm công',
-    icon: '',
-    children: [
+    icon: 'Square3Stack3DIcon',
+    items: [
       {
         label: 'Đăng ký chấm công',
-        href: '/registers'
+        route: '/registers'
       },
       {
         label: 'Quản lý thiết bị chấm công',
-        href: '/devices'
+        route: '/devices'
       },
       {
         label: 'Quản lý ca làm việc',
-        href: '/shifts'
+        route: '/shifts'
       },
       {
         label: 'Lịch làm việc',
-        href: '/schedule'
+        route: '/schedule'
       },
       {
         label: 'Lịch sử chấm công',
-        href: '/log'
+        route: '/log'
       },
       {
         label: 'Tổng hợp chấm công',
-        href: '/summary'
+        route: '/summary'
       }
     ]
   },
   {
-    label: 'Quản lý công lương',
-    icon: '',
-    children: [
-    ]
+    label: 'Quản lý tiền lương',
+    icon: 'CircleStackIcon',
+    items: []
+  },
+  {
+    label: 'Quản lý phê duyệt',
+    icon: 'InboxStackIcon',
+    items: []
   }
 ];

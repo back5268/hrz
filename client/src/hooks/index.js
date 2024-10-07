@@ -1,1 +1,1 @@
-export { default as useGetParams } from './useGetParams';
+export * from './useGetParams'

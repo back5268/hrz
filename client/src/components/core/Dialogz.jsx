@@ -1,15 +1,17 @@
 import { Dialog } from 'primereact/dialog';
 
 export const Dialogz = (props) => {
-  const { header = '', children, visible, setVisible = () => {} } = props;
+  const { header = '', children, open, setOpen = () => {}, position = 'top', width = "1200px" } = props;
 
   return (
     <Dialog
+      position={position}
+      style={{ width }}
       header={header}
-      visible={visible}
+      visible={open}
       onHide={() => {
-        if (!visible) return;
-        setVisible(false);
+        if (!open) return;
+        setOpen(false);
       }}
     >
       {children}

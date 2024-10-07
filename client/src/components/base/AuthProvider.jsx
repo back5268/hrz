@@ -14,7 +14,6 @@ export const AuthProvider = ({ children }) => {
       const response = await getInfoApi();
       if (response) {
         setUserInfo(response);
-        navigate('/');
       } else {
         localStorage.removeItem('token');
         navigate('/auth/sign-in');

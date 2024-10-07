@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 
-const useGetParams = () => {
+export const useGetParams = () => {
   const location = useLocation();
   const params = {};
   params.page = 1;
@@ -14,5 +14,3 @@ const useGetParams = () => {
   }
   return params;
 };
-
-export default useGetParams;
