@@ -1,19 +1,27 @@
 import { Fragment } from 'react';
 import { routes } from '@view/routes';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { AccessDenied, ErrorPage } from '@view/default';
 import { Layout } from '@view/layout';
 import { useUserState } from '@store';
 
 const App = () => {
-  const { userInfo } = useUserState();
+  const { userInfo, isAuthenticated } = useUserState();
 
   return (
     <Routes>
       {routes.map((route, index) => {
         const DefaultLayout = route.layout ? Layout : Fragment;
-        const Page = route.element;
-        const checkPermission = route.public ? true : ['admin'].includes(userInfo.role);
+        const isPublicRoute = route.public;
+        const checkPermission = isPublicRoute ? true : ['admin'].includes(userInfo?.role);
+
+        if (isPublicRoute && isAuthenticated) {
+          return <Route key={index} path={route.path} element={<Navigate to="/" />} />;
+        }
+        
+        if (!isPublicRoute && !isAuthenticated) {
+          return <Route key={index} path={route.path} element={<Navigate to="/auth/sign-in" />} />;
+        }
 
         return (
           <Route
@@ -22,7 +30,7 @@ const App = () => {
             element={
               checkPermission ? (
                 <DefaultLayout>
-                  <Page />
+                  <route.element />
                 </DefaultLayout>
               ) : (
                 <AccessDenied />

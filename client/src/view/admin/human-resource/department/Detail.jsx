@@ -1,19 +1,19 @@
-import { PositionValidation } from '@lib/validation';
+import { DepartmentValidation } from '@lib/validation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormDetail } from '@components/base';
 import { checkEqualProp } from '@lib/helper';
-import { createPositionApi, updatePositionApi } from '@api';
+import { createDepartmentApi, updateDepartmentApi } from '@api';
 import { InputFormz, TextAreaz } from '@components/core';
 
 const defaultValues = {
   name: '',
-  salaryBase: '',
+  code: '',
   description: ''
 };
 
-export const DetailPosition = (props) => {
+export const DetailDepartment = (props) => {
   const { open, setOpen, setParams, data } = props;
   const isUpdate = typeof open === 'string';
   const item = isUpdate ? data.find((d) => d._id === open) : {};
@@ -26,7 +26,7 @@ export const DetailPosition = (props) => {
     reset,
     watch
   } = useForm({
-    resolver: yupResolver(PositionValidation),
+    resolver: yupResolver(DepartmentValidation),
     defaultValues
   });
 
@@ -46,7 +46,7 @@ export const DetailPosition = (props) => {
 
   return (
     <FormDetail
-      title="nhân viên"
+      title="phòng ban"
       open={open}
       setOpen={() => {
         setOpen(false);
@@ -55,20 +55,13 @@ export const DetailPosition = (props) => {
       isUpdate={isUpdate}
       handleData={handleData}
       handleSubmit={handleSubmit}
-      createApi={createPositionApi}
-      updateApi={updatePositionApi}
+      createApi={createDepartmentApi}
+      updateApi={updateDepartmentApi}
       setParams={setParams}
     >
       <div className="flex flex-wrap w-full">
-        <InputFormz id="name" label="Tên chức vụ (*)" value={watch('name')} errors={errors} register={register} />
-        <InputFormz
-          type="number"
-          id="salaryBase"
-          label="Lương cơ bản (*)"
-          value={watch('salaryBase')}
-          errors={errors}
-          register={register}
-        />
+        <InputFormz id="name" label="Tên phòng ban (*)" value={watch('name')} errors={errors} register={register} />
+        <InputFormz id="code" label="Mã phòng ban (*)" value={watch('code')} errors={errors} register={register} />
         <TextAreaz id="description" label="Mô tả (*)" value={watch('description')} errors={errors} register={register} />
       </div>
     </FormDetail>

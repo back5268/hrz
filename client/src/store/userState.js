@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 
 export const INITIAL_USER_INFO = {
-  role: '',
 };
 
 const useUserState = create((set, get) => ({

@@ -46,7 +46,7 @@ export const DataTable = (props) => {
   const onDeletez = (item) => {
     confirmDialog({
       message: 'Bạn có chắc chắn muốn xóa dữ liệu này!',
-      header: process.env.REACT_APP_BRANCH_NAME,
+      header: "HRZ",
       icon: 'pi pi-info-circle',
       accept: async () => {
         const response = await deleteApi(handleDelete(item));
@@ -71,9 +71,11 @@ export const DataTable = (props) => {
   };
 
   const onChangeStatus = (item) => {
-    showConfirm({
-      title: 'Bạn có chắc chắn muốn chuyển trạng thái dữ liệu này!',
-      action: async () => {
+    confirmDialog({
+      message: 'Bạn có chắc chắn muốn chuyển trạng thái dữ liệu này!',
+      header: "HRZ",
+      icon: 'pi pi-info-circle',
+      accept: async () => {
         const response = await changeStatusApi(handleChangeStatus(item));
         if (response) showToast({ title: 'Chuyển trạng thái thành công!', severity: 'success' });
         setParams((pre) => ({ ...pre, render: !pre.render }));
@@ -106,7 +108,6 @@ export const DataTable = (props) => {
   const onPage = (event) => {
     setParams({
       ...params,
-      first: event.first,
       limit: event.rows,
       page: event.page !== 0 ? event.page + 1 : 1
     });
@@ -150,7 +151,7 @@ export const DataTable = (props) => {
       onPage={onPage}
       dataKey={key}
       loading={loading}
-      emptyMessage={'Không tìm thấy ' + title?.toLowerCase() || ""}
+      emptyMessage={'Không tìm thấy ' + title?.toLowerCase() || ''}
       currentPageReportTemplate="Tổng số: {totalRecords} bản ghi"
       selection={select}
       onSelectionChange={(e) => {
@@ -177,19 +178,21 @@ export const DataTable = (props) => {
           body={(item) => (
             <div className="flex justify-center items-center gap-2">
               {baseActions.includes('detail') && (
-                <Buttonz onClick={() => onViewDetail(item)} variant="outlined" className="rounded-full p-2">
-                  <DocumentMagnifyingGlassIcon className="w-5" />
-                </Buttonz>
+                <Buttonz
+                  onClick={() => onViewDetail(item)}
+                  outlined
+                  className="!p-0 h-11 w-11 flex justify-center items-center rounded-full"
+                  icon={<DocumentMagnifyingGlassIcon className="w-6" />}
+                />
               )}
               {baseActions.includes('delete') && (
                 <Buttonz
-                  color="red"
+                  severity="danger"
+                  outlined
                   onClick={() => (onDelete ? onDelete(item) : onDeletez(item))}
-                  variant="outlined"
-                  className="rounded-full p-2"
-                >
-                  <TrashIcon className="w-5" />
-                </Buttonz>
+                  className="!p-0 h-11 w-11 flex justify-center items-center rounded-full"
+                  icon={<TrashIcon className="w-5" />}
+                />
               )}
               {moreActions?.length > 0 &&
                 moreActions.map((action, index) => {
@@ -205,7 +208,7 @@ export const DataTable = (props) => {
                         color={color}
                         onClick={() => action.onClick(item)}
                         variant={variant}
-                        className="rounded-full p-2"
+                        className="rounded-full !p-0"
                       >
                         <Icon className="w-5" />
                       </Buttonz>

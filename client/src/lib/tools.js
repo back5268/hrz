@@ -6,19 +6,23 @@ export const tools = [
     items: [
       {
         label: 'Quản lý chức vụ',
-        route: '/positions'
+        route: '/position'
+      },
+      {
+        label: 'Quản lý vị trí công việc',
+        route: '/job-position'
       },
       {
         label: 'Quản lý phòng ban',
-        route: '/departments'
+        route: '/department'
       },
       {
         label: 'Thông tin nhân sự',
-        route: '/personnels'
+        route: '/personnel'
       },
       {
         label: 'Quản lý hợp đồng',
-        route: '/contracts'
+        route: '/contract'
       }
     ]
   },
@@ -28,15 +32,15 @@ export const tools = [
     items: [
       {
         label: 'Đăng ký chấm công',
-        route: '/registers'
+        route: '/register'
       },
       {
         label: 'Quản lý thiết bị chấm công',
-        route: '/devices'
+        route: '/device'
       },
       {
         label: 'Quản lý ca làm việc',
-        route: '/shifts'
+        route: '/shift'
       },
       {
         label: 'Lịch làm việc',

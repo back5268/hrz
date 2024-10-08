@@ -1,26 +1,23 @@
-import { getInfoApi } from '@api';
+import { getInfoApi, getListAccountInfoApi } from '@api';
 import { ProgressSpinnerz } from '@components/core';
-import { useUserState } from '@store';
+import { useDataState, useUserState } from '@store';
 import { Fragment, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export const AuthProvider = ({ children }) => {
-  const navigate = useNavigate();
+  const { setAccounts } = useDataState();
   const { setUserInfo, loadingz } = useUserState();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const checkAuth = async () => {
     try {
       const response = await getInfoApi();
       if (response) {
-        setUserInfo(response);
-      } else {
-        localStorage.removeItem('token');
-        navigate('/auth/sign-in');
+        setUserInfo(response)
+        const accounts = await getListAccountInfoApi();
+        if (accounts) setAccounts(accounts);
       }
+      else localStorage.removeItem('token');
     } catch (error) {
-      navigate('/auth/sign-in');
-      return false;
     } finally {
       setTimeout(() => {
         setLoading(false);
@@ -29,14 +26,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    setLoading(true);
     const token = localStorage.getItem('token');
     if (token) checkAuth();
     else {
       setTimeout(() => {
         setLoading(false);
       }, 1000);
-      navigate('/auth/sign-in');
     }
   }, [loadingz]);
 
