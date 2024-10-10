@@ -1,4 +1,5 @@
 export * from './authValidation'
 export * from './departmentValidation'
 export * from './jobPositionValidation'
+export * from './personnelValidation'
 export * from './positionValidation'

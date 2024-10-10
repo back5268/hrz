@@ -1,0 +1,51 @@
+.p-datatable .p-column-header-content {
+    justify-content: center;
+}
+
+.p-dialog-header {
+    background-color: #f8f9fa !important;
+}
+
+.p-accordion-header-link {
+    background-color: #f8f9fa;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.38);
+}
+
+.p-accordion-content {
+    padding-bottom: 2rem;
+}
+
+.p-datatable-wrapper {
+    font-size: 0.875rem;
+}
+
+.p-float-label {
+    font-size: 0.875rem;
+}
+
+.p-datatable-tbody tr td {
+    padding: 0.5rem;
+}
+
+.p-datatable-header, .p-datatable-thead th {
+    background-color: #f8f9fa;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page {
+    height: 2.5rem !important;
+    min-width: 2.5rem !important;
+    border-radius: 0.25rem;
+}
+
+.p-timeline-event-opposite {
+    width: fit-content;
+}
+
+.p-timeline-event-marker {
+    background: #673AB7;
+}
+
+.p-timeline-event-connector {
+    background: #673AB7;
+}

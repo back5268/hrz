@@ -40,6 +40,7 @@ export const FormDetail = (props) => {
   const isModal = type === 'modal';
   const { mutateAsync, isPending } = usePostApi(isUpdate ? updateApi : createApi);
   const newTitle = `${isUpdate ? (updateApi ? 'Cập nhật' : 'Chi tiết') : 'Thêm mới'} ${title && String(title).toLocaleLowerCase()}`;
+
   const onSubmit = async (e) => {
     const data = handleData(e);
     if (typeof data === 'string') {
@@ -56,6 +57,7 @@ export const FormDetail = (props) => {
       } else navigate(-1);
     }
   };
+
   return (
     <Wrapper title={newTitle} isModal={isModal} open={open} setOpen={setOpen}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -72,7 +74,7 @@ export const FormDetail = (props) => {
         <hr className="my-4" />
         <div className="flex gap-4 justify-end">
           <Buttonz
-            variant="outlined"
+            outlined
             color="red"
             label={isModal ? 'Hủy' : 'Trở lại'}
             onClick={() => {

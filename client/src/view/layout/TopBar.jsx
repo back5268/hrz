@@ -8,7 +8,7 @@ export const TopBar = (props) => {
   const { showSidebar, setShowSidebar, onSignOut } = props;
 
   return (
-    <div className="fixed top-0 inset-x-0 px-6 z-10">
+    <div className="fixed top-0 inset-x-0 px-8 z-10">
       <div className={`h-14 transition-all duration-500 ease-in-out bg-white ${showSidebar ? 'lg:ml-[18rem]' : ''}`}>
         <div className="flex justify-between items-center h-full">
           <Buttonz

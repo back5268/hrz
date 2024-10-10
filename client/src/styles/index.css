@@ -10,6 +10,12 @@
   @tailwind utilities;
 }
 
+@layer components {
+  .card {
+    @apply border-border rounded-md p-4 border-[1px];
+  }
+}
+
 ::-webkit-scrollbar {
   height: 4px;
   width: 4px;
@@ -24,32 +30,21 @@
   opacity: 0;
 }
 
-/* Quá trình xuất hiện */
 .menu-transition-enter-active {
-  max-height: 300px; /* Điều chỉnh tùy thuộc vào nội dung */
+  max-height: 300px;
   opacity: 1;
   transition: max-height 300ms ease, opacity 300ms ease, transform 300ms ease;
 }
 
-/* Bắt đầu thoát */
 .menu-transition-exit {
   max-height: 300px;
   opacity: 1;
   transform: translateY(0);
 }
 
-/* Quá trình thoát */
 .menu-transition-exit-active {
   max-height: 0;
   opacity: 0;
   transform: translateY(-10px);
   transition: max-height 200ms ease, opacity 200ms ease, transform 200ms ease;
-}
-
-.p-datatable .p-column-header-content {
-  justify-content: center;
-}
-
-.p-dialog-header {
-  background-color: #f8f9fa !important;
 }

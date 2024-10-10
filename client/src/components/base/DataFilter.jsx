@@ -52,7 +52,7 @@ export const DataFilter = (props) => {
         {props.children}
         <div className={`p-2 w-full md:w-6/12 lg:w-3/12 ${className}`}>
           <div className="flex gap-2 items-center justify-end">
-            <Buttonz onClick={onClear} variant="outlined">
+            <Buttonz onClick={onClear} outlined>
               Làm mới
             </Buttonz>
             <Buttonz type="submit">Lọc</Buttonz>

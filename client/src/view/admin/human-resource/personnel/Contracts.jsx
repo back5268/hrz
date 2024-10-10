@@ -1,12 +1,13 @@
 import { deleteDepartmentApi, getListDepartmentApi, updateDepartmentApi } from '@api';
-import { DataTable, FormList, DataFilter, UserBody } from '@components/base';
-import { Columnz, Inputzz } from '@components/core';
+import { DataTable, DataFilter, UserBody } from '@components/base';
+import { Columnz, Dropdownzz } from '@components/core';
 import { useGetParams } from '@hooks';
 import { useGetApi } from '@lib/react-query';
 import React, { useState } from 'react';
-import { DetailDepartment } from './Detail';
+import { DetailContract } from './DetailContract';
+import { contractStatus, contractTypes } from '@constant';
 
-export const Department = () => {
+export const Contracts = () => {
   const initParams = useGetParams();
   const [params, setParams] = useState(initParams);
   const [filter, setFilter] = useState({});
@@ -14,10 +15,21 @@ export const Department = () => {
   const { isLoading, data } = useGetApi(getListDepartmentApi, params, 'department');
 
   return (
-    <FormList title="Danh sách phòng ban">
-      <DetailDepartment open={open} setOpen={setOpen} setParams={setParams} data={data?.documents} />
-      <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-3/4">
-        <Inputzz value={filter.keySearch} onChange={(e) => setFilter({ ...filter, keySearch: e.target.value })} label="Tìm kiếm theo tên, mã" />
+    <div>
+      <DetailContract open={open} setOpen={setOpen} setParams={setParams} data={data?.documents} />
+      <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-2/4">
+        <Dropdownzz
+          value={filter.type}
+          onChange={(e) => setFilter({ ...filter, type: e.target.value })}
+          options={contractTypes}
+          label="Loại hợp đồng"
+        />
+        <Dropdownzz
+          value={filter.status}
+          onChange={(e) => setFilter({ ...filter, status: e.target.value })}
+          options={contractStatus}
+          label="Trạng thái"
+        />
       </DataFilter>
       <DataTable
         title="Phòng ban"
@@ -30,7 +42,7 @@ export const Department = () => {
         setShow={setOpen}
         actionsInfo={{
           onViewDetail: (item) => setOpen(item._id),
-          deleteApi: deleteDepartmentApi,
+          deleteApi: deleteDepartmentApi
         }}
         statusInfo={{ changeStatusApi: updateDepartmentApi }}
         headerInfo={{ onCreate: () => setOpen(true) }}
@@ -38,9 +50,9 @@ export const Department = () => {
         <Columnz header="Tên phòng ban" field="name" />
         <Columnz header="Mã phòng ban" field="code" />
         <Columnz header="Mô tả" field="description" />
-        <Columnz header="Thời gian tạo" body={e => UserBody(e.createdAt, e.by)} />
-        <Columnz header="Thời gian cập nhật" body={e => e.updatedBy ? UserBody(e.updatedAt, e.updatedBy) : ""} />
+        <Columnz header="Thời gian tạo" body={(e) => UserBody(e.createdAt, e.by)} />
+        <Columnz header="Thời gian cập nhật" body={(e) => (e.updatedBy ? UserBody(e.updatedAt, e.updatedBy) : '')} />
       </DataTable>
-    </FormList>
+    </div>
   );
 };

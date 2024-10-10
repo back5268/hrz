@@ -9,7 +9,7 @@ JobPositionMd.init('JobPosition', {
   code: { type: String, required: true },
   minSalary: { type: Number, required: true },
   maxSalary: { type: Number, required: true },
-  description: { type: String, required: true },
+  description: { type: String },
   status: { type: Number, enum: [0, 1], default: 1, description: '0: Đã khóa, 1: Hoạt động' },
   deletedAt: { type: Date }
 });

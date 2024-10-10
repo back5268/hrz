@@ -14,20 +14,19 @@ const Dropdownz = (props) => {
   } = props;
 
   return (
-    <div className="flex flex-column gap-2">
+    <div className="flex flex-col gap-2">
       <span className="p-float-label w-full">
         <Dropdown
-          id={id}
           value={value}
           options={options}
           optionLabel={optionLabel}
           optionValue={optionValue}
           invalid={Boolean(errors[id])}
           className="w-full"
-          {...register(id)}
+          emptyMessage={label ? `Không tìm thấy ${label.toLowerCase()}` : "Không có dữ liệu"}
           {...prop}
         ></Dropdown>
-        <label htmlFor={id}>{label}</label>
+        <label>{label}</label>
       </span>
       {errors[id] && <small className="w-full ml-2 text-red-600">{errors[id].message}</small>}
     </div>
@@ -42,9 +41,9 @@ export const Dropdownzz = ({ ...prop }) => {
   );
 };
 
-export const DropdownFormz = ({ ...prop }) => {
+export const DropdownFormz = ({ className = "", ...prop }) => {
   return (
-    <div className="p-2 w-full lg:w-6/12">
+    <div className={`p-2 w-full lg:w-6/12 ${className}`}>
       <Dropdownz {...prop} />
     </div>
   );

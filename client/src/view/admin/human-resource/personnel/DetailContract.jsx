@@ -13,7 +13,7 @@ const defaultValues = {
   description: ''
 };
 
-export const DetailDepartment = (props) => {
+export const DetailContract = (props) => {
   const { open, setOpen, setParams, data } = props;
   const isUpdate = typeof open === 'string';
   const item = isUpdate ? data.find((d) => d._id === open) : {};

@@ -22,9 +22,10 @@ export const SideBar = (props) => {
 
   useEffect(() => {
     const value = tools.findIndex((tool) => {
-      if (tool.items) {
-        return tool.items.find((item) => item.route === pathname);
-      } else return pathname === tool.route;
+      if (pathname !== '/' && tool.route !== '/') {
+        if (tool.items) return tool.items.find((item) => pathname?.includes(item.route));
+        else return pathname?.includes(tool.route);
+      }
     });
     if (value >= 0) {
       if (!open?.includes(value + 1)) setOpen((pre) => [...pre, value + 1]);
@@ -34,7 +35,7 @@ export const SideBar = (props) => {
   return (
     <div
       className={`fixed left-0 inset-y-0 h-screen z-40 w-full max-w-[18rem] shadow-custom flex flex-col justify-between
-      transition-all duration-500 ease-in-out bg-white ${showSidebar ? '' : '-translate-x-full'}`}
+      transition-all duration-500 ease-in-out bg-sidebar ${showSidebar ? '' : '-translate-x-full'}`}
     >
       <div>
         <div className="p-4">

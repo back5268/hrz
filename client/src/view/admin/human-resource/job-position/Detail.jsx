@@ -2,7 +2,7 @@ import { createJobPositionApi, detailJobPositionApi, updateJobPositionApi } from
 import { FormDetail } from '@components/base';
 import { Editorz, InputFormz } from '@components/core';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { checkEqualProp } from '@lib/helper';
+import { checkEqualProp, convertNumberToString } from '@lib/helper';
 import { useGetApi } from '@lib/react-query';
 import { JobPositionValidation } from '@lib/validation';
 import { useEffect } from 'react';
@@ -69,6 +69,7 @@ export const DetailJobPosition = () => {
           value={watch('minSalary')}
           errors={errors}
           register={register}
+          helper={watch('minSalary') ? convertNumberToString(watch('minSalary')) : ""}
         />
         <InputFormz
           type="number"
@@ -78,6 +79,7 @@ export const DetailJobPosition = () => {
           value={watch('maxSalary')}
           errors={errors}
           register={register}
+          helper={watch('maxSalary') ? convertNumberToString(watch('maxSalary')) : ""}
         />
         <Editorz data={watch("description")} setData={e => setValue("description", e)} label="Mô tả công việc" />
       </div>

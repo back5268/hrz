@@ -9,6 +9,7 @@ import App from './App';
 import 'primereact/resources/primereact.css';
 import './styles/index.css';
 import './styles/editor.css';
+import './styles/primereact.css';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>

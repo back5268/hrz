@@ -15,15 +15,19 @@ export const NavigationScroll = ({ children }) => {
     });
 
     let item = null;
-    tools.forEach((tool) => {
-      if (tool.children?.length > 0) {
-        tool.children.forEach((child) => {
-          if (child.href === pathname) item = child;
-        });
-      } else {
-        if (tool.href === pathname) item = tool;
-      }
-    });
+    if (pathname === '/') item = { label: 'Trang chủ', icon: 'Squares2X2Icon', route: '/' };
+    else
+      tools.forEach((tool) => {
+        if (tool.route !== '/') {
+          if (tool.items?.length > 0) {
+            tool.items.forEach((child) => {
+              if (pathname?.includes(child.route)) item = child;
+            });
+          } else {
+            if (pathname?.includes(tool.route)) item = tool;
+          }
+        }
+      });
 
     if (item) document.title = item?.label;
   }, [pathname]);

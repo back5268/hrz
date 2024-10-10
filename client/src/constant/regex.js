@@ -13,3 +13,5 @@ export const REGEX = {
     /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
   PASSWORD: /^(?=.*\d)(?=.*[a-zA-Z])/
 };
+
+export const IMAGE_TYPE = ["image/jpeg", "image/png", "image/gif", "image/svg+xml", "image/webp", "image/bmp"]

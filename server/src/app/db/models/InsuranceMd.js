@@ -1,18 +1,14 @@
 import { ModelBase } from '@config';
-import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
-const ObjectId = Schema.Types.ObjectId;
 
 class InsuranceMd extends ModelBase {}
 
 InsuranceMd.init('Insurance', {
-  account: { type: ObjectId, ref: 'Account', required: true },
+  account: { type: String, required: true },
   healthInsuranceNumber: { type: String, description: "Số bảo hiểm y tế" },
-  healthInsuranceFiles: [{ type: String }],
   socialInsuranceNumber: { type: String, description: "Số bảo hiểm xã hội" },
-  socialInsuranceFiles: [{ type: String }],
   taxCode: { type: String },
   taxAuth: { type: Number, enum: [], description: '' },
+  taxFiles: [{ type: String }],
   dependents: [
     {
       fullName: String,

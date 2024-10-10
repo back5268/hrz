@@ -18,7 +18,7 @@ export const updatePositionValid = {
 };
 
 export const createPositionValid = {
-  name: { type: 'string' },
-  code: { type: 'string' },
+  name: 'string',
+  code: 'string',
   description: { type: 'string', allowNull: true }
 };

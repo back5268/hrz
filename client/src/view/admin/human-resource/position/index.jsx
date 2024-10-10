@@ -39,7 +39,7 @@ export const Position = () => {
         <Columnz header="Mã chức vụ" field="code" />
         <Columnz header="Mô tả" field="description" />
         <Columnz header="Thời gian tạo" body={e => UserBody(e.createdAt, e.by)} />
-        <Columnz header="Thời gian cập nhật" body={e => e.updatedBy && UserBody(e.updatedAt, e.updatedBy)} />
+        <Columnz header="Thời gian cập nhật" body={e => e.updatedBy ? UserBody(e.updatedAt, e.updatedBy) : ""} />
       </DataTable>
     </FormList>
   );

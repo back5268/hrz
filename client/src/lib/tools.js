@@ -19,10 +19,6 @@ export const tools = [
       {
         label: 'Thông tin nhân sự',
         route: '/personnel'
-      },
-      {
-        label: 'Quản lý hợp đồng',
-        route: '/contract'
       }
     ]
   },

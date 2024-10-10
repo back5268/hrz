@@ -101,10 +101,6 @@ export const DataTable = (props) => {
     navigate(location.pathname + '?' + new URLSearchParams(query).toString());
   }, [JSON.stringify(params)]);
 
-  const convertParams = (params) => {
-    if (params.first || params.first === 0) return params;
-    else return { ...params, first: (params.page - 1) * params.limit };
-  };
   const onPage = (event) => {
     setParams({
       ...params,
@@ -143,7 +139,7 @@ export const DataTable = (props) => {
   return (
     <Tablez
       header={isHeader && Header}
-      first={convertParams(params)?.first}
+      params={params}
       rows={params.limit}
       value={data}
       totalRecords={total}
@@ -152,7 +148,6 @@ export const DataTable = (props) => {
       dataKey={key}
       loading={loading}
       emptyMessage={'Không tìm thấy ' + title?.toLowerCase() || ''}
-      currentPageReportTemplate="Tổng số: {totalRecords} bản ghi"
       selection={select}
       onSelectionChange={(e) => {
         if (setSelect) setSelect(e.value);
@@ -181,7 +176,7 @@ export const DataTable = (props) => {
                 <Buttonz
                   onClick={() => onViewDetail(item)}
                   outlined
-                  className="!p-0 h-11 w-11 flex justify-center items-center rounded-full"
+                  className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
                   icon={<DocumentMagnifyingGlassIcon className="w-6" />}
                 />
               )}
@@ -190,7 +185,7 @@ export const DataTable = (props) => {
                   severity="danger"
                   outlined
                   onClick={() => (onDelete ? onDelete(item) : onDeletez(item))}
-                  className="!p-0 h-11 w-11 flex justify-center items-center rounded-full"
+                  className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
                   icon={<TrashIcon className="w-5" />}
                 />
               )}

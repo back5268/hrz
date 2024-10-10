@@ -18,7 +18,7 @@ export const updateDepartmentValid = {
 };
 
 export const createDepartmentValid = {
-  name: { type: 'string' },
-  code: { type: 'string' },
+  name: 'string',
+  code: 'string',
   description: { type: 'string', allowNull: true }
 };

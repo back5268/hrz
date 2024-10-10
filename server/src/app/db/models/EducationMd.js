@@ -1,17 +1,14 @@
 import { ModelBase } from '@config';
-import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
-const ObjectId = Schema.Types.ObjectId;
 
 class EducationMd extends ModelBase {}
 
 EducationMd.init('Education', {
-  account: { type: ObjectId, ref: 'Account', required: true },
+  account: { type: String, required: true },
   qualification: {
     type: Number,
     enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     description:
-      'Trình độ học vấn; 1: Trên đại học, 2: Đại học, 3: Cao đẳng, 4: Trung cấp, 5: Sơ cấp, 6: Sinh viên, 7: 12/12, 8: 10/12, 9: 9/12, 10: Khác'
+      'Trình độ học vấn; 1: Trên đại học, 2: Đại học, 3: Cao đẳng, 4: Trung cấp, 5: Sơ cấp, 6: Sinh viên, 7: Khác'
   },
   graduationType: {
     type: Number,
@@ -24,8 +21,6 @@ EducationMd.init('Education', {
   educationFiles: [{ type: String }],
   healthStatus: { type: String, description: 'Tình trạng sức khỏe' },
   pathology: { type: String, description: 'Bệnh lý' },
-  height: { type: Number, description: 'Chiều cao' },
-  weight: { type: Number, description: 'Cân nặng' },
   healthFiles: [{ type: String }],
   deletedAt: { type: Date }
 });

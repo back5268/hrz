@@ -1,4 +1,3 @@
-export * from './contract'
 export * from './department'
 export * from './job-position'
 export * from './personnel'

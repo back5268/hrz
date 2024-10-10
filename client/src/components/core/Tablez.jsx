@@ -1,18 +1,31 @@
 import { DataTable } from 'primereact/datatable';
 
+const convertParams = (params) => {
+  if (params.first || params.first === 0) return params;
+  else return { ...params, first: (params.page - 1) * params.limit };
+};
+
 export const Tablez = (props) => {
-  const { children, ...prop } = props;
+  const {
+    paginator = true,
+    params = {},
+    paginatorTemplate = 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown',
+    children,
+    ...prop
+  } = props;
 
   return (
     <DataTable
+      first={convertParams(params)?.first}
       lazy
-      paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-      paginator
+      paginatorTemplate={paginatorTemplate}
+      paginator={paginator}
       rowHover
       showGridlines
       stripedRows
       scrollable
       selectionMode="checkbox"
+      currentPageReportTemplate="Tổng số: {totalRecords} bản ghi"
       {...prop}
     >
       {children}

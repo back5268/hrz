@@ -54,7 +54,7 @@ export const JobPosition = () => {
           )}
         />
         <Columnz header="Thời gian tạo" body={(e) => UserBody(e.createdAt, e.by)} />
-        <Columnz header="Thời gian cập nhật" body={(e) => e.updatedBy && UserBody(e.updatedAt, e.updatedBy)} />
+        <Columnz header="Thời gian cập nhật" body={(e) => e.updatedBy ? UserBody(e.updatedAt, e.updatedBy) : ""} />
       </DataTable>
     </FormList>
   );

@@ -1,7 +1,7 @@
 import { InputText } from 'primereact/inputtext';
 
 export const Inputz = (props) => {
-  const { id, label = '', type = 'text', value = '', errors = {}, register = () => {}, ...prop } = props;
+  const { id, label = '', type = 'text', value = '', helper = '', errors = {}, register = () => {}, ...prop } = props;
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -9,6 +9,7 @@ export const Inputz = (props) => {
         <InputText type={type} id={id} value={value} invalid={Boolean(errors[id])} {...register(id)} className="w-full" {...prop} />
         <label htmlFor={id}>{label}</label>
       </span>
+      {helper && <i className="w-full text-sm text-primary">{helper}</i>}
       {errors[id] && <small className="w-full text-red-600">{errors[id].message}</small>}
     </div>
   );
@@ -22,9 +23,9 @@ export const Inputzz = ({ ...prop }) => {
   );
 };
 
-export const InputFormz = ({ ...prop }) => {
+export const InputFormz = ({ className = "", ...prop }) => {
   return (
-    <div className="p-2 w-full lg:w-6/12">
+    <div className={`p-2 w-full lg:w-6/12 ${className}`}>
       <Inputz {...prop} />
     </div>
   );

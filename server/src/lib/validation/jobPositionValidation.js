@@ -20,9 +20,9 @@ export const updateJobPositionValid = {
 };
 
 export const createJobPositionValid = {
-  name: { type: 'string' },
-  code: { type: 'string' },
+  name: 'string',
+  code: 'string',
   description: { type: 'string', allowNull: true },
-  minSalary: { type: 'number' },
-  maxSalary: { type: 'number' }
+  minSalary: 'number',
+  maxSalary: 'number'
 };

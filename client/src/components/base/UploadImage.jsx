@@ -3,13 +3,17 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { convertFileToUrl } from '@lib/helper';
 import { Buttonz, Imagez } from '@components/core';
+import { IMAGE_TYPE } from '@constant';
+import { useToastState } from '@store';
 
-const UploadImage = ({ data, setData, label, className = "" }) => {
+export const UploadImage = ({ data, setData, label, className = '' }) => {
   const [file, setFile] = useState([]);
   const [fileUrl, setFileUrl] = useState(data);
+  const { showToast } = useToastState();
 
   const onDrop = useCallback(
     (acceptedFiles) => {
+      if (!IMAGE_TYPE.includes(acceptedFiles[0]?.type)) return showToast({ title: "Vui lòng chỉ chọn hình ảnh!", severity: 'warning' });
       setFile(acceptedFiles);
       setData(acceptedFiles);
       setFileUrl(convertFileToUrl(acceptedFiles[0]));
@@ -39,7 +43,7 @@ const UploadImage = ({ data, setData, label, className = "" }) => {
             <div {...getRootProps()}>
               <Buttonz label="Đổi" />
             </div>
-            <Buttonz color="red" variant="outlined" className="p-2" onClick={() => setData(null)}>
+            <Buttonz severity="danger" outlined className="p-2" onClick={() => setData(null)}>
               <TrashIcon className="w-6" />
             </Buttonz>
           </div>
@@ -48,12 +52,12 @@ const UploadImage = ({ data, setData, label, className = "" }) => {
         <div {...getRootProps()} className="flex justify-center flex-col gap-4 text-center items-center p-2 h-72">
           <CloudArrowUpIcon className="w-32" />
           <span className="font-medium">Kéo và thả ảnh tại đây</span>
-          <span className="text-center font-semibold dark:text-neutral-200">OR</span>
+          <div className="w-full flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-border after:mt-0.5 after:flex-1 after:border-t after:border-border">
+            <p className="mx-4 mb-0 text-center font-semibold">OR</p>
+          </div>
           <Buttonz label="Chọn file" />
         </div>
       )}
     </div>
   );
 };
-
-export default UploadImage;
