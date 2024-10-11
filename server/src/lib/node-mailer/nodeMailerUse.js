@@ -24,5 +24,5 @@ export const sendMailUse = async ({ type, params, to }) => {
 };
 
 export const sendMailForgotPassword = ({ to, username, otp }) => {
-  return sendMailUse({ to, type: 1, params: { $username: username, $otp: otp } });
+  return sendMailUse({ to, type: 6, params: { $username: username, $otp: otp } });
 };

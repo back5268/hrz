@@ -1,24 +1,19 @@
-import mongoose from 'mongoose';
 import { ModelBase } from '@config';
-const Schema = mongoose.Schema;
-const ObjectId = Schema.Types.ObjectId;
 
 class TemplateMd extends ModelBase {}
 
 TemplateMd.init('Template', {
-  by: { type: ObjectId, ref: 'Account' },
-  updateBy: { type: ObjectId, ref: 'Account' },
+  updatedBy: { type: String },
   type: {
     type: Number,
-    enum: [1, 2, 3, 4, 5],
-    required: true,
-    description: '1: Quên mật khẩu'
+    enum: [1, 2, 3, 4, 5, 6],
+    description:
+      '1: Hợp đồng lao động, 2: Hợp đồng dịch vụ, 3: Hợp dồng thử việc, 4: Hợp đồng theo dự án, 5: Phiếu lương, 6: Quên mật khẩu',
+    required: true
   },
-  code: { type: String, required: true },
   subject: { type: String, required: true },
-  content: { type: String, required: true },
+  content: { type: String },
   description: { type: String },
-  status: { type: Number, enum: [0, 1], default: 1 },
   deletedAt: { type: Date }
 });
 

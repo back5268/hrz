@@ -31,6 +31,9 @@
 .p-datatable-header, .p-datatable-thead th {
     background-color: #f8f9fa;
 }
+.p-datatable-tbody td {
+    text-align: center;
+}
 
 .p-paginator .p-paginator-pages .p-paginator-page {
     height: 2.5rem !important;
@@ -48,4 +51,12 @@
 
 .p-timeline-event-connector {
     background: #673AB7;
+}
+
+.p-tag-warning {
+    color: white !important;
+}
+
+.p-disabled {
+    opacity: 0.5;
 }

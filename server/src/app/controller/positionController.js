@@ -9,7 +9,7 @@ export const getListPosition = async (req, res) => {
     const { page, limit, keySearch, status } = value;
     const where = {};
     if (keySearch) where.$or = [{ name: { $regex: keySearch, $options: 'i' } }, { code: { $regex: keySearch, $options: 'i' } }];
-    if (status) where.status = status;
+    if (status || status === 0) where.status = status;
     const documents = await listPositionMd(where, page, limit);
     const total = await countPositionMd(where);
     res.json({ status: 1, data: { documents, total } });

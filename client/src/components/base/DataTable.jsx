@@ -154,7 +154,7 @@ export const DataTable = (props) => {
       }}
     >
       {select && setSelect && <Columnz selectionMode="multiple" />}
-      <Columnz header="#" frozen body={(data, options) => options.rowIndex + 1} />
+      <Columnz header="#" body={(data, options) => options.rowIndex + 1} />
       {props.children}
       {isStatus && (
         <Columnz

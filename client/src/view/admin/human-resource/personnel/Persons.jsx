@@ -41,7 +41,7 @@ export const Contacts = (props) => {
         emptyMessage="."
         paginatorTemplate="CurrentPageReport"
       >
-        <Columnz header="#" frozen body={(data, options) => options.rowIndex + 1} />
+        <Columnz header="#" body={(data, options) => options.rowIndex + 1} />
         <Columnz
           header="Họ tên"
           body={(item) => (
@@ -128,7 +128,7 @@ export const Dependents = (props) => {
         emptyMessage="."
         paginatorTemplate="CurrentPageReport"
       >
-        <Columnz header="#" frozen body={(data, options) => options.rowIndex + 1} />
+        <Columnz header="#" body={(data, options) => options.rowIndex + 1} />
         <Columnz
           header="Họ tên"
           body={(item) => (

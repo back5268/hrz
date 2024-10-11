@@ -4,3 +4,4 @@ export * from './info';
 export * from './job-position';
 export * from './personnel';
 export * from './position';
+export * from './template';

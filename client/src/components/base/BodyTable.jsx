@@ -13,9 +13,14 @@ export const NumberBody = (value) => {
   else return <p className="text-center">0</p>;
 };
 
-export const Body = (data = [], value, key = 'key', label = 'label') => {
+export const Body = (data = [], value, key = '_id', label = 'name') => {
   const item = data.find((d) => d[key] === value) || {};
-  if (item.color) return <Tagz severity={item.color} value={item[label]} className="text-center" />;
+  if (item.severity)
+    return (
+      <div className="flex justify-center w-full">
+        <Tagz severity={item.severity} value={item[label]} className="text-center" />
+      </div>
+    );
   else return item[label];
 };
 

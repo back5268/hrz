@@ -18,7 +18,7 @@ export const DetailPersonnel = () => {
           <TabPanel header="Lịch sử làm việc">
             <History />
           </TabPanel>
-          <TabPanel header="Thông tin hợp dồng">
+          <TabPanel header="Thông tin hợp đồng">
             <Contracts />
           </TabPanel>
         </TabView>

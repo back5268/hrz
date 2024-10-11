@@ -1,3 +1,4 @@
+import { Template } from './admin/config';
 import { DashBoard } from './admin/dashboard';
 import { Department, DetailJobPosition, DetailPersonnel, JobPosition, Personnel, Position } from './admin/human-resource';
 import { Device, Registers, Schedule, Shifts, TimekeepingLog, TimekeepingSummary } from './admin/timekeeping';
@@ -22,5 +23,7 @@ export const routes = [
   { path: '/shift', element: Shifts, layout: true },
   { path: '/schedule', element: Schedule, layout: true },
   { path: '/timekeeping-log', element: TimekeepingLog, layout: true },
-  { path: '/timekeeping-summary', element: TimekeepingSummary, layout: true }
+  { path: '/timekeeping-summary', element: TimekeepingSummary, layout: true },
+
+  { path: '/template', element: Template, layout: true }
 ];

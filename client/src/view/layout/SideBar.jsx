@@ -2,7 +2,7 @@ import { Logo } from '@components/base';
 import { Buttonz } from '@components/core';
 import { useEffect, useState } from 'react';
 import { tools } from '@lib/tools';
-import { Squares2X2Icon, UsersIcon, CircleStackIcon, Square3Stack3DIcon, InboxStackIcon } from '@heroicons/react/24/outline';
+import { Squares2X2Icon, UsersIcon, CircleStackIcon, Square3Stack3DIcon, InboxStackIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { NavItem } from './NavItem';
 import { NavGroup } from './NavGroup';
 import { useLocation } from 'react-router-dom';
@@ -12,7 +12,8 @@ const icons = {
   UsersIcon,
   CircleStackIcon,
   Square3Stack3DIcon,
-  InboxStackIcon
+  InboxStackIcon,
+  Cog6ToothIcon
 };
 
 export const SideBar = (props) => {

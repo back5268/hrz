@@ -61,5 +61,19 @@ export const tools = [
     label: 'Quản lý phê duyệt',
     icon: 'InboxStackIcon',
     items: []
+  },
+  {
+    label: 'Cấu hình',
+    icon: 'Cog6ToothIcon',
+    items: [
+      {
+        label: 'Thiết lập mẫu thông báo',
+        route: '/template'
+      },
+      {
+        label: 'Lịch sử gửi email',
+        route: '/log'
+      },
+    ]
   }
 ];

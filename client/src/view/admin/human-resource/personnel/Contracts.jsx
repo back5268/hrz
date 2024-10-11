@@ -1,23 +1,55 @@
-import { deleteDepartmentApi, getListDepartmentApi, updateDepartmentApi } from '@api';
-import { DataTable, DataFilter, UserBody } from '@components/base';
-import { Columnz, Dropdownzz } from '@components/core';
-import { useGetParams } from '@hooks';
+import { deleteContractApi, getListContractApi, renderContractApi } from '@api';
+import { Body, DataFilter, TimeBody, UserBody } from '@components/base';
+import { Buttonz, Columnz, Dropdownzz, Tablez } from '@components/core';
 import { useGetApi } from '@lib/react-query';
 import React, { useState } from 'react';
 import { DetailContract } from './DetailContract';
 import { contractStatus, contractTypes } from '@constant';
+import { useParams } from 'react-router-dom';
+import { DocumentMagnifyingGlassIcon, PrinterIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { confirmDialog } from 'primereact/confirmdialog';
+import { useToastState } from '@store';
+import { Print } from './Print';
 
 export const Contracts = () => {
-  const initParams = useGetParams();
-  const [params, setParams] = useState(initParams);
+  const { _id } = useParams();
+  const { showToast } = useToastState();
+  const [params, setParams] = useState({});
   const [filter, setFilter] = useState({});
   const [open, setOpen] = useState(false);
-  const { isLoading, data } = useGetApi(getListDepartmentApi, params, 'department');
+  const [openPrint, setOpenPrint] = useState(false);
+  const { isLoading, data } = useGetApi(
+    getListContractApi,
+    { ...params, page: undefined, limit: undefined, account: _id },
+    'contract',
+    Boolean(_id)
+  );
+
+  const onDelete = (item) => {
+    confirmDialog({
+      message: 'Bạn có chắc chắn muốn xóa hợp đồng này!',
+      header: 'HRZ',
+      icon: 'pi pi-info-circle',
+      accept: async () => {
+        const response = await deleteContractApi({ account: _id, _id: item._id });
+        if (response) {
+          setParams((pre) => ({ ...pre, render: !pre.render }));
+          showToast({ title: 'Xóa hợp đồng thành công!', severity: 'success' });
+        }
+      }
+    });
+  };
+
+  const onViewPrint = async (item) => {
+    const response = await renderContractApi({ account: _id, _id: item._id });
+    if (response) setOpenPrint({ _id: item._id, template: response });
+  };
 
   return (
     <div>
-      <DetailContract open={open} setOpen={setOpen} setParams={setParams} data={data?.documents} />
-      <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-2/4">
+      <DetailContract open={open} setOpen={setOpen} setParams={setParams} data={data} account={_id} />
+      <Print open={openPrint} setOpen={setOpenPrint} account={_id} />
+      <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-6/12">
         <Dropdownzz
           value={filter.type}
           onChange={(e) => setFilter({ ...filter, type: e.target.value })}
@@ -31,28 +63,56 @@ export const Contracts = () => {
           label="Trạng thái"
         />
       </DataFilter>
-      <DataTable
-        title="Phòng ban"
+      <Tablez
+        header={
+          <div className="flex gap-2 justify-start mb-1">
+            <Buttonz onClick={() => setOpen(true)}>Thêm mới</Buttonz>
+          </div>
+        }
         loading={isLoading}
-        data={data?.documents}
-        total={data?.total}
-        params={params}
-        setParams={setParams}
-        baseActions={['create', 'detail', 'delete']}
-        setShow={setOpen}
-        actionsInfo={{
-          onViewDetail: (item) => setOpen(item._id),
-          deleteApi: deleteDepartmentApi
-        }}
-        statusInfo={{ changeStatusApi: updateDepartmentApi }}
-        headerInfo={{ onCreate: () => setOpen(true) }}
+        value={data}
+        totalRecords={data?.length}
+        rows={100}
+        rowsPerPageOptions={[100]}
+        params={{ page: 1, limit: 100 }}
+        dataKey="_id"
+        emptyMessage="Không tìm thấy hợp đồng của nhân viên"
+        paginatorTemplate="CurrentPageReport"
       >
-        <Columnz header="Tên phòng ban" field="name" />
-        <Columnz header="Mã phòng ban" field="code" />
-        <Columnz header="Mô tả" field="description" />
-        <Columnz header="Thời gian tạo" body={(e) => UserBody(e.createdAt, e.by)} />
-        <Columnz header="Thời gian cập nhật" body={(e) => (e.updatedBy ? UserBody(e.updatedAt, e.updatedBy) : '')} />
-      </DataTable>
+        <Columnz header="#" body={(data, options) => options.rowIndex + 1} />
+        <Columnz header="Số hợp đồng" field="code" />
+        <Columnz header="Loại hợp đồng" body={(e) => Body(contractTypes, e.type)} />
+        <Columnz header="Ngày ký" body={(e) => TimeBody(e.signedDate, 'date')} />
+        <Columnz header="Ngày hết hạn" body={(e) => TimeBody(e.expiredDate, 'date')} />
+        <Columnz header="Thời gian cập nhật" body={(e) => UserBody(e.updatedAt, e.updatedBy || e.by)} />
+        <Columnz header="Trạng thái" body={(e) => Body(contractStatus, e.status)} />
+        <Columnz
+          header="Thao tác"
+          body={(e) => (
+            <div className="flex justify-center items-center gap-2">
+              <Buttonz
+                onClick={() => setOpen(e._id)}
+                outlined
+                className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                icon={<DocumentMagnifyingGlassIcon className="w-6" />}
+              />
+              <Buttonz
+                severity="danger"
+                outlined
+                onClick={() => onDelete(e)}
+                className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                icon={<TrashIcon className="w-5" />}
+              />
+              <Buttonz
+                onClick={() => onViewPrint(e)}
+                outlined
+                className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                icon={<PrinterIcon className="w-5" />}
+              />
+            </div>
+          )}
+        />
+      </Tablez>
     </div>
   );
 };

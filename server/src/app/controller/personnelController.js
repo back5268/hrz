@@ -48,7 +48,7 @@ export const getListPersonnel = async (req, res) => {
     const where = {};
     if (keySearch) where.$or = [{ fullName: { $regex: keySearch, $options: 'i' } }, { staffCode: { $regex: keySearch, $options: 'i' } }];
     if (email) where.$or = [{ email: { $regex: email, $options: 'i' } }, { phone: { $regex: email, $options: 'i' } }];
-    if (status) where.status = status;
+    if (status || status === 0) where.status = status;
     if (department) where.department = department;
     if (position) where.position = position;
     if (jobPosition) where.jobPosition = jobPosition;

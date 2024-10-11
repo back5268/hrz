@@ -1,19 +1,18 @@
 import { ModelBase } from '@config';
-import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
-const ObjectId = Schema.Types.ObjectId;
 
 class ContractMd extends ModelBase {}
 
 ContractMd.init('Contract', {
-  account: { type: ObjectId, ref: 'Account', required: true },
+  by: { type: String },
+  updatedBy: { type: String },
+  account: { type: String, required: true },
   code: { type: String, required: true },
-  type: { type: Number, required: true, enum: [], description: '' },
+  type: { type: Number, required: true, enum: [1, 2, 3, 4] },
   signedDate: { type: Date, required: true },
   expiredDate: { type: Date, required: true },
   note: { type: String },
-  status: { type: Number, required: true, enum: [], description: '' },
-  template: { type: String, required: true },
+  status: { type: Number, required: true, enum: [1, 2, 3, 4] },
+  template: { type: String },
   deletedAt: { type: Date }
 });
 

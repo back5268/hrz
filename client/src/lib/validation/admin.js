@@ -3,19 +3,19 @@ import * as yup from 'yup';
 
 export const PositionValidation = yup.object({
   name: yup.string().required('Tên chức vụ không được bỏ trống!'),
-  code: yup.string().required('Mã chức vụ không được bỏ trống!'),
+  code: yup.string().required('Mã chức vụ không được bỏ trống!')
 });
 
 export const JobPositionValidation = yup.object({
   name: yup.string().required('Tên công việc không được bỏ trống!'),
   code: yup.string().required('Mã công việc không được bỏ trống!'),
   minSalary: yup.number().required('Mức lương tối thiểu không được bỏ trống!').typeError('Mức lương tối thiểu không được bỏ trống!'),
-  maxSalary: yup.number().required('Mức lương tối đa không được bỏ trống!').typeError('Mức lương tối thiểu không được bỏ trống!'),
+  maxSalary: yup.number().required('Mức lương tối đa không được bỏ trống!').typeError('Mức lương tối thiểu không được bỏ trống!')
 });
 
 export const DepartmentValidation = yup.object({
   name: yup.string().required('Tên công việc không được bỏ trống!'),
-  code: yup.string().required('Mã công việc không được bỏ trống!'),
+  code: yup.string().required('Mã công việc không được bỏ trống!')
 });
 
 export const PersonnelValidation = yup.object({
@@ -28,5 +28,17 @@ export const PersonnelValidation = yup.object({
   position: yup.string().required('Chức vụ không được bỏ trống!'),
   jobPosition: yup.string().required('Vị trí công việc không được bỏ trống!'),
   dateIn: yup.string().required('Ngày vào không được bỏ trống!'),
-  salary: yup.number().required('Lương cơ bản không được bỏ trống!').typeError('Lương cơ bản không được bỏ trống!'),
+  salary: yup.number().required('Lương cơ bản không được bỏ trống!').typeError('Lương cơ bản không được bỏ trống!')
+});
+
+export const ContractValidation = yup.object({
+  code: yup.string().required('Số hợp đồng không được bỏ trống!'),
+  type: yup.number().required('Loại hợp đồng không được bỏ trống!'),
+  signedDate: yup.string().required('Ngày ký không được bỏ trống!'),
+  expiredDate: yup.string().required('Ngày hết hạn không được bỏ trống!')
+});
+
+export const TemplateValidation = yup.object({
+  type: yup.number().required('Loại mẫu không được bỏ trống!'),
+  subject: yup.string().required('Tiêu đề không được bỏ trống!')
 });
