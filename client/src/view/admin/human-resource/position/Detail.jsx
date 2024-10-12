@@ -1,11 +1,14 @@
 import { PositionValidation } from '@lib/validation';
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormDetail } from '@components/base';
 import { checkEqualProp } from '@lib/helper';
-import { createPositionApi, updatePositionApi } from '@api';
+import { createPositionApi, detailPositionApi, updatePositionApi } from '@api';
 import { InputFormz, TextAreaz } from '@components/core';
+import { useParams } from 'react-router-dom';
+import { useGetApi } from '@lib/react-query';
+import { Allowances } from './Allowances';
 
 const defaultValues = {
   name: '',
@@ -13,17 +16,17 @@ const defaultValues = {
   description: ''
 };
 
-export const DetailPosition = (props) => {
-  const { open, setOpen, setParams, data } = props;
-  const isUpdate = typeof open === 'string';
-  const item = isUpdate ? data.find((d) => d._id === open) : {};
+export const DetailPosition = () => {
+  const { _id } = useParams();
+  const [allowances, setAllowances] = useState([]);
+  const isUpdate = Boolean(_id);
+  const { data: item } = useGetApi(detailPositionApi, { _id }, 'positionz', isUpdate);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-    reset,
     watch
   } = useForm({
     resolver: yupResolver(PositionValidation),
@@ -31,7 +34,8 @@ export const DetailPosition = (props) => {
   });
 
   useEffect(() => {
-    if (isUpdate) {
+    if (isUpdate && item) {
+      if (item.allowances) setAllowances(item.allowances.map((i, index) => ({ ...i, idz: index + 1 })));
       for (const key in defaultValues) {
         setValue(key, item[key]);
       }
@@ -39,30 +43,26 @@ export const DetailPosition = (props) => {
   }, [item]);
 
   const handleData = (data) => {
-    const newData = { ...data };
-    if (isUpdate) return { ...checkEqualProp(newData, item), _id: open };
+    const newData = { ...data, allowances };
+    if (isUpdate) return { ...checkEqualProp(newData, item), _id };
     else return newData;
   };
 
   return (
     <FormDetail
+      type="nomal"
       title="chức vụ"
-      open={open}
-      setOpen={() => {
-        setOpen(false);
-        reset();
-      }}
       isUpdate={isUpdate}
-      handleData={handleData}
-      handleSubmit={handleSubmit}
       createApi={createPositionApi}
       updateApi={updatePositionApi}
-      setParams={setParams}
+      handleData={handleData}
+      handleSubmit={handleSubmit}
     >
       <div className="flex flex-wrap w-full">
         <InputFormz id="name" label="Tên chức vụ (*)" value={watch('name')} errors={errors} register={register} />
         <InputFormz id="code" label="Mã chức vụ (*)" value={watch('code')} errors={errors} register={register} />
-        <TextAreaz id="description" label="Mô tả (*)" value={watch('description')} errors={errors} register={register} />
+        <TextAreaz id="description" label="Mô tả" value={watch('description')} errors={errors} register={register} />
+        <Allowances data={allowances} setData={setAllowances} />
       </div>
     </FormDetail>
   );

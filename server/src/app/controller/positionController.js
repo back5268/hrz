@@ -33,7 +33,6 @@ export const deletePosition = async (req, res) => {
     const { _id } = value;
     const data = await deletePositionMd({ _id });
     if (!data) return res.status(400).json({ status: 0, mess: 'Chức vụ không tồn tại!' });
-    if (data.key) return res.status(400).json({ status: 0, mess: 'Chức vụ cơ bản không thể xóa!' });
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -84,7 +83,7 @@ export const createPosition = async (req, res) => {
     if (checkName) return res.status(400).json({ status: 0, mess: 'Tên chức vụ đã tồn tại!' });
     const checkCode = await detailPositionMd({ code });
     if (checkCode) return res.status(400).json({ status: 0, mess: 'Mã chức vụ đã tồn tại!' });
-    const data = await createPositionMd({ by: req.account._id, ...value });
+    const data = await createPositionMd({ updatedBy: req.account._id, ...value });
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

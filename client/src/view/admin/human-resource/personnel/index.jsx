@@ -1,16 +1,21 @@
 import {
   deletePersonnelApi,
+  getListAccountInfoApi,
   getListDepartmentInfoApi,
   getListJobPositionInfoApi,
   getListPersonnelApi,
   getListPositionInfoApi,
+  resetPasswordApi,
   updatePersonnelApi
 } from '@api';
 import { DataTable, FormList, DataFilter } from '@components/base';
-import { Columnz, Dropdownzz, Inputzz } from '@components/core';
+import { Buttonz, Columnz, Dialogz, Dropdownzz, Inputzz } from '@components/core';
 import { status } from '@constant';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { useGetParams } from '@hooks';
 import { useGetApi } from '@lib/react-query';
+import { useDataState, useToastState } from '@store';
+import { confirmDialog } from 'primereact/confirmdialog';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 export * from './Detail';
@@ -18,15 +23,47 @@ export * from './Detail';
 export const Personnel = () => {
   const navigate = useNavigate();
   const initParams = useGetParams();
+  const { showToast } = useToastState();
   const [params, setParams] = useState(initParams);
+  const { setAccounts } = useDataState();
   const [filter, setFilter] = useState({});
   const { isLoading, data } = useGetApi(getListPersonnelApi, params, 'personnel');
   const { data: positions } = useGetApi(getListPositionInfoApi, {}, 'positions');
   const { data: jobPositions } = useGetApi(getListJobPositionInfoApi, {}, 'jobPositions');
   const { data: departments } = useGetApi(getListDepartmentInfoApi, {}, 'departments');
+  const [password, setPassword] = useState(null);
+
+  const onSuccess = async () => {
+    const response = await getListAccountInfoApi();
+    if (response) setAccounts(response);
+  };
+
+  const onResetPassword = (item) => {
+    confirmDialog({
+      message: `Bạn có chắc chắn muốn đổi mật khẩu nhân viên ${item.fullName}`,
+      header: 'HRZ',
+      icon: 'pi pi-info-circle',
+      accept: async () => {
+        const response = await resetPasswordApi({ _id: item._id });
+        if (response) {
+          showToast({ title: 'Đổi mật khẩu thành công!', severity: 'success' });
+          setPassword(response);
+        }
+      }
+    });
+  };
 
   return (
     <FormList title="Danh sách nhân viên">
+      <Dialogz header="HRZ" open={Boolean(password)} setOpen={setPassword} position="center" width="500px">
+        <div className="p-6 text-left">
+          Đổi mật khẩu thành công, mật khẩu mới là <b>{password}</b>
+        </div>
+        <hr />
+        <div className="flex gap-4 justify-end mt-4">
+          <Buttonz label="Xác nhận" onClick={async () => setPassword(false)} />
+        </div>
+      </Dialogz>
       <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-6/12">
         <Inputzz
           value={filter.keySearch}
@@ -80,7 +117,13 @@ export const Personnel = () => {
         baseActions={['create', 'detail', 'delete']}
         actionsInfo={{
           onViewDetail: (item) => navigate(`/personnel/detail/${item._id}`),
-          deleteApi: deletePersonnelApi
+          deleteApi: deletePersonnelApi,
+          moreActions: [
+            {
+              icon: ArrowPathIcon,
+              onClick: (item) => onResetPassword(item)
+            }
+          ]
         }}
         statusInfo={{ changeStatusApi: updatePersonnelApi }}
         headerInfo={{
@@ -88,11 +131,15 @@ export const Personnel = () => {
             navigate('/personnel/create');
           }
         }}
+        onSuccess={onSuccess}
       >
         <Columnz header="Tên nhân viên" field="fullName" />
         <Columnz header="Mã nhân viên" field="staffCode" />
         <Columnz header="Email" field="email" />
         <Columnz header="Số điện thoại" field="phone" />
+        <Columnz header="Phòng ban" field="department.name" />
+        <Columnz header="Chức vụ" field="position.name" />
+        <Columnz header="Vị trí làm việc" field="jobPosition.name" />
       </DataTable>
     </FormList>
   );

@@ -48,3 +48,7 @@
   transform: translateY(-10px);
   transition: max-height 200ms ease, opacity 200ms ease, transform 200ms ease;
 }
+
+hr {
+  border-color: #a3a3a3;
+}

@@ -25,8 +25,14 @@ export const PersonnelValidation = yup.object({
   phone: yup.string().matches(REGEX.C_PHONE, 'Số điện thoại không đúng định dạng!').required('Số điện thoại không được bỏ trống!'),
   birthday: yup.string().required('Ngày sinh không được bỏ trống!'),
   cmt: yup.string().required('Số chứng minh thư không được bỏ trống!'),
+  dateOfIssue: yup.string().required('Ngày cấp không được bỏ trống!'),
+  placeOfIssue: yup.string().required('Nơi cấp không được bỏ trống!'),
+  address: yup.string().required('Địa chỉ thường trú không được bỏ trống!'),
   position: yup.string().required('Chức vụ không được bỏ trống!'),
   jobPosition: yup.string().required('Vị trí công việc không được bỏ trống!'),
+  bankAccount: yup.string().required('Số tài khoản không được bỏ trống!'),
+  bank: yup.string().required('Ngân hàng không được bỏ trống!'),
+  nationality: yup.string().required('Quốc tịch không được bỏ trống!'),
   dateIn: yup.string().required('Ngày vào không được bỏ trống!'),
   salary: yup.number().required('Lương cơ bản không được bỏ trống!').typeError('Lương cơ bản không được bỏ trống!')
 });
@@ -40,5 +46,13 @@ export const ContractValidation = yup.object({
 
 export const TemplateValidation = yup.object({
   type: yup.number().required('Loại mẫu không được bỏ trống!'),
+  subject: yup.string().required('Tiêu đề không được bỏ trống!')
+});
+
+export const PermissionValidation = yup.object({
+  name: yup.string().required('Tên nhóm quyền không được bỏ trống!')
+});
+
+export const NotifyValidation = yup.object({
   subject: yup.string().required('Tiêu đề không được bỏ trống!')
 });

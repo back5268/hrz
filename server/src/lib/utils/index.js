@@ -46,19 +46,19 @@ export const replaceFistText = (inputString, prefix = "\\$") => {
   return inputString.replace(regex, '');
 }
 
-export const ghepGiaTri = ({obj, html, format}) => {
-  for (let key of Object.keys(obj)) {
-      if (obj[key] === 0 || (obj[key] && obj[key] !== "undefined")) {
-          if (format && typeof obj[key] === "number") {
-              html = html.replaceAll(key, formatNumber(obj[key], true))
-              html = html.replaceAll(key.toLocaleUpperCase(), formatNumber(obj[key], true))
+export const ghepGiaTri = ({params, content, format}) => {
+  for (let key of Object.keys(params)) {
+      if (params[key] === 0 || (params[key] && params[key] !== "undefined")) {
+          if (format && typeof params[key] === "number") {
+              content = content.replaceAll(key, formatNumber(params[key], true))
+              content = content.replaceAll(key.toLocaleUpperCase(), formatNumber(params[key], true))
           } else {
-              html = html.replaceAll(key, obj[key])
-              html = html.replaceAll(key.toLocaleUpperCase(), obj[key])
+              content = content.replaceAll(key, params[key])
+              content = content.replaceAll(key.toLocaleUpperCase(), params[key])
           }
       }
   }
-  return html
+  return content
 }
 
 export const formatNumber = (value, noRound) => {

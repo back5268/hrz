@@ -95,7 +95,7 @@ export const createJobPosition = async (req, res) => {
     if (checkName) return res.status(400).json({ status: 0, mess: 'Tên vị trí công việc đã tồn tại!' });
     const checkCode = await detailJobPositionMd({ code });
     if (checkCode) return res.status(400).json({ status: 0, mess: 'Mã vị trí công việc đã tồn tại!' });
-    const data = await createJobPositionMd({ by: req.account._id, ...value });
+    const data = await createJobPositionMd({ updatedBy: req.account._id, ...value });
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

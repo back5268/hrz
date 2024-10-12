@@ -7,9 +7,10 @@ const useUserState = create((set, get) => ({
   userInfo: INITIAL_USER_INFO,
   isAuthenticated: false,
   role: false,
+  tools: [],
   loadingz: false,
-  setUserInfo: (data) => set({ userInfo: data, isAuthenticated: true, role: data.role }),
-  clearUserInfo: () => set({ userInfo: INITIAL_USER_INFO, isAuthenticated: false, role: false }),
+  setUserInfo: (data) => set({ ...data, isAuthenticated: true, role: data.userInfo?.role }),
+  clearUserInfo: () => set({ userInfo: INITIAL_USER_INFO, isAuthenticated: false, role: false, tools: [] }),
   setLoadingz: () => {
     const loading = get().loadingz;
     set({ loadingz: !loading });

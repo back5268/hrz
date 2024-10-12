@@ -14,11 +14,13 @@ export const updatePositionValid = {
   name: { type: 'string', allowNull: true },
   code: { type: 'string', allowNull: true },
   description: { type: 'string', allowNull: true },
-  status: { type: 'number', allowNull: true }
+  status: { type: 'number', allowNull: true },
+  allowances: { type: 'json', allowNull: true }
 };
 
 export const createPositionValid = {
   name: 'string',
   code: 'string',
-  description: { type: 'string', allowNull: true }
+  description: { type: 'string', allowNull: true },
+  allowances: { type: 'json', allowNull: true }
 };

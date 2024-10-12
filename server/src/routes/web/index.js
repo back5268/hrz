@@ -1,17 +1,23 @@
 import express from 'express';
-import { authMiddleware } from '@middleware';
+import { authMiddleware, permissionMiddleware } from '@middleware';
 import { departmentRouter } from './department';
 import { jobPositionRouter } from './jobPosition';
 import { positionRouter } from './position';
 import { personnelRouter } from './personnel';
 import { contractRouter } from './contract';
 import { templateRouter } from './template';
+import { permissionRouter } from './permission';
+import { logRouter } from './log';
+import { notifyRouter } from './notify';
 
 export const webRouter = express.Router();
 
-webRouter.use(authMiddleware);
+webRouter.use(authMiddleware, permissionMiddleware);
 webRouter.use('/department', departmentRouter);
 webRouter.use('/job-position', jobPositionRouter);
+webRouter.use('/log', logRouter);
+webRouter.use('/notify', notifyRouter);
+webRouter.use('/permission', permissionRouter);
 webRouter.use('/personnel', personnelRouter);
 webRouter.use('/position', positionRouter);
 webRouter.use('/contract', contractRouter);

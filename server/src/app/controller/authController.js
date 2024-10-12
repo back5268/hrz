@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { confirmPasswordValid, sendOtpAuthValid, signInValid } from '@lib/validation';
-import { detailAccountMd, updateAccountMd } from '@models';
+import { detailAccountMd, listToolMd, updateAccountMd } from '@models';
 import { generateNumber, validateData } from '@utils';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
@@ -10,7 +10,21 @@ dotenv.config();
 
 export const getInfo = async (req, res) => {
   try {
-    res.json({ status: 1, data: req.account });
+    let tools = req.tools;
+    const permissions = req.permissions;
+    if (!tools) {
+      const toolz = await listToolMd({ status: 1 }, false, false, false, 'name icon items', { sort: 1 });
+      tools = toolz.map((tool) => {
+        const items = tool.items;
+        let itemz = [];
+        items.forEach((c) => {
+          if (permissions.find((p) => p.route === c.route)) itemz.push(c);
+        });
+        if (itemz.length > 0) return { ...tool?._doc, items: itemz };
+      });
+      tools = tools.filter((t) => t);
+    }
+    res.json({ status: 1, data: { userInfo: req.account, tools } });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
   }

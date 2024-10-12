@@ -40,7 +40,6 @@ export const deleteDepartment = async (req, res) => {
     const { _id } = value;
     const data = await deleteDepartmentMd({ _id });
     if (!data) return res.status(400).json({ status: 0, mess: 'Phòng ban không tồn tại!' });
-    if (data.key) return res.status(400).json({ status: 0, mess: 'Phòng ban cơ bản không thể xóa!' });
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -91,7 +90,7 @@ export const createDepartment = async (req, res) => {
     if (checkName) return res.status(400).json({ status: 0, mess: 'Tên phòng ban đã tồn tại!' });
     const checkCode = await detailDepartmentMd({ code });
     if (checkCode) return res.status(400).json({ status: 0, mess: 'Mã phòng ban đã tồn tại!' });
-    const data = await createDepartmentMd({ by: req.account._id, ...value });
+    const data = await createDepartmentMd({ updatedBy: req.account._id, ...value });
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

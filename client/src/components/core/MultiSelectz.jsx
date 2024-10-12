@@ -29,9 +29,25 @@ export const MultiSelectz = (props) => {
           {...register(id)}
           {...prop}
         />
-        <label htmlFor={id}>{label}</label>
+        <label>{label}</label>
       </span>
       {errors[id] && <small className="w-full ml-2 text-red-600">{errors[id].message}</small>}
+    </div>
+  );
+};
+
+export const MultiSelectzz = ({ ...prop }) => {
+  return (
+    <div className="p-2 w-full md:w-6/12 lg:w-3/12">
+      <MultiSelectz {...prop} />
+    </div>
+  );
+};
+
+export const MultiSelectFormz = ({ className = '', ...prop }) => {
+  return (
+    <div className={`p-2 w-full lg:w-6/12 ${className}`}>
+      <MultiSelectz {...prop} />
     </div>
   );
 };

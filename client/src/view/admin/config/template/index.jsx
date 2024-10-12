@@ -17,7 +17,7 @@ export const Template = () => {
   return (
     <FormList title="Danh sách mẫu thông báo">
       <DetailTemplate open={open} setOpen={setOpen} setParams={setParams} data={data?.documents} />
-      <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-2/4">
+      <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-6/12">
         <Inputzz value={filter.keySearch} onChange={(e) => setFilter({ ...filter, keySearch: e.target.value })} label="Tìm kiếm theo tiêu đề" />
         <Dropdownzz
           value={filter.type}

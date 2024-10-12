@@ -1,5 +1,5 @@
 import { getListWorkHistoryApi } from '@api';
-import { personnelType } from '@constant';
+import { personnelTypes } from '@constant';
 import { formatNumber } from '@lib/helper';
 import { useGetApi } from '@lib/react-query';
 import { useDataState } from '@store';
@@ -25,7 +25,7 @@ export const History = () => {
           const dataz = item.after;
           if (check) {
             note = [
-              `Loại nhân sự: ${personnelType.find((p) => p._id === dataz.type)?.name}`,
+              `Loại nhân sự: ${personnelTypes.find((p) => p._id === dataz.type)?.name}`,
               `Lương cơ bản: ${formatNumber(dataz.salary)} VNĐ`
             ];
           }
@@ -41,7 +41,7 @@ export const History = () => {
                 <div className="border rounded-md border-primary/50">
                   <div className="flex flex-col gap-2 p-2">
                     {note.map((n, i) => (
-                      <span key={i}>{n}</span>
+                      <span key={i} className='border-b border-dashed border-primary my-1 py-1'> + {n}</span>
                     ))}
                   </div>
                 </div>

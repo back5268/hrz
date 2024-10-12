@@ -159,8 +159,8 @@ export const Dependents = (props) => {
           bodyStyle={{ minWidth: '10rem' }}
           body={(item) => (
             <Dropdown
-              value={item.address}
-              onChange={(e) => onChange(item, 'address', e.target.value)}
+              value={item.relation}
+              onChange={(e) => onChange(item, 'relation', e.target.value)}
               options={relations}
               optionLabel="name"
               optionValue="_id"

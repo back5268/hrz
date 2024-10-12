@@ -51,11 +51,11 @@ export const DataFilter = (props) => {
       <div className="flex items-center flex-wrap w-full">
         {props.children}
         <div className={`p-2 w-full md:w-6/12 lg:w-3/12 ${className}`}>
-          <div className="flex gap-2 items-center justify-end">
+          <div className="flex gap-4 items-center justify-end">
             <Buttonz onClick={onClear} outlined>
-              Làm mới
+              Làm mới bộ lọc
             </Buttonz>
-            <Buttonz type="submit">Lọc</Buttonz>
+            <Buttonz type="submit">Tìm kiếm</Buttonz>
           </div>
         </div>
       </div>

@@ -1,6 +1,8 @@
 import {
   createPersonnelApi,
   detailPersonnelApi,
+  getInfoApi,
+  getListAccountInfoApi,
   getListBankInfoApi,
   getListDepartmentInfoApi,
   getListJobPositionInfoApi,
@@ -9,7 +11,7 @@ import {
 } from '@api';
 import { MultiRadio, UploadFiles, UploadImage } from '@components/base';
 import { Buttonz, CalendarFormz, DropdownFormz, InputFormz, ProgressSpinnerz } from '@components/core';
-import { genders, graduationTypes, maritalStatus, personnelType, qualifications, taxAuths } from '@constant';
+import { genders, graduationTypes, maritalStatus, personnelTypes, qualifications, taxAuths } from '@constant';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useGetApi, usePostApi } from '@lib/react-query';
 import { PersonnelValidation } from '@lib/validation';
@@ -19,7 +21,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Contacts, Dependents } from './Persons';
 import { checkEqualProp, convertNumberToString, formatNumber, handleFiles } from '@lib/helper';
-import { useToastState } from '@store';
+import { useDataState, useToastState, useUserState } from '@store';
 
 const defaultValues = {
   department: '',
@@ -30,14 +32,15 @@ const defaultValues = {
   email: '',
   phone: '',
   cmt: '',
+  placeOfIssue: '',
   gender: 1,
   bankAccount: '',
   bank: '',
   salary: '',
   type: 1,
   maritalStatus: '',
-  nationality: '',
-  religion: '',
+  nationality: 'Việt Nam',
+  religion: 'Không',
   address: '',
   permanentAddress: '',
   healthInsuranceNumber: '',
@@ -56,6 +59,8 @@ const defaultValues = {
 export const Infos = () => {
   const navigate = useNavigate();
   const { showToast } = useToastState();
+  const { userInfo, setUserInfo } = useUserState();
+  const { setAccounts } = useDataState();
   const { _id } = useParams();
   const isUpdate = Boolean(_id);
   const { data: item } = useGetApi(detailPersonnelApi, { _id }, 'personnelz', isUpdate);
@@ -98,6 +103,7 @@ export const Infos = () => {
     if (isUpdate && item) {
       if (item.avatar) setAvatar(item.avatar);
       if (item.birthday) setValue('birthday', new Date(item.birthday));
+      if (item.dateOfIssue) setValue('dateOfIssue', new Date(item.dateOfIssue));
       if (item.dateIn) setValue('dateIn', new Date(item.dateIn));
       if (item.contacts) setContacts(item.contacts.map((i, index) => ({ ...i, idz: index + 1 })));
       if (item.dependents) setDependents(item.dependents.map((i, index) => ({ ...i, idz: index + 1 })));
@@ -110,6 +116,15 @@ export const Infos = () => {
       }
     }
   }, [item]);
+
+  const onSuccess = async () => {
+    const accounts = await getListAccountInfoApi();
+    if (accounts) setAccounts(accounts);
+    if (_id === userInfo._id) {
+      const response = await getInfoApi();
+      if (response) setUserInfo(response);
+    }
+  };
 
   const onSubmit = async (e) => {
     let params = { ...e };
@@ -128,6 +143,7 @@ export const Infos = () => {
     const response = await mutateAsync(params);
     if (response) {
       showToast({ title: `${isUpdate ? 'Cập nhật' : 'Thêm'} nhân viên thành công!`, severity: 'success' });
+      onSuccess();
       navigate(-1);
     }
   };
@@ -158,6 +174,9 @@ export const Infos = () => {
                   <InputFormz id="phone" label="Số điện thoại (*)" value={watch('phone')} errors={errors} register={register} />
                   <CalendarFormz id="birthday" label="Ngày sinh (*)" value={watch('birthday')} errors={errors} register={register} />
                   <InputFormz id="cmt" label="Chứng minh thư (*)" value={watch('cmt')} errors={errors} register={register} />
+                  <CalendarFormz id="dateOfIssue" label="Ngày Cấp (*)" value={watch('dateOfIssue')} errors={errors} register={register} />
+                  <InputFormz id="placeOfIssue" label="Nơi cấp (*)" value={watch('placeOfIssue')} errors={errors} register={register} />
+                  <InputFormz id="address" label="Địa chỉ thường trú (*)" value={watch('address')} errors={errors} register={register} />
                   <div className="w-full lg:w-1/2 px-2">
                     <MultiRadio
                       id="gender"
@@ -175,7 +194,7 @@ export const Infos = () => {
                   <DropdownFormz
                     id="type"
                     label="Loại nhân sự (*)"
-                    options={personnelType}
+                    options={personnelTypes}
                     value={watch('type')}
                     errors={errors}
                     onChange={(e) => setValue('type', e.target.value)}
@@ -219,7 +238,7 @@ export const Infos = () => {
                   </div>
                   <InputFormz
                     id="bankAccount"
-                    label="Số tài khoản"
+                    label="Số tài khoản (*)"
                     value={watch('bankAccount')}
                     errors={errors}
                     register={register}
@@ -227,7 +246,7 @@ export const Infos = () => {
                   />
                   <DropdownFormz
                     id="bank"
-                    label="Ngân hàng"
+                    label="Ngân hàng (*)"
                     filter
                     options={banks}
                     value={watch('bank')}
@@ -260,12 +279,11 @@ export const Infos = () => {
                 errors={errors}
                 onChange={(e) => setValue('maritalStatus', e.target.value)}
               />
-              <InputFormz id="nationality" label="Quốc tịch" value={watch('nationality')} errors={errors} register={register} />
+              <InputFormz id="nationality" label="Quốc tịch (*)" value={watch('nationality')} errors={errors} register={register} />
               <InputFormz id="religion" label="Tôn giáo" value={watch('religion')} errors={errors} register={register} />
-              <InputFormz id="address" label="Địa chỉ cư trú" value={watch('address')} errors={errors} register={register} />
               <InputFormz
                 id="permanentAddress"
-                label="Địa chỉ thường trú"
+                label="Địa chỉ cư trú"
                 value={watch('permanentAddress')}
                 errors={errors}
                 register={register}

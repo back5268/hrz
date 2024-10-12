@@ -6,6 +6,7 @@ export const detailPersonnelApi = (params) => getData('/web/personnel/detailPers
 export const deletePersonnelApi = (params) => deleteData('/web/personnel/deletePersonnel', params);
 export const createPersonnelApi = (params) => postData('/web/personnel/createPersonnel', params, true);
 export const updatePersonnelApi = (params) => putData('/web/personnel/updatePersonnel', params, true);
+export const resetPasswordApi = (params) => putData('/web/personnel/resetPassword', params);
 
 export const getListContractApi = (params) => getData('/web/contract/getListContract', params);
 export const deleteContractApi = (params) => deleteData('/web/contract/deleteContract', params);

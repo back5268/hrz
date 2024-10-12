@@ -6,7 +6,7 @@ export const Calendarz = (props) => {
   return (
     <div className="flex flex-col gap-2">
       <span className="p-float-label w-full">
-        <Calendar id={id} value={value} invalid={Boolean(errors[id])} {...register(id)} className="w-full" showIcon {...prop}></Calendar>
+        <Calendar dateFormat="dd/mm/yy" id={id} value={value} invalid={Boolean(errors[id])} {...register(id)} className="w-full" showIcon {...prop}></Calendar>
         <label>{label}</label>
       </span>
       {errors[id] && <small className="w-full ml-2 text-red-600">{errors[id].message}</small>}

@@ -46,7 +46,7 @@ export const DataTable = (props) => {
   const onDeletez = (item) => {
     confirmDialog({
       message: 'Bạn có chắc chắn muốn xóa dữ liệu này!',
-      header: "HRZ",
+      header: 'HRZ',
       icon: 'pi pi-info-circle',
       accept: async () => {
         const response = await deleteApi(handleDelete(item));
@@ -73,7 +73,7 @@ export const DataTable = (props) => {
   const onChangeStatus = (item) => {
     confirmDialog({
       message: 'Bạn có chắc chắn muốn chuyển trạng thái dữ liệu này!',
-      header: "HRZ",
+      header: 'HRZ',
       icon: 'pi pi-info-circle',
       accept: async () => {
         const response = await changeStatusApi(handleChangeStatus(item));
@@ -191,8 +191,7 @@ export const DataTable = (props) => {
               )}
               {moreActions?.length > 0 &&
                 moreActions.map((action, index) => {
-                  const color = action.color || 'cyan';
-                  const variant = action.variant || 'outlined';
+                  const severity = action.severity || '';
                   const Icon = action.icon;
                   const isHide = action.isHide && action.isHide(item);
 
@@ -200,13 +199,12 @@ export const DataTable = (props) => {
                     !isHide && (
                       <Buttonz
                         key={index}
-                        color={color}
+                        severity={severity}
+                        outlined
                         onClick={() => action.onClick(item)}
-                        variant={variant}
-                        className="rounded-full !p-0"
-                      >
-                        <Icon className="w-5" />
-                      </Buttonz>
+                        className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                        icon={<Icon className="w-6" />}
+                      />
                     )
                   );
                 })}

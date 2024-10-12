@@ -21,14 +21,14 @@ export const NavGroup = (props) => {
       >
         <div className="flex items-center gap-2">
           {Icon && <Icon className="h-5 w-5" />}
-          <span>{item.label}</span>
+          <span>{item.name}</span>
         </div>
         <ChevronDownIcon strokeWidth={2.5} className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       <CSSTransition timeout={{ enter: 500, exit: 200 }} in={isOpen} classNames="menu-transition" unmountOnExit nodeRef={nodeRef}>
         <ul ref={nodeRef} className="pl-4">
-          {item.items?.map((child, index) => (
-            <NavItem item={child} key={index} pathname={pathname} />
+          {item.items?.filter(item => item.showSidebar)?.map((item, index) => (
+            <NavItem item={item} key={index} pathname={pathname} />
           ))}
         </ul>
       </CSSTransition>

@@ -16,7 +16,7 @@ export const JobPosition = () => {
   const { isLoading, data } = useGetApi(getListJobPositionApi, params, 'job-position');
 
   return (
-    <FormList title="Danh sách công việc">
+    <FormList title="Danh sách vị trí công việc">
       <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-3/4">
         <Inputzz
           value={filter.keySearch}
@@ -25,7 +25,7 @@ export const JobPosition = () => {
         />
       </DataFilter>
       <DataTable
-        title="Công việc"
+        title="Vị trí công việc"
         loading={isLoading}
         data={data?.documents}
         total={data?.total}
@@ -46,15 +46,14 @@ export const JobPosition = () => {
         <Columnz header="Tên công việc" field="name" />
         <Columnz header="Mã công việc" field="code" />
         <Columnz
-          header="Khoảng lương"
+          header="Khoảng lương (VNĐ)"
           body={(e) => (
             <span>
               {formatNumber(e.minSalary)} - {formatNumber(e.maxSalary)}
             </span>
           )}
         />
-        <Columnz header="Thời gian tạo" body={(e) => UserBody(e.createdAt, e.by)} />
-        <Columnz header="Thời gian cập nhật" body={(e) => e.updatedBy ? UserBody(e.updatedAt, e.updatedBy) : ""} />
+        <Columnz header="Thời gian cập nhật" body={(e) => UserBody(e.updatedAt, e.updatedBy)} />
       </DataTable>
     </FormList>
   );

@@ -30,6 +30,7 @@
 
 .p-datatable-header, .p-datatable-thead th {
     background-color: #f8f9fa;
+    text-align: center;
 }
 .p-datatable-tbody td {
     text-align: center;

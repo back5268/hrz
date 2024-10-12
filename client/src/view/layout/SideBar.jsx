@@ -1,11 +1,11 @@
 import { Logo } from '@components/base';
 import { Buttonz } from '@components/core';
 import { useEffect, useState } from 'react';
-import { tools } from '@lib/tools';
 import { Squares2X2Icon, UsersIcon, CircleStackIcon, Square3Stack3DIcon, InboxStackIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { NavItem } from './NavItem';
 import { NavGroup } from './NavGroup';
 import { useLocation } from 'react-router-dom';
+import { useUserState } from '@store';
 
 const icons = {
   Squares2X2Icon,
@@ -20,17 +20,33 @@ export const SideBar = (props) => {
   const { showSidebar, onSignOut } = props;
   const { pathname } = useLocation();
   const [open, setOpen] = useState([]);
+  const { tools } = useUserState();
 
   useEffect(() => {
-    const value = tools.findIndex((tool) => {
-      if (pathname !== '/' && tool.route !== '/') {
-        if (tool.items) return tool.items.find((item) => pathname?.includes(item.route));
-        else return pathname?.includes(tool.route);
-      }
-    });
-    if (value >= 0) {
-      if (!open?.includes(value + 1)) setOpen((pre) => [...pre, value + 1]);
+    let item = null,
+      indexz = null;
+    if (pathname === '/') item = { label: 'Trang chủ', icon: 'Squares2X2Icon', route: '/' };
+    else {
+      tools.forEach((tool, index) => {
+        if (tool.route !== '/') {
+          if (tool.items?.length > 0) {
+            tool.items.forEach((child) => {
+              if (pathname?.includes(child.route)) {
+                item = child;
+                indexz = index;
+              }
+            });
+          } else {
+            if (pathname?.includes(tool.route)) {
+              item = tool;
+              indexz = index;
+            }
+          }
+        }
+      });
     }
+    if (indexz >= 0 && !open?.includes(indexz + 1)) setOpen((pre) => [...pre, indexz + 1]);
+    if (item) document.title = item?.name;
   }, [pathname]);
 
   return (

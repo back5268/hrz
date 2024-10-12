@@ -1,79 +1,88 @@
 export const tools = [
-  { label: 'Trang chủ', icon: 'Squares2X2Icon', route: '/' },
+  { name: 'Trang chủ', icon: 'Squares2X2Icon', sort: 1, route: '/' },
   {
-    label: 'Quản lý nhân sự',
+    name: 'Quản lý nhân sự',
     icon: 'UsersIcon',
+    sort: 2,
     items: [
       {
-        label: 'Quản lý chức vụ',
+        name: 'Quản lý chức vụ',
         route: '/position'
       },
       {
-        label: 'Quản lý vị trí công việc',
+        name: 'Quản lý vị trí công việc',
         route: '/job-position'
       },
       {
-        label: 'Quản lý phòng ban',
+        name: 'Quản lý phòng ban',
         route: '/department'
       },
       {
-        label: 'Thông tin nhân sự',
+        name: 'Thông tin nhân sự',
         route: '/personnel'
       }
     ]
   },
   {
-    label: 'Quản lý chấm công',
+    name: 'Quản lý chấm công',
     icon: 'Square3Stack3DIcon',
+    sort: 3,
     items: [
       {
-        label: 'Đăng ký chấm công',
+        name: 'Đăng ký chấm công',
         route: '/register'
       },
       {
-        label: 'Quản lý thiết bị chấm công',
+        name: 'Quản lý thiết bị chấm công',
         route: '/device'
       },
       {
-        label: 'Quản lý ca làm việc',
+        name: 'Quản lý ca làm việc',
         route: '/shift'
       },
       {
-        label: 'Lịch làm việc',
+        name: 'Lịch làm việc',
         route: '/schedule'
       },
       {
-        label: 'Lịch sử chấm công',
+        name: 'Lịch sử chấm công',
         route: '/log'
       },
       {
-        label: 'Tổng hợp chấm công',
+        name: 'Tổng hợp chấm công',
         route: '/summary'
       }
     ]
   },
   {
-    label: 'Quản lý tiền lương',
+    name: 'Quản lý tiền lương',
     icon: 'CircleStackIcon',
+    sort: 4,
     items: []
   },
   {
-    label: 'Quản lý phê duyệt',
+    name: 'Quản lý phê duyệt',
+    sort: 5,
     icon: 'InboxStackIcon',
     items: []
   },
   {
-    label: 'Cấu hình',
+    name: 'Cấu hình',
     icon: 'Cog6ToothIcon',
+    sort: 6,
     items: [
       {
-        label: 'Thiết lập mẫu thông báo',
+        name: 'Phân quyền',
+        route: '/permission'
+      },
+      {
+        name: 'Thiết lập mẫu thông báo',
         route: '/template'
       },
       {
-        label: 'Lịch sử gửi email',
+        name: 'Lịch sử gửi email',
         route: '/log'
-      },
+      }
     ]
   }
 ];

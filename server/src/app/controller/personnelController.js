@@ -1,4 +1,4 @@
-import { personnelType } from '@constant';
+import { personnelTypes } from '@constant';
 import { uploadFileToFirebase } from '@lib/firebase';
 import { createPersonnelValid, detailPersonnelValid, listPersonnelValid, updatePersonnelValid } from '@lib/validation';
 import {
@@ -17,6 +17,8 @@ import {
   detailDepartmentMd,
   detailEducationMd,
   detailInsuranceMd,
+  detailJobPositionMd,
+  detailPositionMd,
   listAccountMd,
   listJobPositionMd,
   listPositionMd,
@@ -26,8 +28,9 @@ import {
   updateEducationMd,
   updateInsuranceMd
 } from '@models';
-import { formatNumber, validateData } from '@utils';
+import { formatNumber, generateRandomString, validateData } from '@utils';
 import moment from 'moment';
+import bcrypt from 'bcrypt';
 
 export const getListWorkHistory = async (req, res) => {
   const { error, value } = validateData(detailPersonnelValid, req.query);
@@ -52,7 +55,11 @@ export const getListPersonnel = async (req, res) => {
     if (department) where.department = department;
     if (position) where.position = position;
     if (jobPosition) where.jobPosition = jobPosition;
-    const documents = await listAccountMd(where, page, limit);
+    const documents = await listAccountMd(where, page, limit, [
+      { path: 'jobPosition', select: 'name' },
+      { path: 'position', select: 'name' },
+      { path: 'department', select: 'name' }
+    ]);
     const total = await countAccountMd(where);
     res.json({ status: 1, data: { documents, total } });
   } catch (error) {
@@ -99,10 +106,18 @@ export const updatePersonnel = async (req, res) => {
     if (error) return res.status(400).json({ status: 0, mess: error });
     const { _id, staffCode, email, phone, cmt, type, department, salary, position, jobPosition } = value;
     value._id = undefined;
-    const dataz = await detailAccountMd({ _id }, [{ path: 'department', select: 'name' }]);
+    const dataz = await detailAccountMd({ _id }, [
+      { path: 'department', select: 'name' },
+      { path: 'position', select: 'name' },
+      { path: 'jobPosition', select: 'name' }
+    ]);
     if (!dataz) return res.status(400).json({ status: 0, mess: 'Không tìm thấy nhân viên!' });
-    const checkDepartment = department ? detailDepartmentMd({ _id: department }) : null;
+    const checkDepartment = department ? await detailDepartmentMd({ _id: department }) : null;
     if (department && !checkDepartment) return res.status(400).json({ status: 0, mess: 'Không tìm thấy phòng ban!' });
+    const checkPosition = position ? await detailPositionMd({ _id: position }) : null;
+    if (position && !checkPosition) return res.status(400).json({ status: 0, mess: 'Không tìm thấy chức vụ!' });
+    const checkJobPosition = jobPosition ? await detailJobPositionMd({ _id: jobPosition }) : null;
+    if (jobPosition && !checkJobPosition) return res.status(400).json({ status: 0, mess: 'Không tìm thấy vị trí công việc!' });
     if (staffCode) {
       const checkCode = await detailAccountMd({ staffCode });
       if (checkCode) return res.status(400).json({ status: 0, mess: 'Mã nhân viên đã tồn tại!' });
@@ -119,7 +134,6 @@ export const updatePersonnel = async (req, res) => {
       const checkCmt = await detailAccountMd({ cmt });
       if (checkCmt) return res.status(400).json({ status: 0, mess: 'Số CMT/CCCD đã tồn tại!' });
     }
-
     if (req.files?.['avatar']?.length > 0) {
       for (const file of req.files['avatar']) {
         value.avatar = await uploadFileToFirebase(file);
@@ -155,26 +169,18 @@ export const updatePersonnel = async (req, res) => {
     await updateInsuranceMd({ account: _id }, value);
     await updateEducationMd({ account: _id }, value);
 
-    const positions = await listPositionMd({});
-    const jobPositions = await listJobPositionMd({});
-    if ((type || department || position || jobPosition, salary)) {
+    if (type || department || position || jobPosition || salary) {
       const note = [];
       if (type)
         note.push(
-          `Thay đổi loại nhân sự từ ${personnelType.find((p) => p._id === dataz.type)?.name} thành ${personnelType.find((p) => p._id === type)?.name}`
+          `Thay đổi loại nhân sự từ ${personnelTypes.find((p) => p._id === dataz.type)?.name} thành ${personnelTypes.find((p) => p._id === type)?.name}`
         );
       if (department) {
         if (dataz.department?.name) note.push(`Điều chuyển phòng ban từ ${dataz.department?.name} sang ${checkDepartment?.name}`);
         else note.push(`Điều chuyển vào phòng ban ${checkDepartment?.name}`);
       }
-      if (position)
-        note.push(
-          `Thay đổi chức vụ từ ${positions?.find((p) => String(p._id) === dataz.position)?.name} thành ${positions?.find((p) => String(p._id) === position)?.name}`
-        );
-      if (jobPosition)
-        note.push(
-          `Thay đổi vị trí công việc từ ${jobPositions?.find((p) => String(p._id) === dataz.jobPosition)?.name} thành ${jobPositions?.find((p) => String(p._id) === jobPosition)?.name}`
-        );
+      if (position) note.push(`Thay đổi chức vụ từ ${dataz.position?.name} thành ${checkPosition?.name}`);
+      if (jobPosition) note.push(`Thay đổi vị trí công việc từ ${dataz.jobPosition?.name} thành ${checkJobPosition?.name}`);
       if (salary) {
         if (salary > dataz.salary) note.push(`Tăng lương cơ bản từ ${formatNumber(dataz.salary)} VNĐ lên ${formatNumber(salary)} VNĐ`);
         else note.push(`Giảm lương cơ bản từ ${formatNumber(dataz.salary)} VNĐ xuống ${formatNumber(salary)} VNĐ`);
@@ -249,6 +255,21 @@ export const createPersonnel = async (req, res) => {
     });
 
     res.status(201).json({ status: 1, data });
+  } catch (error) {
+    res.status(500).json({ status: 0, mess: error.toString() });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { error, value } = validateData(detailPersonnelValid, req.body);
+    if (error) return res.status(400).json({ status: 0, mess: error });
+    const { _id } = value;
+    const newPassword = generateRandomString(8);
+    const salt = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(newPassword, salt);
+    await updateAccountMd({ _id }, { password, token: '' });
+    res.status(201).json({ status: 1, data: newPassword });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
   }

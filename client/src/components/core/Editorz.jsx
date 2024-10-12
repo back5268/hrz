@@ -374,8 +374,10 @@ export const Editorz = ({ data = '', setData = () => {}, label }) => {
                       editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
                     }}
                     onAfterDestroy={() => {
-                      Array.from(editorToolbarRef.current?.children).forEach((child) => child.remove());
-                      Array.from(editorMenuBarRef.current?.children).forEach((child) => child.remove());
+                      if (editorToolbarRef?.current) {
+                        Array.from(editorToolbarRef.current?.children).forEach((child) => child.remove());
+                        Array.from(editorMenuBarRef.current?.children).forEach((child) => child.remove());
+                      }
                     }}
                     editor={DecoupledEditor}
                     config={editorConfig}

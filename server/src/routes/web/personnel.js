@@ -1,4 +1,4 @@
-import { createPersonnel, deletePersonnel, detailPersonnel, getListPersonnel, getListWorkHistory, updatePersonnel } from '@controller';
+import { createPersonnel, deletePersonnel, detailPersonnel, getListPersonnel, getListWorkHistory, resetPassword, updatePersonnel } from '@controller';
 import { upload } from '@lib/multer';
 import express from 'express';
 
@@ -8,6 +8,7 @@ personnelRouter.get('/getListPersonnel', getListPersonnel);
 personnelRouter.get('/getListWorkHistory', getListWorkHistory);
 personnelRouter.get('/detailPersonnel', detailPersonnel);
 personnelRouter.delete('/deletePersonnel', deletePersonnel);
+personnelRouter.put('/resetPassword', resetPassword);
 personnelRouter.post(
   '/createPersonnel',
   upload.fields([

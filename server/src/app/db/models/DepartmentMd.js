@@ -6,13 +6,11 @@ const ObjectId = Schema.Types.ObjectId;
 class DepartmentMd extends ModelBase {}
 
 DepartmentMd.init('Department', {
-  by: { type: String },
   updatedBy: { type: String },
   name: { type: String, required: true },
   code: { type: String, required: true },
   manager: { type: ObjectId, ref: 'Account' },
   description: { type: String },
-  key: { type: String },
   status: { type: Number, enum: [0, 1], default: 1, description: '0: Đã khóa, 1: Hoạt động' },
   deletedAt: { type: Date }
 });

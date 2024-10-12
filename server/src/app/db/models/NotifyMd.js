@@ -1,32 +1,15 @@
-import mongoose from 'mongoose';
 import { ModelBase } from '@config';
-const Schema = mongoose.Schema;
-const ObjectId = Schema.Types.ObjectId;
 
 class NotifyMd extends ModelBase {}
 
 NotifyMd.init('Notify', {
-  project: { type: String, required: true },
-  fromBy: {
-    type: Number,
-    enum: [1, 2],
-    required: true,
-    description: '1: Thông báo từ hệ thống, 2: Thông báo từ người dùng'
-  },
-  by: { type: ObjectId, ref: 'Account' },
-  to: { type: String, required: true },
+  updatedBy: { type: String },
+  subject: { type: String, required: true },
   content: { type: String, required: true },
-  type: {
-    type: Number,
-    required: true
-  },
-  status: {
-    type: Number,
-    enum: [0, 1, 2],
-    default: 0,
-    description: '0: Chưa xem, 1: Xem nhưng chưa đọc, 2: Đã đọc'
-  },
-  data: { type: Object },
+  files: [{ type: String }],
+  departments: [{ type: String }],
+  accounts: [{ type: String }],
+  status: { type: Number, enum: [0, 1], default: 1 },
   deletedAt: { type: Date }
 });
 

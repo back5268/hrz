@@ -25,7 +25,7 @@ export const NotifySection = () => {
         icon={<BellIcon className="w-6 stroke-1" />}
       />
       <div
-        className={`absolute right-0 mt-4 w-80 bg-white shadow-custom rounded-sm transition-all z-50
+        className={`absolute right-0 mt-4 w-96 bg-white shadow-custom rounded-sm transition-all z-50
           duration-200 ease-in-out transform ${isShow ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0 pointer-events-none'}`}
       >
         <div className="mx-4">
@@ -36,7 +36,7 @@ export const NotifySection = () => {
             </span>
           </div>
           <hr/>
-          <div className='min-h-48'></div>
+          <div className='min-h-[40rem]'></div>
         </div>
       </div>
     </div>

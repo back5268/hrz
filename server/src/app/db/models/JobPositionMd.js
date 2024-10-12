@@ -3,7 +3,6 @@ import { ModelBase } from '@config';
 class JobPositionMd extends ModelBase {}
 
 JobPositionMd.init('JobPosition', {
-  by: { type: String },
   updatedBy: { type: String },
   name: { type: String, required: true },
   code: { type: String, required: true },

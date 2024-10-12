@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { routes } from '@view/routes';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AccessDenied, ErrorPage } from '@view/default';
@@ -6,19 +6,35 @@ import { Layout } from '@view/layout';
 import { useUserState } from '@store';
 
 const App = () => {
-  const { userInfo, isAuthenticated } = useUserState();
+  const { userInfo, isAuthenticated, tools } = useUserState();
+  const [toolz, setToolz] = useState([]);
+
+  useEffect(() => {
+    if (Array.isArray(tools)) {
+      const newTool = [];
+      tools.forEach((tool) => {
+        if (tool.route) newTool.push(tool.route);
+        if (Array.isArray(tool.items)) {
+          tool.items.forEach((t) => {
+            if (t.route) newTool.push(t.route);
+          });
+        }
+      });
+      setToolz(newTool)
+    }
+  }, [tools]);
 
   return (
     <Routes>
       {routes.map((route, index) => {
         const DefaultLayout = route.layout ? Layout : Fragment;
         const isPublicRoute = route.public;
-        const checkPermission = isPublicRoute ? true : ['admin'].includes(userInfo?.role);
+        const checkPermission = isPublicRoute || ['admin'].includes(userInfo?.role) ? true : toolz.includes(route.path)
 
         if (isPublicRoute && isAuthenticated) {
           return <Route key={index} path={route.path} element={<Navigate to="/" />} />;
         }
-        
+
         if (!isPublicRoute && !isAuthenticated) {
           return <Route key={index} path={route.path} element={<Navigate to="/auth/sign-in" />} />;
         }

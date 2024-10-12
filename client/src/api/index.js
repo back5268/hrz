@@ -2,6 +2,8 @@ export * from './auth';
 export * from './department';
 export * from './info';
 export * from './job-position';
+export * from './notify';
+export * from './permission';
 export * from './personnel';
 export * from './position';
 export * from './template';

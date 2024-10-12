@@ -1,3 +1,10 @@
+export const toolActions = [
+  { name: 'Thêm mới', _id: 'create' },
+  { name: 'Xem', _id: 'read' },
+  { name: 'Cập nhật', _id: 'update' },
+  { name: 'Xóa', _id: 'delete' }
+];
+
 export const status = [
   { name: 'Hoạt động', _id: 1 },
   { name: 'Dừng hoạt động', _id: 0 }
@@ -9,7 +16,7 @@ export const genders = [
   { name: 'Khác', _id: 3 }
 ];
 
-export const personnelType = [
+export const personnelTypes = [
   { name: 'Nhân viên chính thức', _id: 1 },
   { name: 'Thử việc', _id: 2 },
   { name: 'Thực tập sinh', _id: 3 }
@@ -31,6 +38,11 @@ export const relations = [
 export const taxAuths = [
   { name: 'Công ty', _id: 1 },
   { name: 'Cá nhân', _id: 2 }
+];
+
+export const allowanceTypes = [
+  { name: 'Trợ cấp theo tháng', _id: 1 },
+  { name: 'Trợ cấp theo ngày làm việc', _id: 2 }
 ];
 
 export const qualifications = [
@@ -75,3 +87,9 @@ export const templateTypes = [
   { name: 'Phiếu lương', _id: 5 },
   { name: 'Quên mật khẩu', _id: 6 }
 ];
+
+export const logStatus = [
+  { name: "Đang gửi", _id: 0, severity: 'warning' },
+  { name: "Đã gửi", _id: 1, severity: 'success' },
+  { name: "Có lỗi", _id: 2, severity: 'danger' },
+]

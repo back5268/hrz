@@ -5,9 +5,7 @@ class ContactMd extends ModelBase {}
 ContactMd.init('Contact', {
   account: { type: String, required: true },
   maritalStatus: { type: Number, enum: [1, 2], description: '1: Độc thân, 2: Đã kết hôn' },
-  nationality: { type: String, description: 'Quốc tịch' },
   religion: { type: String, description: 'Tôn giáo' },
-  address: { type: String, description: 'Địa chỉ' },
   permanentAddress: { type: String, description: 'Địa chỉ thường trú' },
   cmtFiles: [{ type: String }],
   contacts: [

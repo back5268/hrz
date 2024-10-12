@@ -51,7 +51,7 @@ export const DetailJobPosition = () => {
   return (
     <FormDetail
       type="nomal"
-      title="công việc"
+      title="vị trí công việc"
       isUpdate={isUpdate}
       createApi={createJobPositionApi}
       updateApi={updateJobPositionApi}
@@ -65,7 +65,7 @@ export const DetailJobPosition = () => {
           type="number"
           id="minSalary"
           min={1}
-          label="Mức lương tối thiểu (*)"
+          label="Mức lương tối thiểu (VNĐ) (*)"
           value={watch('minSalary')}
           errors={errors}
           register={register}
@@ -75,7 +75,7 @@ export const DetailJobPosition = () => {
           type="number"
           id="maxSalary"
           min={1}
-          label="Mức lương tối đa (*)"
+          label="Mức lương tối đa (VNĐ) (*)"
           value={watch('maxSalary')}
           errors={errors}
           register={register}
