@@ -12,6 +12,6 @@ export const routes = (app) => {
   app.use('/auth', authRouter);
   app.use('/info', infoRouter);
   app.get('/', async (req, res) => {
-    res.json('Welcome to mini-Bdc!');
+    res.json('Welcome to hrz!');
   });
 };

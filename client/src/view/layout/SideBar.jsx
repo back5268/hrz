@@ -25,7 +25,7 @@ export const SideBar = (props) => {
   useEffect(() => {
     let item = null,
       indexz = null;
-    if (pathname === '/') item = { label: 'Trang chủ', icon: 'Squares2X2Icon', route: '/' };
+    if (pathname === '/') item = { name: 'Trang chủ', icon: 'Squares2X2Icon', route: '/' };
     else {
       tools.forEach((tool, index) => {
         if (tool.route !== '/') {

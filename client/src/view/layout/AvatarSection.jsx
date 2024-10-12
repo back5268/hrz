@@ -10,7 +10,7 @@ const items = [
 ];
 
 export const AvatarSection = () => {
-  const { userInfo, setLoadingz } = useUserState();
+  const { userInfo, setLoadingz, clearUserInfo } = useUserState();
   const { showToast } = useToastState();
   const ref = useRef(null);
   const [isShow, setIsShow] = useState(false);
@@ -31,7 +31,7 @@ export const AvatarSection = () => {
     localStorage.removeItem('token');
     setTimeout(() => {
       showToast({ title: 'Đăng xuất thành công', severity: 'success' });
-    }, 1000);
+    }, 500);
     setLoadingz();
   };
 

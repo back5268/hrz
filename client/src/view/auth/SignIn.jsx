@@ -26,7 +26,7 @@ export const SignIn = () => {
       localStorage.setItem('token', response);
       setTimeout(() => {
         showToast({ title: 'Đăng nhập thành công', severity: 'success' });
-      }, 1000)
+      }, 500)
       setLoadingz()
     }
   };
