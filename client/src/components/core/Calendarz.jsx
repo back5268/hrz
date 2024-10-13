@@ -15,9 +15,9 @@ export const Calendarz = (props) => {
 };
 
 
-export const Calendarzz = ({ ...prop }) => {
+export const Calendarzz = ({ className = "", ...prop }) => {
   return (
-    <div className="p-2 w-full md:w-6/12 lg:w-3/12">
+    <div className={`p-2 w-full md:w-6/12 lg:w-3/12 ${className}`}>
       <Calendarz {...prop} />
     </div>
   );

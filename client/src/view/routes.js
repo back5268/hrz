@@ -1,7 +1,7 @@
 import { DetailNotifyz, DetailPermission, Notify, Permission, Template } from './admin/config';
 import { DashBoard } from './admin/dashboard';
 import { Department, DetailJobPosition, DetailPersonnel, DetailPosition, JobPosition, Personnel, Position } from './admin/human-resource';
-import { Device, Registers, Schedule, Shifts, TimekeepingLog, TimekeepingSummary } from './admin/timekeeping';
+import { DetailShift, Device, Schedule, Shift, Timekeeping } from './admin/timekeeping';
 import { ForgotPassword, SignIn } from './auth';
 
 export const routes = [
@@ -21,11 +21,11 @@ export const routes = [
   { path: '/personnel/detail/:_id', element: DetailPersonnel, layout: true },
 
   { path: '/device', element: Device, layout: true },
-  { path: '/register', element: Registers, layout: true },
-  { path: '/shift', element: Shifts, layout: true },
+  { path: '/shift', element: Shift, layout: true },
+  { path: '/shift/create', element: DetailShift, layout: true },
+  { path: '/shift/detail/:_id', element: DetailShift, layout: true },
   { path: '/schedule', element: Schedule, layout: true },
-  { path: '/timekeeping-log', element: TimekeepingLog, layout: true },
-  { path: '/timekeeping-summary', element: TimekeepingSummary, layout: true },
+  { path: '/timekeeping', element: Timekeeping, layout: true },
 
   { path: '/permission', element: Permission, layout: true },
   { path: '/permission/create', element: DetailPermission, layout: true },

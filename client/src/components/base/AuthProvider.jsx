@@ -1,10 +1,10 @@
-import { getInfoApi, getListAccountInfoApi } from '@api';
+import { getInfoApi, getListAccountInfoApi, getListDepartmentInfoApi } from '@api';
 import { ProgressSpinnerz } from '@components/core';
 import { useDataState, useUserState } from '@store';
 import { Fragment, useEffect, useState } from 'react';
 
 export const AuthProvider = ({ children }) => {
-  const { setAccounts } = useDataState();
+  const { setAccounts, setDepartments } = useDataState();
   const { setUserInfo, loadingz } = useUserState();
   const [loading, setLoading] = useState(true);
 
@@ -15,6 +15,8 @@ export const AuthProvider = ({ children }) => {
         setUserInfo(response)
         const accounts = await getListAccountInfoApi();
         if (accounts) setAccounts(accounts);
+        const departments = await getListDepartmentInfoApi();
+        if (departments) setDepartments(departments);
       }
       else localStorage.removeItem('token');
     } catch (error) {

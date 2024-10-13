@@ -56,3 +56,15 @@ export const PermissionValidation = yup.object({
 export const NotifyValidation = yup.object({
   subject: yup.string().required('Tiêu đề không được bỏ trống!')
 });
+
+export const DeviceValidation = yup.object({
+  name: yup.string().required('Tên thiết bị không được bỏ trống!'),
+  code: yup.string().required('Mã thiết bị không được bỏ trống!'),
+  type: yup.string().required('Loại thiết bị không được bỏ trống!'),
+});
+
+export const ShiftValidation = yup.object({
+  name: yup.string().required('Tên ca làm việc không được bỏ trống!'),
+  code: yup.string().required('Mã ca làm việc không được bỏ trống!'),
+  dateStart: yup.string().required('Ngày áp dụng không được bỏ trống!'),
+});

@@ -4,7 +4,6 @@ import {
   getInfoApi,
   getListAccountInfoApi,
   getListBankInfoApi,
-  getListDepartmentInfoApi,
   getListJobPositionInfoApi,
   getListPositionInfoApi,
   updatePersonnelApi
@@ -60,14 +59,13 @@ export const Infos = () => {
   const navigate = useNavigate();
   const { showToast } = useToastState();
   const { userInfo, setUserInfo } = useUserState();
-  const { setAccounts } = useDataState();
+  const { setAccounts, departments } = useDataState();
   const { _id } = useParams();
   const isUpdate = Boolean(_id);
   const { data: item } = useGetApi(detailPersonnelApi, { _id }, 'personnelz', isUpdate);
   const { data: banks } = useGetApi(getListBankInfoApi, {}, 'banks');
   const { data: positions } = useGetApi(getListPositionInfoApi, {}, 'positions');
   const { data: jobPositions } = useGetApi(getListJobPositionInfoApi, {}, 'jobPositions');
-  const { data: departments } = useGetApi(getListDepartmentInfoApi, {}, 'departments');
   const [avatar, setAvatar] = useState(null);
   const [cmtFiles, setCmtFiles] = useState([]);
   const [taxFiles, setTaxFiles] = useState([]);
@@ -127,9 +125,7 @@ export const Infos = () => {
   };
 
   const onSubmit = async (e) => {
-    let params = { ...e };
-    params.contacts = contacts;
-    params.dependents = dependents;
+    let params = { ...e, contacts, dependents };
     if (isUpdate) params = { ...checkEqualProp(params, item), _id };
     else params = checkEqualProp(params, {});
     if (avatar) params.formData = { avatar };

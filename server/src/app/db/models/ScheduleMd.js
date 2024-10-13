@@ -8,12 +8,12 @@ class ScheduleMd extends ModelBase {}
 ScheduleMd.init('Schedule', {
   department: { type: ObjectId, ref: 'Department', required: true },
   account: { type: ObjectId, ref: 'Account', required: true },
-  shift: { type: ObjectId, ref: 'Shift', required: true },
+  shift: { type: ObjectId, ref: 'Shift' },
   date: { type: Date, required: true },
   timeStart: { type: String, required: true },
   timeEnd: { type: String, required: true },
-  breakTimeStart: { type: String },
-  breakTimeEnd: { type: String },
+  timeBreakStart: { type: String },
+  timeBreakEnd: { type: String },
   totalTime: { type: Number, required: true },
   totalWork: { type: Number, required: true },
   checkInTime: { type: String },
@@ -23,8 +23,8 @@ ScheduleMd.init('Schedule', {
   totalTimeReality: { type: Number },
   totalWorkReality: { type: Number },
   summary: { type: Number },
-  type: { type: Number, enum: [1, 2], description: '1: Công việc bình thường, 2: OT' },
-  Requests: [{ type: ObjectId, ref: 'Request' }],
+  type: { type: Number, enum: [1, 2], default: 1, description: '1: Công việc bình thường, 2: OT' },
+  requests: { type: Array },
   deletedAt: { type: Date }
 });
 

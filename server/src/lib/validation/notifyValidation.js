@@ -15,7 +15,6 @@ export const updateNotifyValid = {
   content: { type: 'string', allowNull: true },
   files: { type: 'json', allowNull: true },
   departments: { type: 'json', allowNull: true },
-  accounts: { type: 'json', allowNull: true },
   status: { type: 'number', allowNull: true }
 };
 
@@ -23,5 +22,4 @@ export const createNotifyValid = {
   subject: 'string',
   content: 'string',
   departments: { type: 'json', allowNull: true },
-  accounts: { type: 'json', allowNull: true }
 };

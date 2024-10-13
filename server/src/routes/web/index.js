@@ -9,6 +9,9 @@ import { templateRouter } from './template';
 import { permissionRouter } from './permission';
 import { logRouter } from './log';
 import { notifyRouter } from './notify';
+import { shiftRouter } from './shift';
+import { deviceRouter } from './device';
+import { scheduleRouter } from './schedule';
 
 export const webRouter = express.Router();
 
@@ -22,3 +25,6 @@ webRouter.use('/personnel', personnelRouter);
 webRouter.use('/position', positionRouter);
 webRouter.use('/contract', contractRouter);
 webRouter.use('/template', templateRouter);
+webRouter.use('/schedule', scheduleRouter);
+webRouter.use('/shift', shiftRouter);
+webRouter.use('/device', deviceRouter);

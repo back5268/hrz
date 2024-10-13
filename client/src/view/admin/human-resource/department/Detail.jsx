@@ -4,8 +4,9 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormDetail } from '@components/base';
 import { checkEqualProp } from '@lib/helper';
-import { createDepartmentApi, updateDepartmentApi } from '@api';
+import { createDepartmentApi, getListDepartmentInfoApi, updateDepartmentApi } from '@api';
 import { InputFormz, TextAreaz } from '@components/core';
+import { useDataState } from '@store';
 
 const defaultValues = {
   name: '',
@@ -17,6 +18,7 @@ export const DetailDepartment = (props) => {
   const { open, setOpen, setParams, data } = props;
   const isUpdate = typeof open === 'string';
   const item = isUpdate ? data.find((d) => d._id === open) : {};
+  const { setDepartments } = useDataState();
 
   const {
     register,
@@ -44,6 +46,11 @@ export const DetailDepartment = (props) => {
     else return newData;
   };
 
+  const onSuccess = async () => {
+    const response = await getListDepartmentInfoApi();
+    if (response) setDepartments(response);
+  };
+
   return (
     <FormDetail
       title="phòng ban"
@@ -58,6 +65,7 @@ export const DetailDepartment = (props) => {
       createApi={createDepartmentApi}
       updateApi={updateDepartmentApi}
       setParams={setParams}
+      onSuccess={onSuccess}
     >
       <div className="flex flex-wrap w-full">
         <InputFormz id="name" label="Tên phòng ban (*)" value={watch('name')} errors={errors} register={register} />

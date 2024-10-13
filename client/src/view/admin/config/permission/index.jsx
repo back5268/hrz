@@ -1,8 +1,9 @@
-import { deletePermissionApi, getListDepartmentInfoApi, getListPermissionApi, getListPositionInfoApi, updatePermissionApi } from '@api';
+import { deletePermissionApi, getListPermissionApi, getListPositionInfoApi, updatePermissionApi } from '@api';
 import { DataTable, FormList, DataFilter, UserBody } from '@components/base';
 import { Columnz, Inputzz, Tagz } from '@components/core';
 import { useGetParams } from '@hooks';
 import { useGetApi } from '@lib/react-query';
+import { useDataState } from '@store';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 export * from './Detail'
@@ -14,7 +15,7 @@ export const Permission = () => {
   const [filter, setFilter] = useState({});
   const { isLoading, data } = useGetApi(getListPermissionApi, params, 'permission');
   const { data: positions } = useGetApi(getListPositionInfoApi, {}, 'positions');
-  const { data: departments } = useGetApi(getListDepartmentInfoApi, {}, 'departments');
+  const { departments } = useDataState();
 
   const Body = (data = [], value = []) => {
     let arr = []

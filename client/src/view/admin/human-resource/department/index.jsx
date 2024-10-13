@@ -1,10 +1,11 @@
-import { deleteDepartmentApi, getListDepartmentApi, updateDepartmentApi } from '@api';
+import { deleteDepartmentApi, getListDepartmentApi, getListDepartmentInfoApi, updateDepartmentApi } from '@api';
 import { DataTable, FormList, DataFilter, UserBody } from '@components/base';
 import { Columnz, Inputzz } from '@components/core';
 import { useGetParams } from '@hooks';
 import { useGetApi } from '@lib/react-query';
 import React, { useState } from 'react';
 import { DetailDepartment } from './Detail';
+import { useDataState } from '@store';
 
 export const Department = () => {
   const initParams = useGetParams();
@@ -12,6 +13,12 @@ export const Department = () => {
   const [filter, setFilter] = useState({});
   const [open, setOpen] = useState(false);
   const { isLoading, data } = useGetApi(getListDepartmentApi, params, 'department');
+  const { setDepartments } = useDataState();
+
+  const onSuccess = async () => {
+    const response = await getListDepartmentInfoApi();
+    if (response) setDepartments(response);
+  };
 
   return (
     <FormList title="Danh sách phòng ban">
@@ -34,6 +41,7 @@ export const Department = () => {
         }}
         statusInfo={{ changeStatusApi: updateDepartmentApi }}
         headerInfo={{ onCreate: () => setOpen(true) }}
+        onSuccess={onSuccess}
       >
         <Columnz header="Tên phòng ban" field="name" />
         <Columnz header="Mã phòng ban" field="code" />

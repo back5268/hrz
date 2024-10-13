@@ -96,7 +96,7 @@ export const renderContract = async (req, res) => {
     if (contract.template) return res.json({ status: 1, data: contract.template });
     else {
       const template = await detailTemplateMd({ type: contract.type });
-      if (!template || !template.content) return res.status(400).json({ status: 0, mess: 'Không có mẫu gửi thông báo!' });
+      if (!template || !template.content) return res.status(400).json({ status: 0, mess: 'Không có mẫu hợp đồng!' });
       const account = await detailAccountMd({ _id: accountz }, [{ path: "jobPosition", select: "name" }]);
       if (!account) return res.status(400).json({ status: 0, mess: 'Không tìm thấy nhân viên!' });
       const gender = account.gender;

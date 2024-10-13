@@ -1,4 +1,4 @@
-import { createNotifyApi, detailNotifyApi, getListDepartmentInfoApi, updateNotifyApi } from '@api';
+import { createNotifyApi, detailNotifyApi, updateNotifyApi } from '@api';
 import { FormDetail, UploadFiles } from '@components/base';
 import { Editorz, InputFormz, MultiSelectFormz } from '@components/core';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -13,15 +13,13 @@ import { useParams } from 'react-router-dom';
 const defaultValues = {
   subject: '',
   departments: [],
-  accounts: []
 };
 
 export const DetailNotifyz = () => {
   const { _id } = useParams();
   const isUpdate = Boolean(_id);
   const { data: item } = useGetApi(detailNotifyApi, { _id }, 'notifyz', isUpdate);
-  const { accounts } = useDataState();
-  const { data: departments } = useGetApi(getListDepartmentInfoApi, {}, 'departments');
+  const { departments } = useDataState();
   const [files, setFiles] = useState([]);
 
   const {
@@ -72,18 +70,6 @@ export const DetailNotifyz = () => {
           onChange={(e) => setValue('departments', e.target.value)}
           filter
         />
-        {watch('departments')?.length > 0 && (
-          <MultiSelectFormz
-            id="accounts"
-            label="Nhân sự hiển thị"
-            options={accounts?.filter((a) => watch('departments')?.includes(a.department))}
-            value={watch('accounts')}
-            errors={errors}
-            onChange={(e) => setValue('accounts', e.target.value)}
-            optionLabel="fullName"
-            filter
-          />
-        )}
         <UploadFiles max={5} label="File đính kèm" files={files} setFiles={setFiles} />
         <Editorz data={watch('content')} setData={(e) => setValue('content', e)} label="Nội dung thông báo" />
       </div>

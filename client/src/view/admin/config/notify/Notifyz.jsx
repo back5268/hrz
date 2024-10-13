@@ -1,4 +1,4 @@
-import { deleteNotifyApi, getListDepartmentInfoApi, getListNotifyApi, updateNotifyApi } from '@api';
+import { deleteNotifyApi, getListNotifyApi, updateNotifyApi } from '@api';
 import { DataTable, DataFilter, UserBody } from '@components/base';
 import { Columnz, Inputzz, Tagz } from '@components/core';
 import { useGetParams } from '@hooks';
@@ -13,8 +13,7 @@ export const Notifyz = () => {
   const [params, setParams] = useState(initParams);
   const [filter, setFilter] = useState({});
   const { isLoading, data } = useGetApi(getListNotifyApi, params, 'notify');
-  const { accounts } = useDataState();
-  const { data: departments } = useGetApi(getListDepartmentInfoApi, {}, 'departments');
+  const { departments } = useDataState();
 
   const Body = (data = [], value = []) => {
     let arr = [];
@@ -61,7 +60,6 @@ export const Notifyz = () => {
       >
         <Columnz header="Tiêu đề" field="subject" />
         <Columnz header="Phòng ban hiển thị" body={(e) => Body(departments, e.departments)} />
-        <Columnz header="Nhân sự hiển thị" body={(e) => Body(accounts, e.accounts)} />
         <Columnz header="Thời gian cập nhật" body={(e) => UserBody(e.updatedAt, e.updatedBy)} />
       </DataTable>
     </>

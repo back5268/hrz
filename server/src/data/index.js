@@ -212,37 +212,33 @@ export const tools = [
       }
     ]
   },
-  // {
-  //   name: 'Quản lý chấm công',
-  //   icon: 'Square3Stack3DIcon',
-  //   sort: 3,
-  //   items: [
-  //     {
-  //       name: 'Đăng ký chấm công',
-  //       route: '/register'
-  //     },
-  //     {
-  //       name: 'Quản lý thiết bị chấm công',
-  //       route: '/device'
-  //     },
-  //     {
-  //       name: 'Quản lý ca làm việc',
-  //       route: '/shift'
-  //     },
-  //     {
-  //       name: 'Lịch làm việc',
-  //       route: '/schedule'
-  //     },
-  //     {
-  //       name: 'Lịch sử chấm công',
-  //       route: '/log'
-  //     },
-  //     {
-  //       name: 'Tổng hợp chấm công',
-  //       route: '/summary'
-  //     }
-  //   ]
-  // },
+  {
+    name: 'Quản lý chấm công',
+    icon: 'Square3Stack3DIcon',
+    sort: 3,
+    items: [
+      {
+        name: 'Quản lý máy chấm công',
+        route: '/device',
+        actions: ['delete', 'create', 'update', 'read']
+      },
+      {
+        name: 'Quản lý ca làm việc',
+        route: '/shift',
+        actions: ['delete', 'create', 'update', 'read']
+      },
+      {
+        name: 'Lịch làm việc',
+        route: '/schedule',
+        actions: ['delete', 'create', 'update', 'read']
+      },
+      {
+        name: 'Tổng hợp chấm công',
+        route: '/timekeeping',
+        actions: ['read']
+      }
+    ]
+  },
   // {
   //   name: 'Quản lý tiền lương',
   //   icon: 'CircleStackIcon',

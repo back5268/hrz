@@ -1,7 +1,6 @@
 import {
   deletePersonnelApi,
   getListAccountInfoApi,
-  getListDepartmentInfoApi,
   getListJobPositionInfoApi,
   getListPersonnelApi,
   getListPositionInfoApi,
@@ -25,12 +24,11 @@ export const Personnel = () => {
   const initParams = useGetParams();
   const { showToast } = useToastState();
   const [params, setParams] = useState(initParams);
-  const { setAccounts } = useDataState();
+  const { setAccounts, departments } = useDataState();
   const [filter, setFilter] = useState({});
   const { isLoading, data } = useGetApi(getListPersonnelApi, params, 'personnel');
   const { data: positions } = useGetApi(getListPositionInfoApi, {}, 'positions');
   const { data: jobPositions } = useGetApi(getListJobPositionInfoApi, {}, 'jobPositions');
-  const { data: departments } = useGetApi(getListDepartmentInfoApi, {}, 'departments');
   const [password, setPassword] = useState(null);
 
   const onSuccess = async () => {

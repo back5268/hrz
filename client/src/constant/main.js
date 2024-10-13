@@ -89,7 +89,30 @@ export const templateTypes = [
 ];
 
 export const logStatus = [
-  { name: "Đang gửi", _id: 0, severity: 'warning' },
-  { name: "Đã gửi", _id: 1, severity: 'success' },
-  { name: "Có lỗi", _id: 2, severity: 'danger' },
+  { name: 'Đang gửi', _id: 0, severity: 'warning' },
+  { name: 'Đã gửi', _id: 1, severity: 'success' },
+  { name: 'Có lỗi', _id: 2, severity: 'danger' }
+];
+
+export const deviceTypes = [
+  { name: 'Chấm công khuôn mặt', _id: 1 },
+  { name: 'Chấm công vân tay', _id: 2 },
+  { name: 'Chấm công thẻ từ', _id: 3 }
+];
+
+export const workDates = [
+  { name: 'Thứ 2', _id: 'mo' },
+  { name: 'Thứ 3', _id: 'tu' },
+  { name: 'Thứ 4', _id: 'we' },
+  { name: 'Thứ 5', _id: 'th' },
+  { name: 'Thứ 6', _id: 'fr' },
+  { name: 'Thứ 7', _id: 'sa' },
+  { name: 'Chủ nhật', _id: 'su' },
 ]
+
+export const sheduleTypes = [
+  { name: 'Ca bình thường', _id: 1 },
+  { name: 'Ca OT', _id: 2 },
+]
+
+export const weeks = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7']

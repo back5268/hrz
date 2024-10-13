@@ -1,7 +1,6 @@
 import {
   createPermissionApi,
   detailPermissionApi,
-  getListDepartmentInfoApi,
   getListPositionInfoApi,
   getListToolApi,
   updatePermissionApi
@@ -16,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { Tool } from './Tool';
+import { useDataState } from '@store';
 
 const defaultValues = {
   name: '',
@@ -29,7 +29,7 @@ export const DetailPermission = () => {
   const { data: item } = useGetApi(detailPermissionApi, { _id }, 'permissionz', isUpdate);
   const { data: toolData } = useGetApi(getListToolApi, { status: 1 }, 'tools');
   const { data: positions } = useGetApi(getListPositionInfoApi, {}, 'positions');
-  const { data: departments } = useGetApi(getListDepartmentInfoApi, {}, 'departments');
+  const { departments } = useDataState();
   const [tools, setTools] = useState([]);
 
   const {

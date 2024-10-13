@@ -33,14 +33,22 @@ import moment from 'moment';
 import bcrypt from 'bcrypt';
 
 export const getListWorkHistory = async (req, res) => {
-  const { error, value } = validateData(detailPersonnelValid, req.query);
-  const { _id } = value;
-  if (error) return res.status(400).json({ status: 0, mess: error });
-  res.json({ status: 1, data: await listWorkHistoryMd({ account: _id }) });
+  try {
+    const { error, value } = validateData(detailPersonnelValid, req.query);
+    const { _id } = value;
+    if (error) return res.status(400).json({ status: 0, mess: error });
+    res.json({ status: 1, data: await listWorkHistoryMd({ account: _id }) });
+  } catch (error) {
+    res.status(500).json({ status: 0, mess: error.toString() });
+  }
 };
 
 export const getListAccountInfo = async (req, res) => {
-  res.json({ status: 1, data: await listAccountMd({}) });
+  try {
+    res.json({ status: 1, data: await listAccountMd({}) });
+  } catch (error) {
+    res.status(500).json({ status: 0, mess: error.toString() });
+  }
 };
 
 export const getListPersonnel = async (req, res) => {

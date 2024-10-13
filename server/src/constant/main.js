@@ -14,3 +14,5 @@ export const personnelTypes = [
   { name: 'Thử việc', _id: 2 },
   { name: 'Thực tập sinh', _id: 3 }
 ];
+
+export const dateData = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
