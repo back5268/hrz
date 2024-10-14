@@ -138,7 +138,7 @@ export const exportTimekeeping = async (req, res) => {
           convertNumberToTime(datum.late),
           convertNumberToTime(datum.soon),
           convertNumberToTime(datum.totalTimeReality),
-          datum.summary || '0',
+          datum.summary || 0,
           ''
         ]);
         index += 1;
