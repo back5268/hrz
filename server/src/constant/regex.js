@@ -11,5 +11,6 @@ export const REGEX = {
   C_EMAIL: /^([a-zA-Z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
   YOUTUBE_URL:
     /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
-  PASSWORD: /^(?=.*\d)(?=.*[a-zA-Z])/
+  PASSWORD: /^(?=.*\d)(?=.*[a-zA-Z])/,
+  TIME: /^([01]\d|2[0-3]):([0-5]\d)$/
 };

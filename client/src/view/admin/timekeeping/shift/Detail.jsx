@@ -22,7 +22,7 @@ const convertTimeToDate = (time) => {
   return new Date(`2024-01-01 ${time}:00`)
 };
 
-const convertDateToTime = (date) => {
+const databaseDateToTime = (date) => {
   return moment(date).format('HH:mm');
 };
 
@@ -73,10 +73,10 @@ export const DetailShift = () => {
       ...data,
       dates: dates.map((date) => ({
         ...date,
-        timeStart: convertDateToTime(date.timeStart),
-        timeEnd: convertDateToTime(date.timeEnd),
-        timeBreakStart: convertDateToTime(date.timeBreakStart),
-        timeBreakEnd: convertDateToTime(date.timeBreakEnd)
+        timeStart: databaseDateToTime(date.timeStart),
+        timeEnd: databaseDateToTime(date.timeEnd),
+        timeBreakStart: databaseDateToTime(date.timeBreakStart),
+        timeBreakEnd: databaseDateToTime(date.timeBreakEnd)
       }))
     };
     if (isUpdate) return { ...checkEqualProp(newData, item), _id };

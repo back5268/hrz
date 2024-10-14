@@ -13,7 +13,7 @@ export const DataFilter = (props) => {
     for (let [key, value] of queryParams.entries()) {
       query[key] = Number(value) || value;
     }
-    setFilter((pre) => ({ ...pre, ...query }));
+    setFilter((pre) => ({ ...pre, ...query, page: undefined, limit: undefined }));
   }, [search]);
 
   const onClear = () => {

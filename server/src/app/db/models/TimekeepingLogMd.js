@@ -8,10 +8,11 @@ class TimekeepingLogMd extends ModelBase {}
 TimekeepingLogMd.init('TimekeepingLog', {
   department: { type: ObjectId, ref: 'Department', required: true },
   account: { type: ObjectId, ref: 'Account', required: true },
-  shift: { type: ObjectId, ref: 'Shift', required: true },
+  shift: { type: ObjectId, ref: 'Account' },
   date: { type: Date, required: true },
   time: { type: String, required: true },
-  device: { type: ObjectId },
+  device: { type: String },
+  deviceName: { type: String },
   deletedAt: { type: Date }
 });
 

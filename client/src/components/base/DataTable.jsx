@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TrashIcon, DocumentMagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { TrashIcon, DocumentMagnifyingGlassIcon, ArrowDownTrayIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline';
 import { useToastState } from '@store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { removeSpecialCharacter } from '@lib/helper';
@@ -66,7 +66,7 @@ export const DataTable = (props) => {
       downloadLink.href = URL.createObjectURL(response);
       downloadLink.download = (title && `ket-qua-export-${removeSpecialCharacter(title)}.xlsx`) || 'data.xlsx';
       downloadLink.click();
-      showToast({ title: `Export ${title} thành công!`, severity: 'success' });
+      showToast({ title: `Export ${title?.toLowerCase()} thành công!`, severity: 'success' });
     }
   };
 
@@ -109,16 +109,27 @@ export const DataTable = (props) => {
     });
   };
 
-  const Header = () => (
-    <div className="flex gap-2 justify-start mb-1">
+  const header = (
+    <div className="flex gap-4 justify-start mb-1">
       {baseActions.includes('create') && <Buttonz onClick={onCreate}>Thêm mới</Buttonz>}
       {baseActions.includes('import') && (
-        <Buttonz color="green" onClick={onImport}>
+        <Buttonz
+          severity="success"
+          onClick={onImport}
+          className="flex gap-4 items-center"
+          icon={<ArrowUpTrayIcon className="h-5 w-5 stroke-2" />}
+        >
           Import
         </Buttonz>
       )}
       {baseActions.includes('export') && (
-        <Buttonz color="green" onClick={onExport} loading={isLoading}>
+        <Buttonz
+          severity="success"
+          onClick={onExport}
+          loading={isLoading}
+          className="flex gap-4 items-center"
+          icon={<ArrowDownTrayIcon className="h-5 w-5 stroke-2" />}
+        >
           Export
         </Buttonz>
       )}
@@ -137,81 +148,83 @@ export const DataTable = (props) => {
   );
 
   return (
-    <Tablez
-      header={isHeader && Header}
-      params={params}
-      rows={params.limit}
-      value={data}
-      totalRecords={total}
-      rowsPerPageOptions={rows}
-      onPage={onPage}
-      dataKey={key}
-      loading={loading}
-      emptyMessage={'Không tìm thấy ' + title?.toLowerCase() || ''}
-      selection={select}
-      onSelectionChange={(e) => {
-        if (setSelect) setSelect(e.value);
-      }}
-    >
-      {select && setSelect && <Columnz selectionMode="multiple" />}
-      <Columnz header="#" body={(data, options) => options.rowIndex + 1} />
-      {props.children}
-      {isStatus && (
-        <Columnz
-          headerStyle={{ padding: 'auto', textAlign: 'center' }}
-          header="Trạng thái"
-          body={(item) => (
-            <div className="flex justify-center items-center">
-              <Switchz checked={Boolean(item.status)} onChange={() => onChangeStatus(item)} />
-            </div>
-          )}
-        />
-      )}
-      {isActions && (
-        <Columnz
-          header="Thao tác"
-          body={(item) => (
-            <div className="flex justify-center items-center gap-2">
-              {baseActions.includes('detail') && (
-                <Buttonz
-                  onClick={() => onViewDetail(item)}
-                  outlined
-                  className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
-                  icon={<DocumentMagnifyingGlassIcon className="w-6" />}
-                />
-              )}
-              {baseActions.includes('delete') && (
-                <Buttonz
-                  severity="danger"
-                  outlined
-                  onClick={() => (onDelete ? onDelete(item) : onDeletez(item))}
-                  className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
-                  icon={<TrashIcon className="w-5" />}
-                />
-              )}
-              {moreActions?.length > 0 &&
-                moreActions.map((action, index) => {
-                  const severity = action.severity || '';
-                  const Icon = action.icon;
-                  const isHide = action.isHide && action.isHide(item);
+    <div className="w-full px-2">
+      <Tablez
+        header={isHeader && header}
+        params={params}
+        rows={params.limit}
+        value={data}
+        totalRecords={total}
+        rowsPerPageOptions={rows}
+        onPage={onPage}
+        dataKey={key}
+        loading={loading}
+        emptyMessage={'Không tìm thấy ' + title?.toLowerCase() || ''}
+        selection={select}
+        onSelectionChange={(e) => {
+          if (setSelect) setSelect(e.value);
+        }}
+      >
+        {select && setSelect && <Columnz selectionMode="multiple" />}
+        <Columnz header="#" body={(data, options) => options.rowIndex + 1} />
+        {props.children}
+        {isStatus && (
+          <Columnz
+            headerStyle={{ padding: 'auto', textAlign: 'center' }}
+            header="Trạng thái"
+            body={(item) => (
+              <div className="flex justify-center items-center">
+                <Switchz checked={Boolean(item.status)} onChange={() => onChangeStatus(item)} />
+              </div>
+            )}
+          />
+        )}
+        {isActions && (
+          <Columnz
+            header="Thao tác"
+            body={(item) => (
+              <div className="flex justify-center items-center gap-2">
+                {baseActions.includes('detail') && (
+                  <Buttonz
+                    onClick={() => onViewDetail(item)}
+                    outlined
+                    className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                    icon={<DocumentMagnifyingGlassIcon className="w-6" />}
+                  />
+                )}
+                {baseActions.includes('delete') && (
+                  <Buttonz
+                    severity="danger"
+                    outlined
+                    onClick={() => (onDelete ? onDelete(item) : onDeletez(item))}
+                    className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                    icon={<TrashIcon className="w-5" />}
+                  />
+                )}
+                {moreActions?.length > 0 &&
+                  moreActions.map((action, index) => {
+                    const severity = action.severity || '';
+                    const Icon = action.icon;
+                    const isHide = action.isHide && action.isHide(item);
 
-                  return (
-                    !isHide && (
-                      <Buttonz
-                        key={index}
-                        severity={severity}
-                        outlined
-                        onClick={() => action.onClick(item)}
-                        className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
-                        icon={<Icon className="w-6" />}
-                      />
-                    )
-                  );
-                })}
-            </div>
-          )}
-        />
-      )}
-    </Tablez>
+                    return (
+                      !isHide && (
+                        <Buttonz
+                          key={index}
+                          severity={severity}
+                          outlined
+                          onClick={() => action.onClick(item)}
+                          className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                          icon={<Icon className="w-6" />}
+                        />
+                      )
+                    );
+                  })}
+              </div>
+            )}
+          />
+        )}
+      </Tablez>
+    </div>
   );
 };

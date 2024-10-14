@@ -1,10 +1,14 @@
 import { getListScheduleApi, getListShiftInfoApi } from '@api';
 import { DataFilter, FormList } from '@components/base';
 import { Dropdownzz } from '@components/core';
-import { sheduleTypes, weeks } from '@constant';
+import { sheduleTypes, days } from '@constant';
 import { useGetApi } from '@lib/react-query';
 import { useDataState } from '@store';
 import moment from 'moment';
+import { Column } from 'primereact/column';
+import { ColumnGroup } from 'primereact/columngroup';
+import { DataTable } from 'primereact/datatable';
+import { Row } from 'primereact/row';
 import { useEffect, useState } from 'react';
 
 const getWeekData = (year = 2024) => {
@@ -74,119 +78,61 @@ const handleParams = (params) => {
   return { ...params, week: undefined, year: undefined };
 };
 
-const Header = ({ currentWeek }) => {
-  return (
-    <div className="w-full grid grid-cols-10">
-      <div className="col-span-3">
-        <div className="grid grid-cols-2">
-          <div className="border border-border h-20 flex justify-center items-center uppercase font-semibold text-primary">Nhân viên</div>
-          <div className="border border-border h-20 flex justify-center items-center uppercase font-semibold text-primary">
-            Ca làm việc
-          </div>
-        </div>
-      </div>
-      <div className="col-span-7 text-white bg-primary">
-        <div className="grid grid-cols-7">
-          {weeks?.map((w, index) => {
-            return (
-              <div key={index} className="border border-white h-10 flex justify-center items-center">
-                {w}
-              </div>
-            );
-          })}
-        </div>
-        <div className="grid grid-cols-7">
-          {getDatesByWeek(currentWeek)?.map((w, index) => {
-            return (
-              <div key={index} className="border border-white h-10 flex justify-center items-center">
-                {w}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Body = ({ schedule = [], accounts = [], shifts = [] }) => {
-  return (
-    <>
-      {Array.isArray(schedule) &&
-        schedule.map((item, index) => {
-          return (
-            <div key={index} className="w-full grid grid-cols-10 items-center">
-              <div className="col-span-3 h-full">
-                <div className="grid grid-cols-2 h-full">
-                  <div
-                    className={`border border-border flex justify-center items-center uppercase font-semibold text-primary row-span-${item.data?.length}`}
-                  >
-                    {accounts?.find((account) => account._id === item.account)?.fullName}
-                  </div>
-                  {item.data?.map((datum, index) => (
-                    <div
-                      key={index}
-                      className="border border-border flex gap-2 justify-center items-center uppercase font-semibold text-primary"
-                    >
-                      {shifts?.find((shift) => shift._id === datum.shift)?.code}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="col-span-7">
-                {item.data?.map((datum, index) => (
-                  <div key={index} className="grid grid-cols-7">
-                    {weeks?.map((_w, index) => {
-                      const date = datum.data?.find(d => new Date(d.date).getDay() === index)
-                      const title = date ? `${date.timeStart} - ${date.timeEnd}` : ""
-                      return (
-                        <div key={index} className="border border-border h-10 flex justify-center items-center">
-                          {title}
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-    </>
-  );
-};
-
-const INITDATA = { year: new Date().getFullYear(), week: getCurrentWeek(new Date().getFullYear()) };
+const INITPARAMS = { year: new Date().getFullYear(), week: getCurrentWeek(new Date().getFullYear()) };
 export const Schedule = () => {
   const { accounts, departments } = useDataState();
-  const [params, setParams] = useState(INITDATA);
-  const [weeks, setWeeks] = useState({});
+  const [params, setParams] = useState(INITPARAMS);
+  const [weekData, setWeekData] = useState({});
   const [filter, setFilter] = useState({ year: new Date().getFullYear() });
   const { isLoading, data } = useGetApi(getListScheduleApi, handleParams(params), 'schedule');
-  const { data: shifts } = useGetApi(getListShiftInfoApi, handleParams(params), 'shifts');
+  const { data: shifts } = useGetApi(getListShiftInfoApi, {}, 'shifts');
   const [schedule, setSchedule] = useState([]);
 
   useEffect(() => {
     if (Array.isArray(data)) {
-      const newData = [];
+      const newData = [],
+        dataz = [];
       data.forEach((datum) => {
-        const index = newData.findIndex((n) => n.account === datum.account);
-        if (index >= 0) {
-          const dataz = newData[index].data;
-          const indexz = dataz.findIndex((d) => d.shift === datum.shift);
-          if (indexz >= 0) newData[index].data[indexz].data.push(datum);
-          else newData[index].data.push({ shift: datum.shift, data: [datum] });
-        } else {
-          newData.push({ account: datum.account, data: [{ shift: datum.shift, data: [datum] }] });
-        }
+        const index = newData.findIndex((n) => n.account === datum.account && n.shift === datum.shift);
+        if (index >= 0) newData[index].data.push(datum);
+        else newData.push({ account: datum.account, shift: datum.shift, data: [datum] });
       });
-      setSchedule(newData);
+      newData.forEach((n) => {
+        const object = {};
+        const data = n.data;
+        const shift = shifts.find((s) => s._id === n.shift);
+        days.forEach((work, index) => {
+          const date = data?.find((d) => new Date(d.date).getDay() === index);
+          const title = date ? `${date.timeStart} - ${date.timeEnd}` : '';
+          object[work._id] = title;
+        });
+        dataz.push({ ...n, ...object, shift });
+      });
+      setSchedule(dataz);
     }
   }, [JSON.stringify(data)]);
 
   useEffect(() => {
-    setWeeks(getWeekData(filter.year));
+    setWeekData(getWeekData(filter.year));
     setFilter((pre) => ({ ...pre, week: getCurrentWeek(filter.year) }));
   }, [filter.year]);
+
+  const headerGroup = (
+    <ColumnGroup>
+      <Row>
+        <Column header="Nhân viên" rowSpan={2} />
+        <Column header="Ca làm việc" rowSpan={2} />
+        {days.map((w, index) => (
+          <Column key={index} header={w.name} />
+        ))}
+      </Row>
+      <Row>
+        {getDatesByWeek(params.week).map((w, index) => (
+          <Column key={index} header={w} />
+        ))}
+      </Row>
+    </ColumnGroup>
+  );
 
   return (
     <FormList title="Lịch làm việc">
@@ -195,8 +141,8 @@ export const Schedule = () => {
         filter={filter}
         setFilter={setFilter}
         handleClear={() => {
-          setParams(INITDATA);
-          setFilter(INITDATA);
+          setParams(INITPARAMS);
+          setFilter(INITPARAMS);
         }}
         handleFilter={() => setParams(filter)}
         className="lg:w-9/12"
@@ -207,7 +153,7 @@ export const Schedule = () => {
           options={getYearData()}
           label="Năm"
         />
-        <Dropdownzz value={filter.week} onChange={(e) => setFilter({ ...filter, week: e.target.value })} options={weeks} label="Tuần" />
+        <Dropdownzz value={filter.week} onChange={(e) => setFilter({ ...filter, week: e.target.value })} options={weekData} label="Tuần" />
         <Dropdownzz
           value={filter.department}
           onChange={(e) => setFilter({ ...filter, department: e.target.value, account: undefined })}
@@ -232,9 +178,49 @@ export const Schedule = () => {
           showClear
         />
       </DataFilter>
-      <div className="w-full px-2 mt-12">
-        <Header currentWeek={params.week} />
-        <Body schedule={schedule} accounts={accounts} shifts={shifts} />
+      <div className="w-full px-2">
+        <DataTable
+          loading={isLoading}
+          value={schedule}
+          headerColumnGroup={headerGroup}
+          rowGroupMode="rowspan"
+          groupRowsBy="account"
+          sortMode="single"
+          sortField="account"
+          sortOrder={1}
+          showGridlines
+          scrollable
+          emptyMessage="Không có nhân viên làm việc trong khoảng thời gian này"
+        >
+          <Column
+            field="account"
+            className="min-w-40"
+            body={(e) => {
+              const account = accounts.find((a) => a._id === e.account);
+              return (
+                <div className="flex justify-center items-center gap-4">
+                  <img alt={account.fullName} src={account.avatar || '/images/avatar.jpg'} width="46" className="rounded-md" />
+                  <div className="flex flex-col gap-1 text-primary">
+                    <span className="font-semibold">{account.fullName}</span>
+                    <span className="font-semibold">{account.staffCode}</span>
+                  </div>
+                </div>
+              );
+            }}
+          ></Column>
+          <Column
+            field="shift.code"
+            body={(e) => (
+              <span className="font-medium text-primary">
+                {e.shift?.name} ({e.shift?.code})
+              </span>
+            )}
+            className="min-w-28"
+          ></Column>
+          {days.map((work, index) => (
+            <Column key={index} field={work._id} className="min-w-28"></Column>
+          ))}
+        </DataTable>
       </div>
     </FormList>
   );

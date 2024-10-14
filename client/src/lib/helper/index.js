@@ -41,10 +41,10 @@ export const handleFiles = (item, params, files, field) => {
       });
       if (newfiles.length > 0) params[field] = newfiles;
       if (formData.length > 0) {
-        if (params.formData) params.formData[field] = formData
+        if (params.formData) params.formData[field] = formData;
         else {
-          params.formData = {}
-          params.formData[field] = formData
+          params.formData = {};
+          params.formData[field] = formData;
         }
       }
     } else params[field] = undefined;
@@ -127,71 +127,83 @@ export const multiFormatDateString = (timestamp = '') => {
   }
 };
 
-export const databseDate = (date, type = 'datetime') => {
+export const databaseDate = (date, type = 'datetime') => {
   let format = type === 'time' ? 'HH:mm:ss' : type === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss';
   return moment(date).format(format);
+};
+
+export const convertNumberToTime = (number) => {
+  if (number === 0) return '00:00';
+  if (!number) return '-';
+  let hours = Math.floor(number);
+  let minutes = Math.round((number - hours) * 60);
+  if (hours < 10) hours = `0${hours}`;
+  if (minutes < 10) minutes = `0${minutes}`;
+  return `${hours}:${minutes}`;
+};
+
+export const getDates = (fromDate, toDate) => {
+  toDate = toDate ? toDate : fromDate;
+  let start = moment(fromDate);
+  const end = moment(toDate);
+  const dateTimeArray = [];
+  while (start <= end) {
+    dateTimeArray.push(start.format('YYYY-MM-DD'));
+    start = start.clone().add(1, 'days');
+  }
+  return dateTimeArray;
 };
 
 export const convertNumberToString = (amount) => {
   const ones = ['', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
   const tens = ['', 'mười', 'hai mươi', 'ba mươi', 'bốn mươi', 'năm mươi', 'sáu mươi', 'bảy mươi', 'tám mươi', 'chín mươi'];
   const thousands = ['', 'nghìn', 'triệu', 'tỷ', 'nghìn tỷ', 'triệu tỷ'];
-
   let words = '';
   let i = 0;
-
-  // Chuyển đổi số thành chuỗi
   let numStr = String(amount);
-
-  // Tính số lượng hàng ngàn trong số
   let numThousands = Math.ceil(numStr.length / 3);
-
-  // Vòng lặp từ hàng ngàn đến hàng đơn vị để chuyển đổi giá trị tiền thành chuỗi
   if (amount > 0) {
-      while (i < numThousands) {
-          // Lấy 3 chữ số cuối cùng của số và chuyển đổi thành chuỗi
-          let part = numStr.slice(-3);
-          numStr = numStr.slice(0, -3);
-          let partWords = '';
-
-          // Lấy số hàng trăm, chục, đơn vị của 3 chữ số và chuyển đổi thành chuỗi
-          let partNum = parseInt(part);
-          if (partNum !== 0) {
-              let hundredsDigit = Math.floor(partNum / 100);
-              let tensDigit = Math.floor((partNum % 100) / 10);
-              let onesDigit = partNum % 10;
-              if (hundredsDigit !== 0) {
-                  partWords += ones[hundredsDigit] + ' trăm ';
-              }
-              if (tensDigit === 0 && onesDigit !== 0) {
-                  partWords += ones[onesDigit];
-              } else if (tensDigit === 1 && onesDigit !== 0) {
-                  partWords += 'mười ' + ones[onesDigit];
-              } else if (tensDigit === 1 && onesDigit === 0) {
-                  partWords += 'mười ';
-              } else if (tensDigit > 1 && onesDigit === 0) {
-                  partWords += tens[tensDigit];
-              } else if (tensDigit > 1 && onesDigit !== 0) {
-                  partWords += tens[tensDigit] + ' ' + ones[onesDigit];
-              } else if (hundredsDigit === 0 && tensDigit === 0 && onesDigit === 0 && i === 0) {
-                  partWords += 'không';
-              }
-          }
-          if (partWords !== '') {
-              partWords += ' ' + thousands[i];
-          }
-          words = partWords + ' ' + words;
-          i++;
+    while (i < numThousands) {
+      let part = numStr.slice(-3);
+      numStr = numStr.slice(0, -3);
+      let partWords = '';
+      let partNum = parseInt(part);
+      if (partNum !== 0) {
+        let hundredsDigit = Math.floor(partNum / 100);
+        let tensDigit = Math.floor((partNum % 100) / 10);
+        let onesDigit = partNum % 10;
+        if (hundredsDigit !== 0) {
+          partWords += ones[hundredsDigit] + ' trăm ';
+        }
+        if (tensDigit === 0 && onesDigit !== 0) {
+          partWords += ones[onesDigit];
+        } else if (tensDigit === 1 && onesDigit !== 0) {
+          partWords += 'mười ' + ones[onesDigit];
+        } else if (tensDigit === 1 && onesDigit === 0) {
+          partWords += 'mười ';
+        } else if (tensDigit > 1 && onesDigit === 0) {
+          partWords += tens[tensDigit];
+        } else if (tensDigit > 1 && onesDigit !== 0) {
+          partWords += tens[tensDigit] + ' ' + ones[onesDigit];
+        } else if (hundredsDigit === 0 && tensDigit === 0 && onesDigit === 0 && i === 0) {
+          partWords += 'không';
+        }
       }
-      words = words.charAt(0).toUpperCase() + words.slice(1);
-      words = words.trim();
+      if (partWords !== '') {
+        partWords += ' ' + thousands[i];
+      }
+      words = partWords + ' ' + words;
+      i++;
+    }
+    words = words.charAt(0).toUpperCase() + words.slice(1);
+    words = words.trim();
   }
   if (amount === 0) {
-      words = 'Không'
+    words = 'Không';
   }
   if (amount < 0) {
-      words = convertMoneyToString(Math.abs(amount));
-      words = 'Âm ' + words;
+    words = convertNumberToString(Math.abs(amount));
+    words = 'Âm ' + words;
   }
-  return words + " đồng.";
-}
+  return words + ' đồng.';
+};

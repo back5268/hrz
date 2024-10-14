@@ -16,3 +16,12 @@ export const personnelTypes = [
 ];
 
 export const dateData = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
+export const days = [
+  { name: 'Chủ nhật', _id: 'su' },
+  { name: 'Thứ 2', _id: 'mo' },
+  { name: 'Thứ 3', _id: 'tu' },
+  { name: 'Thứ 4', _id: 'we' },
+  { name: 'Thứ 5', _id: 'th' },
+  { name: 'Thứ 6', _id: 'fr' },
+  { name: 'Thứ 7', _id: 'sa' }
+];

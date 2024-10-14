@@ -233,9 +233,9 @@ export const tools = [
         actions: ['delete', 'create', 'update', 'read']
       },
       {
-        name: 'Tổng hợp chấm công',
+        name: 'Quản lý chấm công',
         route: '/timekeeping',
-        actions: ['read']
+        actions: ['delete', 'create', 'update', 'read']
       }
     ]
   },

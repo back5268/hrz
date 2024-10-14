@@ -1,3 +1,5 @@
+import { validateExcel } from '@utils';
+
 const ExcelJS = require('exceljs');
 export const handleFileExcel = async (file, attributes = []) => {
   try {
@@ -101,7 +103,7 @@ export const convertToExcel = (data, options = {}) => {
   return workbook.xlsx.writeBuffer();
 };
 
-export const fitToColumn = (arrayOfArray, fromRow) => {
+export const fitToColumn = (arrayOfArray, fromRow = 0) => {
   const result = [];
   Object.keys(arrayOfArray[fromRow]).map((value) => {
     const item = [String(value).length * 1.25];
@@ -112,3 +114,29 @@ export const fitToColumn = (arrayOfArray, fromRow) => {
   });
   return result;
 };
+
+export const excelDateToJSDate = (excelDate) => {
+  try {
+    if (!excelDate) {
+      return false;
+    }
+    if (typeof excelDate === "number") {
+      return new Date(Math.round((excelDate - 25569) * 86400 * 1000));
+    } else if (typeof excelDate === "string" && validateExcel(excelDate)) {
+      const c = excelDate.split("/");
+      let u =[]
+      for (let i = c.length - 1; i >= 0; i--) {
+        u.push(c[i])
+      }
+      let date = new Date(u.join("-"));
+      if(isNaN(date.getTime())){
+        return  false
+      }
+      return  date
+    } else {
+      return false;
+    }
+  } catch (e) {
+    return false;
+  }
+}

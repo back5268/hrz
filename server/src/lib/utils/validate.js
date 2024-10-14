@@ -68,6 +68,13 @@ export const validPhone = (phone) => {
   return true;
 };
 
+export const validateExcel = (value) => {
+  return validRegex(
+    /^(0?[1-9]{1}|[1-2]{1}[0-9]{1}|3[0-1]{1})[-/]{1}(0?[1-9]|1[0-2]{1})[-/]{1}[12]{1}[0-9]{3}$/,
+    value
+  );
+};
+
 /**
  *
  * @param file {{mimetype : String}}

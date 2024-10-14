@@ -12,6 +12,7 @@ import { notifyRouter } from './notify';
 import { shiftRouter } from './shift';
 import { deviceRouter } from './device';
 import { scheduleRouter } from './schedule';
+import { timekeepingRouter } from './timekeeping';
 
 export const webRouter = express.Router();
 
@@ -28,3 +29,4 @@ webRouter.use('/template', templateRouter);
 webRouter.use('/schedule', scheduleRouter);
 webRouter.use('/shift', shiftRouter);
 webRouter.use('/device', deviceRouter);
+webRouter.use('/timekeeping', timekeepingRouter);

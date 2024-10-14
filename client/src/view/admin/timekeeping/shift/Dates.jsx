@@ -1,5 +1,5 @@
 import { Buttonz, Columnz, MultiSelectFormz, Tablez } from '@components/core';
-import { workDates } from '@constant';
+import { days } from '@constant';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import moment from 'moment';
 import { Calendar } from 'primereact/calendar';
@@ -51,7 +51,7 @@ export const Dates = (props) => {
         <label className="inline-block font-medium text-left">Thời gian làm việc theo tuần</label>
         <MultiSelectFormz
           label="Thời gian làm việc"
-          options={workDates}
+          options={days}
           value={data?.map((d) => d.date)}
           onChange={(e) => {
             const dates = e.target.value;
@@ -78,7 +78,7 @@ export const Dates = (props) => {
         paginatorTemplate="CurrentPageReport"
       >
         <Columnz header="#" body={(data, options) => options.rowIndex + 1} />
-        <Columnz header="Ngày làm việc" body={(e) => <b>{workDates.find((w) => w._id === e.date)?.name}</b>} />
+        <Columnz header="Ngày làm việc" body={(e) => <b>{days.find((w) => w._id === e.date)?.name}</b>} />
         <Columnz
           header="Thời gian bắt đầu"
           body={(item) => (

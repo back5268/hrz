@@ -54,7 +54,7 @@
     background: #673AB7;
 }
 
-.p-tag-warning {
+.p-tag-warning, .p-button-warning {
     color: white !important;
 }
 
