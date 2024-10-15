@@ -4,6 +4,7 @@ import {
   createJobPositionMd,
   deleteJobPositionMd,
   detailJobPositionMd,
+  listAccountMd,
   listJobPositionMd,
   updateJobPositionMd
 } from '@models';
@@ -38,9 +39,11 @@ export const deleteJobPosition = async (req, res) => {
     const { error, value } = validateData(detailJobPositionValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
     const { _id } = value;
-    const data = await deleteJobPositionMd({ _id });
+    const data = await detailJobPositionMd({ _id });
     if (!data) return res.status(400).json({ status: 0, mess: 'Vị trí công việc không tồn tại!' });
-    res.status(201).json({ status: 1, data });
+    const accounts = await listAccountMd({ jobPosition: _id });
+    if (accounts.length > 0) res.status(400).json({ status: 0, mess: 'Vị trí công việc đã được áp dụng cho nhân viên, không thể xóa!' });
+    res.status(201).json({ status: 1, data: await deleteJobPositionMd({ _id }) });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
   }

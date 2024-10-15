@@ -1,5 +1,13 @@
 import { createPositionValid, detailPositionValid, listPositionValid, updatePositionValid } from '@lib/validation';
-import { countPositionMd, createPositionMd, deletePositionMd, detailPositionMd, listPositionMd, updatePositionMd } from '@models';
+import {
+  countPositionMd,
+  createPositionMd,
+  deletePositionMd,
+  detailPositionMd,
+  listAccountMd,
+  listPositionMd,
+  updatePositionMd
+} from '@models';
 import { validateData } from '@utils';
 
 export const getListPosition = async (req, res) => {
@@ -31,9 +39,11 @@ export const deletePosition = async (req, res) => {
     const { error, value } = validateData(detailPositionValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
     const { _id } = value;
-    const data = await deletePositionMd({ _id });
+    const data = await detailPositionMd({ _id });
     if (!data) return res.status(400).json({ status: 0, mess: 'Chức vụ không tồn tại!' });
-    res.status(201).json({ status: 1, data });
+    const accounts = await listAccountMd({ position: _id });
+    if (accounts.length > 0) return res.status(400).json({ status: 0, mess: 'Chức vụ đã được áp dụng cho nhân viên, không thể xóa!' });
+    res.status(201).json({ status: 1, data: await deletePositionMd({ _id }) });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
   }

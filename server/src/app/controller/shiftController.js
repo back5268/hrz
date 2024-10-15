@@ -81,14 +81,24 @@ export const createShift = async (req, res) => {
   try {
     const { error, value } = validateData(createShiftValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
-    const { name, code } = value;
+    const { name, code, dateStart } = value;
     const checkName = await detailShiftMd({ name });
     if (checkName) return res.status(400).json({ status: 0, mess: 'Tên ca làm việc đã tồn tại!' });
     const checkCode = await detailShiftMd({ code });
     if (checkCode) return res.status(400).json({ status: 0, mess: 'Mã ca làm việc đã tồn tại!' });
+    if (new Date(dateStart) < new Date()) return res.status(400).json({ status: 0, mess: 'Ngày áp dụng không được nhỏ hơn hiện tại!' });
     const data = await createShiftMd({ updatedBy: req.account._id, ...value });
     await createScheduleByShift(data);
     res.status(201).json({ status: 1, data });
+  } catch (error) {
+    res.status(500).json({ status: 0, mess: error.toString() });
+  }
+};
+
+export const getListShiftApp = async (req, res) => {
+  try {
+    const where = { departments: { $elemMatch: { $eq: req.account?.department } }, status: 1 };
+    res.json({ status: 1, data: await listShiftMd(where) });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
   }

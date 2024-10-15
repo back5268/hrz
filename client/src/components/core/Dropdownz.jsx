@@ -15,7 +15,7 @@ const Dropdownz = (props) => {
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="p-float-label w-full">
+      <span className="p-float-label w-full disabledz">
         <Dropdown
           value={value}
           options={options}

@@ -20,8 +20,6 @@ import {
   detailJobPositionMd,
   detailPositionMd,
   listAccountMd,
-  listJobPositionMd,
-  listPositionMd,
   listWorkHistoryMd,
   updateAccountMd,
   updateContactMd,

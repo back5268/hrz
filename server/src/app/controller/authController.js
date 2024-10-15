@@ -30,6 +30,14 @@ export const getInfo = async (req, res) => {
   }
 };
 
+export const getInfoApp = async (req, res) => {
+  try {
+    res.json({ status: 1, data: req.account });
+  } catch (error) {
+    res.status(500).json({ status: 0, mess: error.toString() });
+  }
+};
+
 export const signIn = async (req, res) => {
   try {
     const { error, value } = validateData(signInValid, req.body);
@@ -76,7 +84,7 @@ export const confirmPassword = async (req, res) => {
     const { username, otp, password } = value;
     const checkUser = await detailAccountMd({ $or: [{ phone: username }, { email: username }] });
     if (!checkUser) return res.status(400).json({ status: 0, mess: `Không tìm thấy người dùng có tài khoản ${username}!` });
-    if (checkUser.otp !== otp || (new Date() - 5 * 60 * 1000 < new Date(checkUser.timeSendOtp)))
+    if (checkUser.otp !== otp || new Date() - 5 * 60 * 1000 < new Date(checkUser.timeSendOtp))
       return res.status(400).json({ status: 0, mess: 'Mã xác nhận không đúng hoặc đã hết hạn!' });
     const salt = await bcrypt.genSalt(10);
     const newPassword = await bcrypt.hash(password, salt);

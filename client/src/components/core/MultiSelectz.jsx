@@ -15,7 +15,7 @@ export const MultiSelectz = (props) => {
 
   return (
     <div className="flex flex-column gap-2">
-      <span className="p-float-label w-full">
+      <span className="p-float-label w-full disabledz">
         <MultiSelect
           id={id}
           value={value}

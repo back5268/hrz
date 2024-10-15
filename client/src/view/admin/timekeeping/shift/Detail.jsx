@@ -65,9 +65,6 @@ export const DetailShift = () => {
     }
   }, [item]);
 
-  console.log(dates);
-  
-
   const handleData = (data) => {
     const newData = {
       ...data,
@@ -79,6 +76,7 @@ export const DetailShift = () => {
         timeBreakEnd: databaseDateToTime(date.timeBreakEnd)
       }))
     };
+    if (new Date(data.dateStart) < new Date()) return "Ngày áp dụng không được nhỏ hơn hiện tại!"
     if (isUpdate) return { ...checkEqualProp(newData, item), _id };
     else return newData;
   };

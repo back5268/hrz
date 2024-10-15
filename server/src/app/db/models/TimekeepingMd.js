@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
-class ScheduleMd extends ModelBase {}
+class TimekeepingMd extends ModelBase {}
 
-ScheduleMd.init('Schedule', {
+TimekeepingMd.init('Timekeeping', {
   department: { type: ObjectId, ref: 'Department', required: true },
   account: { type: ObjectId, ref: 'Account', required: true },
   shift: { type: ObjectId, ref: 'Shift' },
@@ -28,30 +28,30 @@ ScheduleMd.init('Schedule', {
   deletedAt: { type: Date }
 });
 
-export const listScheduleMd = (where, page, limit, populates, attr, sort) => {
-  return ScheduleMd.find({ where, page, limit, populates, attr, sort });
+export const listTimekeepingMd = (where, page, limit, populates, attr, sort) => {
+  return TimekeepingMd.find({ where, page, limit, populates, attr, sort });
 };
 
-export const countScheduleMd = (where) => {
-  return ScheduleMd.count({ where });
+export const countTimekeepingMd = (where) => {
+  return TimekeepingMd.count({ where });
 };
 
-export const detailScheduleMd = (where, populates, attr) => {
-  return ScheduleMd.findOne({ where, populates, attr });
+export const detailTimekeepingMd = (where, populates, attr) => {
+  return TimekeepingMd.findOne({ where, populates, attr });
 };
 
-export const createScheduleMd = (attr) => {
-  return ScheduleMd.create({ attr });
+export const createTimekeepingMd = (attr) => {
+  return TimekeepingMd.create({ attr });
 };
 
-export const updateScheduleMd = (where, attr) => {
-  return ScheduleMd.update({ where, attr });
+export const updateTimekeepingMd = (where, attr) => {
+  return TimekeepingMd.update({ where, attr });
 };
 
-export const updateManyScheduleMd = (where, attr) => {
-  return ScheduleMd.update({ where, attr });
+export const updateManyTimekeepingMd = (where, attr) => {
+  return TimekeepingMd.update({ where, attr });
 };
 
-export const deleteScheduleMd = (where) => {
-  return ScheduleMd.delete({ where });
+export const deleteTimekeepingMd = (where) => {
+  return TimekeepingMd.delete({ where });
 };

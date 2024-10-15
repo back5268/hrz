@@ -1,3 +1,5 @@
+import { REGEX } from '@constant';
+
 export const listTimekeepingLogValid = {
   page: 'number',
   limit: 'number',
@@ -32,4 +34,24 @@ export const listSyntheticTimekeepingValid = {
   account: { type: 'string', allowNull: true },
   fromDate: 'date',
   toDate: 'date'
+};
+
+export const checkTimekeepingAppValid = {
+  department: 'string',
+  account: 'string',
+  shift: 'string',
+  date: 'date',
+  time: { type: 'string', pattern: REGEX.TIME },
+  deviceName: 'string'
+};
+
+export const listTimekeepingLogAppValid = {
+  date: 'date',
+  shift: 'string'
+};
+
+export const listTimekeepingAppValid = {
+  fromDate: 'date',
+  toDate: 'date',
+  shift: 'string'
 };

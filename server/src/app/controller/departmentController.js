@@ -4,6 +4,7 @@ import {
   createDepartmentMd,
   deleteDepartmentMd,
   detailDepartmentMd,
+  listAccountMd,
   listDepartmentMd,
   updateDepartmentMd
 } from '@models';
@@ -38,9 +39,11 @@ export const deleteDepartment = async (req, res) => {
     const { error, value } = validateData(detailDepartmentValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
     const { _id } = value;
-    const data = await deleteDepartmentMd({ _id });
+    const data = await detailDepartmentMd({ _id });
     if (!data) return res.status(400).json({ status: 0, mess: 'Phòng ban không tồn tại!' });
-    res.status(201).json({ status: 1, data });
+    const accounts = await listAccountMd({ department: _id });
+    if (accounts?.length > 0) res.status(400).json({ status: 0, mess: 'Phòng ban đã được thêm nhân viên, không thể xóa!' });
+    res.status(201).json({ status: 1, data: await deleteDepartmentMd({ _id }) });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
   }

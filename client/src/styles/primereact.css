@@ -58,6 +58,6 @@
     color: white !important;
 }
 
-.p-disabled {
-    opacity: 0.5;
+.disabledz .p-disabled {
+    background-color: #f8f9fa;
 }

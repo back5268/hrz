@@ -1,5 +1,5 @@
 import { listScheduleValid } from '@lib/validation';
-import { listScheduleMd } from '@models';
+import { listTimekeepingMd } from '@models';
 import { validateData } from '@utils';
 
 export const getListSchedule = async (req, res) => {
@@ -17,7 +17,7 @@ export const getListSchedule = async (req, res) => {
         $gte: fromDate,
         $lte: toDate
       };
-    const data = await listScheduleMd(where);
+    const data = await listTimekeepingMd(where);
     res.json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
