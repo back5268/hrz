@@ -14,9 +14,9 @@ export default {
         sidebar: 'calc(100vh - 14rem)'
       },
       colors: {
-        primary: '#673AB7',
-        border: 'rgba(0, 0, 0, 0.38)',
-        sidebar: '#F5F5F5'
+        primary: 'var(--primary-color)',
+        border: 'var(--border-color)',
+        background: 'var(--background-color)'
       },
       boxShadow: {
         custom: 'rgba(0, 0, 0, 0.2) 0px 5px 15px'

@@ -12,13 +12,12 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await getInfoApi();
       if (response) {
-        setUserInfo(response)
+        setUserInfo(response);
         const accounts = await getListAccountInfoApi();
         if (accounts) setAccounts(accounts);
         const departments = await getListDepartmentInfoApi();
         if (departments) setDepartments(departments);
-      }
-      else localStorage.removeItem('token');
+      } else localStorage.removeItem('token');
     } catch (error) {
     } finally {
       setTimeout(() => {

@@ -3,12 +3,12 @@ import { AuthWrapper, InputPassword } from '@components/base';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { usePostApi } from '@lib/react-query';
 import { SigninValidation } from '@lib/validation';
-import { signinApi } from '@api';
+import { signInApi } from '@api';
 import { Buttonz, Inputz } from '@components/core';
 import { useToastState, useUserState } from '@store';
 
 export const SignIn = () => {
-  const { mutateAsync, isPending } = usePostApi(signinApi);
+  const { mutateAsync, isPending } = usePostApi(signInApi);
   const { setLoadingz } = useUserState();
   const { showToast } = useToastState();
 

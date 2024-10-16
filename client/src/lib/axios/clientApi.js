@@ -28,8 +28,8 @@ clientApi.interceptors.response.use(
     else return res.data;
   },
   async function (error) {
-    if (error?.response?.data) {
-      showToast({ title: error.response.data.mess || 'Đường truyền không ổn định vui lòng thử lại sau', severity: 'error' });
+    if (error) {
+      showToast({ title: error.response?.data?.mess || 'Đường truyền không ổn định vui lòng thử lại sau', severity: 'error' });
     }
   }
 );

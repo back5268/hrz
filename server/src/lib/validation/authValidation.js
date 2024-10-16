@@ -2,7 +2,7 @@ import { REGEX } from '@constant';
 
 export const signInValid = {
   username: 'string',
-  password: { type: 'string', pattern: REGEX.PASSWORD }
+  password: { type: 'string' }
 };
 
 export const sendOtpAuthValid = {
@@ -12,5 +12,5 @@ export const sendOtpAuthValid = {
 export const confirmPasswordValid = {
   username: 'string',
   otp: 'string',
-  password: { type: 'string', pattern: REGEX.PASSWORD }
+  password: { type: 'string' }
 };

@@ -52,7 +52,7 @@ export const SideBar = (props) => {
   return (
     <div
       className={`fixed left-0 inset-y-0 h-screen z-40 w-full max-w-[18rem] shadow-custom flex flex-col justify-between
-      transition-all duration-500 ease-in-out bg-sidebar ${showSidebar ? '' : '-translate-x-full'}`}
+      transition-all duration-500 ease-in-out bg-background ${showSidebar ? '' : '-translate-x-full'}`}
     >
       <div>
         <div className="p-4">

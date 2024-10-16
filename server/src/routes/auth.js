@@ -7,6 +7,6 @@ export const authRouter = express.Router();
 
 authRouter.get('/getInfo', authMiddleware, permissionMiddleware, getInfo);
 authRouter.get('/getInfoApp', authMiddleware, getInfoApp);
-authRouter.post('/signin', signIn);
+authRouter.post('/signIn', signIn);
 authRouter.post('/sendOtpForgotPassword', sendOtpForgotPassword);
 authRouter.post('/confirmPassword', confirmPassword);
