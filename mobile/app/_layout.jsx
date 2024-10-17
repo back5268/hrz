@@ -3,6 +3,7 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { AuthProvider, Toastify } from '@/components/base';
 import '../styles/index.css';
+import { QueryProvider } from '@/lib/react-query';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -36,15 +37,17 @@ const RootLayout = () => {
   }
 
   return (
-    <AuthProvider>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <Toastify />
-    </AuthProvider>
+    <QueryProvider>
+      <AuthProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <Toastify />
+      </AuthProvider>
+    </QueryProvider>
   );
 };
 

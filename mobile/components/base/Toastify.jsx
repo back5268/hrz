@@ -38,5 +38,5 @@ export const Toastify = () => {
     ),
   };
 
-  return <Toast autoHide visibilityTime={1000} ref={(ref) => Toast.setRef(ref)} config={toastConfig} />;
+  return <Toast config={toastConfig} visibilityTime={1000} autoHide />;
 };

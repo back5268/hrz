@@ -32,7 +32,7 @@ export const getInfo = async (req, res) => {
 
 export const getInfoApp = async (req, res) => {
   try {
-    res.json({ status: 1, data: req.account });
+    res.json({ status: 1, data: { userInfo: req.account } });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
   }

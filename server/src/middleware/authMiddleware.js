@@ -8,14 +8,11 @@ export const authMiddleware = async (req, res, next) => {
   if (!token) return res.status(401).json({ status: false, mess: 'Token không hợp lệ!' });
   try {
     const checkToken = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
-    const account = await detailAccountMd({ _id: checkToken._id });
-
+    const account = await detailAccountMd({ _id: checkToken._id }, ['department', 'position', 'jobPosition']);
     if (!account) return res.status(401).json({ status: false, mess: 'Token không hợp lệ!' });
     if (account.token !== token) return res.status(401).json({ status: false, mess: 'Tài khoản đã được đăng nhập ở nơi khác!' });
     if (account.status === 0)
-      return res
-        .status(401)
-        .json({ status: false, mess: 'Tài khoản của bạn đã bị khóa, vui lòng liên hệ quản trị viên!' });
+      return res.status(401).json({ status: false, mess: 'Tài khoản của bạn đã bị khóa, vui lòng liên hệ quản trị viên!' });
     req.account = account;
     next();
   } catch (error) {

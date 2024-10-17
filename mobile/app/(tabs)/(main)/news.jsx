@@ -1,11 +1,11 @@
 import { Text, View } from 'react-native';
 
-const personnel = () => {
+const News = () => {
   return (
     <View>
-      <Text>personnel</Text>
+      <Text>News</Text>
     </View>
   );
 };
 
-export default personnel;
+export default News;

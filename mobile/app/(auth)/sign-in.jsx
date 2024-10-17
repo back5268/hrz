@@ -36,8 +36,8 @@ const SignIn = () => {
               : '';
     if (title) return showToast(title);
     const response = await signInApi({ ...form });
-    if (response?.status) {
-      asyncStorage('token', response.data);
+    if (response) {
+      asyncStorage('token', response);
       setLoadingz();
     }
   };

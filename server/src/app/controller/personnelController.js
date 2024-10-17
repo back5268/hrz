@@ -49,6 +49,21 @@ export const getListAccountInfo = async (req, res) => {
   }
 };
 
+export const getListEmployeeApp = async (req, res) => {
+  try {
+    const data = req.account?.department
+      ? await listAccountMd({ status: 1, department: req.account?.department }, false, false, [
+          { path: 'department', select: 'name' },
+          { path: 'position', select: 'name' },
+          { path: 'jobPosition', select: 'name' }
+        ])
+      : [req.account];
+    res.json({ status: 1, data });
+  } catch (error) {
+    res.status(500).json({ status: 0, mess: error.toString() });
+  }
+};
+
 export const getListPersonnel = async (req, res) => {
   try {
     const { error, value } = validateData(listPersonnelValid, req.query);

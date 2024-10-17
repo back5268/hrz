@@ -1,11 +1,11 @@
 import { Text, View } from 'react-native';
 
-const Schedule = () => {
+const Payroll = () => {
   return (
     <View>
-      <Text>Schedule</Text>
+      <Text>Payroll</Text>
     </View>
   );
 };
 
-export default Schedule;
+export default Payroll;

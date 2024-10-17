@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { Iconz } from '.';
+import { Feather } from '@expo/vector-icons';
 
 export const Inputz = ({ icon, label, type, value, placeholder, handleChangeText, className = '', ...props }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,7 +11,7 @@ export const Inputz = ({ icon, label, type, value, placeholder, handleChangeText
       <View className="w-full h-12 px-4 border rounded-md border-border/30 focus:border-primary focus:border-2 flex flex-row items-center">
         {!!icon && (
           <View className="mr-4">
-            <Iconz name={icon} color="gray" />
+            <Feather name={icon} color="gray" size={20} />
           </View>
         )}
         <TextInput
@@ -25,7 +25,7 @@ export const Inputz = ({ icon, label, type, value, placeholder, handleChangeText
         />
         {type === 'password' && (
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-            <Iconz name={showPassword ? 'eye-off' : 'eye'} color="gray" />
+            <Feather name={showPassword ? 'eye-off' : 'eye'} color="gray" size={20} />
           </TouchableOpacity>
         )}
       </View>

@@ -1,4 +1,5 @@
 export * from './Buttonz'
+export * from './Hrz'
 export * from './Iconz'
 export * from './Inputz'
 export * from './Loaderz'
