@@ -38,5 +38,5 @@ export const Toastify = () => {
     ),
   };
 
-  return <Toast config={toastConfig} visibilityTime={1000} autoHide />;
+  return <Toast config={toastConfig} visibilityTime={2000} autoHide />;
 };

@@ -37,7 +37,7 @@ export const UploadImage = ({ data, setData, label, className = '' }) => {
       <input {...getInputProps()} className="cursor-pointer" />
       {fileUrl ? (
         <div className="flex flex-col justify-center items-center gap-4 h-72">
-          <Imagez src={fileUrl} alt={label} className="h-40 w-40" />
+          <Imagez src={fileUrl} alt={label} className="h-40 w-40 overflow-hidden" />
           <span className="w-full line-clamp-2 text-center">{fileUrl}</span>
           <div className="flex gap-2 items-center justify-center">
             <div {...getRootProps()}>

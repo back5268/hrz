@@ -44,13 +44,13 @@ const Home = () => {
         </View>
       </View>
 
-      <TouchableOpacity onPress={() => router.push("check-timekeeping")} className="w-full flex flex-row justify-center border-2 border-border/20 rounded-lg py-2 mt-12">
+      <TouchableOpacity onPress={() => router.push("check-timekeeping")} className="w-full flex flex-row justify-center bg-white rounded-lg py-2 mt-12">
         <View className="items-center">
           <Image source={icons.profile} className="w-10 h-10" />
           <Text className="text-sm text-gray-700 mt-2">Chấm công</Text>
         </View>
       </TouchableOpacity>
-      <View className="px-5 border-2 border-border/20 rounded-lg p-4 mt-4 flex-row flex-wrap justify-around">
+      <View className="px-5 rounded-lg p-5 mt-4 flex-row flex-wrap justify-around bg-white">
         {items.map((item, index) => (
           <Item key={index} label={item.label} uri={item.uri} route={item.route} />
         ))}

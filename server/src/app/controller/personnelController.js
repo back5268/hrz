@@ -29,6 +29,7 @@ import {
 import { formatNumber, generateRandomString, validateData } from '@utils';
 import moment from 'moment';
 import bcrypt from 'bcrypt';
+import { registerFace } from '@lib/face-id';
 
 export const getListWorkHistory = async (req, res) => {
   try {
@@ -52,7 +53,7 @@ export const getListAccountInfo = async (req, res) => {
 export const getListEmployeeApp = async (req, res) => {
   try {
     const data = req.account?.department
-      ? await listAccountMd({ status: 1, department: req.account?.department }, false, false, [
+      ? await listAccountMd({ status: 1, department: req.account?.department?._id }, false, false, [
           { path: 'department', select: 'name' },
           { path: 'position', select: 'name' },
           { path: 'jobPosition', select: 'name' }
@@ -156,6 +157,8 @@ export const updatePersonnel = async (req, res) => {
       if (checkCmt) return res.status(400).json({ status: 0, mess: 'Số CMT/CCCD đã tồn tại!' });
     }
     if (req.files?.['avatar']?.length > 0) {
+      const { status, mess } = await registerFace(_id, value.fullName || dataz.fullName, req.files['avatar'][0]);
+      if (!status && mess) return res.status(400).json({ status: 0, mess });
       for (const file of req.files['avatar']) {
         value.avatar = await uploadFileToFirebase(file);
       }
@@ -184,7 +187,6 @@ export const updatePersonnel = async (req, res) => {
         value.healthFiles.push(await uploadFileToFirebase(file));
       }
     }
-
     const data = await updateAccountMd({ _id }, value);
     await updateContactMd({ account: _id }, value);
     await updateInsuranceMd({ account: _id }, value);
@@ -237,6 +239,8 @@ export const createPersonnel = async (req, res) => {
 
     (value.avatar = null), (value.cmtFiles = []), (value.taxFiles = []), (value.educationFiles = []), (value.healthFiles = []);
     if (req.files?.['avatar']?.length > 0) {
+      const { status, mess } = await registerFace(_id, value.fullName || dataz.fullName, req.files['avatar'][0]);
+      if (!status && mess) return res.status(400).json({ status: 0, mess });
       for (const file of req.files['avatar']) {
         value.avatar = await uploadFileToFirebase(file);
       }

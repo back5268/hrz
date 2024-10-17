@@ -1,11 +1,11 @@
 import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
-import { router } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 import React, { Fragment } from 'react';
 import { useUserState } from '@/store';
 import { removeStorage } from '@/lib/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Hrz, Iconz } from '@/components/core';
-import { images } from "@/constants";
+import { images } from '@/constants';
 
 const Item = ({ label, icon, onPress }) => {
   return (
@@ -24,6 +24,7 @@ const Item = ({ label, icon, onPress }) => {
 
 const Other = () => {
   const { userInfo, clearUserInfo } = useUserState();
+  const router = useRouter();
   const logout = async () => {
     clearUserInfo();
     removeStorage('token');
@@ -51,7 +52,7 @@ const Other = () => {
     { label: 'Bảng công', icon: 'clipboard' },
     { label: 'Bảng lương', icon: 'clipboard' },
     { label: 'Đơn từ', icon: 'clipboard' },
-    { label: 'Đổi mật khẩu', icon: 'refresh-ccw' },
+    { label: 'Đổi mật khẩu', icon: 'refresh-ccw', onPress: () => router.push('/change-password') },
     { label: 'Đăng xuất', icon: 'log-out', onPress: showAlert }
   ];
 
@@ -60,7 +61,11 @@ const Other = () => {
       <View className="w-full px-4">
         <View className="flex flex-row items-center justify-start my-16 ml-8">
           <View className="w-20 h-20 border border-secondary rounded-lg flex justify-center items-center">
-            <Image source={userInfo?.avatar ? { uri: userInfo?.avatar } :  images.avatar} className="w-[90%] h-[90%] rounded-lg" resizeMode="cover" />
+            <Image
+              source={userInfo?.avatar ? { uri: userInfo?.avatar } : images.avatar}
+              className="w-[90%] h-[90%] rounded-lg"
+              resizeMode="cover"
+            />
           </View>
           <View className="flex flex-col ml-4 font-lg">
             <Text className="text-lg font-medium mb-1">{userInfo?.fullName}</Text>

@@ -29,7 +29,7 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="other"
+        name="(other)"
         options={{
           title: 'Khác',
           headerShown: false,

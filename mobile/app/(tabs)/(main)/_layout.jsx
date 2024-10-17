@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useUserState } from '@/store';
 import { Text, TouchableOpacity } from 'react-native';
 
-const AuthLayout = () => {
+const MainLayout = () => {
   const { isAuthenticated } = useUserState();
   if (!isAuthenticated) return <Redirect href="/sign-in" />;
 
@@ -24,6 +24,7 @@ const AuthLayout = () => {
     { title: 'Bảng công', name: 'timekeeping' },
     { title: 'Bảng lương', name: 'payroll' },
     { title: 'Thông báo', name: 'notify' },
+    { title: 'Chấm công', name: 'check-timekeeping' },
     { title: 'Đơn từ', name: 'application', headerRight: () => <HeaderButton /> }
   ];
 
@@ -53,4 +54,4 @@ const AuthLayout = () => {
   );
 };
 
-export default AuthLayout;
+export default MainLayout;

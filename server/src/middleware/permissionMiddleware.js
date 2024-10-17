@@ -7,8 +7,8 @@ export const permissionMiddleware = async (req, res, next) => {
     const permissionz = [];
     if (req.account.role === 'staff') {
       const permissions = await listPermissionMd({
-        departments: { $elemMatch: { $eq: req.account.department } },
-        positions: { $elemMatch: { $eq: req.account.position } },
+        departments: { $elemMatch: { $eq: req.account.department?._id } },
+        positions: { $elemMatch: { $eq: req.account.position?._id } },
         status: 1
       });
       if (permissions.length > 0) {

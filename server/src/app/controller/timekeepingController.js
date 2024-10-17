@@ -1,11 +1,11 @@
 import { days } from '@constant';
 import { convertToExcel, excelDateToJSDate, handleFileExcel } from '@lib/excel-js';
+import { checkFace } from '@lib/face-id';
 import {
   listTimekeepingLogValid,
   listTimekeepingValid,
   listSyntheticTimekeepingValid,
   exportTimekeepingValid,
-  checkTimekeepingValid,
   checkTimekeepingAppValid,
   listTimekeepingLogAppValid,
   listTimekeepingAppValid
@@ -342,13 +342,20 @@ export const importTimekeeping = async (req, res) => {
 //====================================App====================================
 export const checkTimekeepingApp = async (req, res) => {
   try {
-    const { error, value } = validateData(checkTimekeepingAppValid, req.query);
+    const { error, value } = validateData(checkTimekeepingAppValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
-    const { department, account } = value;
-    const data = await detailAccountMd({ department, account });
-    if (!data) return res.status(400).json({ status: 0, mess: 'Không tìm thấy nhân viên!' });
-    res.json({ status: 1, data: await createTimekeepingLogMd(value) });
+    if (!req.file) return res.status(400).json({ status: 0, mess: 'Vui lòng truyền hình ảnh!' });
+    const { status, mess, data } = await checkFace(req.file);
+    console.log(data, 349);
+    
+    if (status && data === req.account?._id) {
+      res.json({
+        status: 1,
+        data: await createTimekeepingLogMd({ ...value, account: req.account?._id, department: req.account?.department?._id })
+      });
+    } else res.status(400).json({ status: 0, mess: mess || "Không tìm thấy nhân viên!" });
   } catch (error) {
+    console.log(error, 358);
     res.status(500).json({ status: 0, mess: error.toString() });
   }
 };
