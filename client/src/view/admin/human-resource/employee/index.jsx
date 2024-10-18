@@ -1,11 +1,11 @@
 import {
-  deletePersonnelApi,
+  deleteEmployeeApi,
   getListAccountInfoApi,
   getListJobPositionInfoApi,
-  getListPersonnelApi,
+  getListEmployeeApi,
   getListPositionInfoApi,
   resetPasswordApi,
-  updatePersonnelApi
+  updateEmployeeApi
 } from '@api';
 import { DataTable, FormList, DataFilter } from '@components/base';
 import { Buttonz, Columnz, Dialogz, Dropdownzz, Inputzz } from '@components/core';
@@ -19,14 +19,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 export * from './Detail';
 
-export const Personnel = () => {
+export const Employee = () => {
   const navigate = useNavigate();
   const initParams = useGetParams();
   const { showToast } = useToastState();
   const [params, setParams] = useState(initParams);
   const { setAccounts, departments } = useDataState();
   const [filter, setFilter] = useState({});
-  const { isLoading, data } = useGetApi(getListPersonnelApi, params, 'personnel');
+  const { isLoading, data } = useGetApi(getListEmployeeApi, params, 'employee');
   const { data: positions } = useGetApi(getListPositionInfoApi, {}, 'positions');
   const { data: jobPositions } = useGetApi(getListJobPositionInfoApi, {}, 'jobPositions');
   const [password, setPassword] = useState(null);
@@ -114,8 +114,8 @@ export const Personnel = () => {
         setParams={setParams}
         baseActions={['create', 'detail', 'delete']}
         actionsInfo={{
-          onViewDetail: (item) => navigate(`/personnel/detail/${item._id}`),
-          deleteApi: deletePersonnelApi,
+          onViewDetail: (item) => navigate(`/Employee/detail/${item._id}`),
+          deleteApi: deleteEmployeeApi,
           moreActions: [
             {
               icon: ArrowPathIcon,
@@ -123,10 +123,10 @@ export const Personnel = () => {
             }
           ]
         }}
-        statusInfo={{ changeStatusApi: updatePersonnelApi }}
+        statusInfo={{ changeStatusApi: updateEmployeeApi }}
         headerInfo={{
           onCreate: () => {
-            navigate('/personnel/create');
+            navigate('/Employee/create');
           }
         }}
         onSuccess={onSuccess}

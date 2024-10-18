@@ -40,12 +40,14 @@ export const checkTimekeepingAppValid = {
   // shift: 'string',
   date: 'date',
   time: { type: 'string', pattern: REGEX.TIME },
-  deviceName: 'string'
+  deviceName: 'string',
+  latitude: 'string',
+  longitude: 'string',
 };
 
 export const listTimekeepingLogAppValid = {
   date: 'date',
-  shift: 'string'
+  // shift: 'string'
 };
 
 export const listTimekeepingAppValid = {

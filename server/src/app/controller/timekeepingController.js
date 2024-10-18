@@ -346,9 +346,9 @@ export const checkTimekeepingApp = async (req, res) => {
     if (error) return res.status(400).json({ status: 0, mess: error });
     if (!req.file) return res.status(400).json({ status: 0, mess: 'Vui lòng truyền hình ảnh!' });
     const { status, mess, data } = await checkFace(req.file);
-    console.log(data, 349);
-    
-    if (status && data === req.account?._id) {
+    console.log(String(data));
+    console.log(String(req.account?._id));
+    if (status && String(data) === String(req.account?._id)) {
       res.json({
         status: 1,
         data: await createTimekeepingLogMd({ ...value, account: req.account?._id, department: req.account?.department?._id })

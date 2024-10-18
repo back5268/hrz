@@ -17,7 +17,7 @@ import { ArrowDownTrayIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline'
 const handleParams = (params) => {
   if (Array.isArray(params.dates) && params.dates.length > 0) {
     params.fromDate = databaseDate(params.dates[0]);
-    params.toDate = params.dates[1] ? databaseDate(params.dates[1]) : databaseDate(params.dates[0]);
+    params.toDate = params.dates[1] ? databaseDate(params.dates[1], undefined, true) : databaseDate(params.dates[0], undefined, true);
   }
   return { ...params, dates: undefined };
 };

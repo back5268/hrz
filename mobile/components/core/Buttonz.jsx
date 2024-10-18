@@ -2,7 +2,7 @@ import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 
 export const Buttonz = ({ children, label, handlePress, containerClassName = '', labelClassName = '', isLoading }) => {
   return (
-    <View className="my-8">
+    <View className="my-4">
       <TouchableOpacity
         onPress={handlePress}
         activeOpacity={0.7}

@@ -1,5 +1,5 @@
 import { getInfoApi, getListAccountInfoApi, getListDepartmentInfoApi, getListJobPositionInfoApi, getListPositionInfoApi } from '@/api';
-import { Loaderz } from '@/components/core';
+import { Loadingz } from '@/components/core';
 import { useDataState, useUserState } from '@/store';
 import { Fragment, useEffect, useState } from 'react';
 
@@ -34,6 +34,6 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, [loadingz]);
 
-  if (loading) return <Loaderz className="h-8 w-8 border-4" />;
+  if (loading) return <Loadingz className="h-8 w-8 border-4" />;
   return <Fragment>{children}</Fragment>;
 };

@@ -1,18 +1,18 @@
-import { getListEmployeeApi } from '@/api';
+import { getListContractApi } from '@/api';
 import { useGetApi } from '@/lib/react-query';
 import { FlatList, Image, Text, View } from 'react-native';
-import { images } from '@/constants';
 import { Loadingz } from '@/components/core';
+import moment from 'moment';
+import { contractTypes } from '@/constants';
 
 const Employee = () => {
-  const { isLoading, data } = useGetApi(getListEmployeeApi, {}, 'employee');
+  const { isLoading, data } = useGetApi(getListContractApi, {}, 'contract');
   if (isLoading) {
     return <Loadingz />;
   }
 
   return (
     <View className="flex-1 mx-4 py-4">
-      <Text className="mt-4 uppercase border-b text-lg font-semibold">{data?.[0]?.department?.name}</Text>
       <FlatList
         data={data}
         keyExtractor={(item) => item._id?.toString()}
@@ -20,20 +20,12 @@ const Employee = () => {
         renderItem={({ item }) => (
           <View className="flex-row items-center justify-between p-4 border-border/20 bg-white my-2 rounded-lg">
             <View className="flex flex-row items-center justify-start">
-              <View className="w-20 h-20 rounded-lg flex justify-center items-center">
-                <Image
-                  source={item?.avatar ? { uri: item?.avatar } : images.avatar}
-                  className="w-full h-full rounded-lg"
-                  resizeMode="cover"
-                />
-              </View>
               <View className="flex flex-col ml-4 font-lg">
                 <Text className="text-lg font-medium mb-1">
-                  {item?.fullName} - {item?.staffCode}
+                  Số hiệu: {item.code}
                 </Text>
-                <Text className="leading-6">{item?.jobPosition?.name}</Text>
-                <Text className="leading-6">Email: {item?.email}</Text>
-                <Text className="leading-6">SĐT: {item?.phone}</Text>
+                <Text className="leading-6">Loại hợp đồng: {contractTypes?.find(c => c._id === item.type)?.name}</Text>
+                <Text className="leading-6">Thời gian: {moment(item.signedDate).format("DD/MM/YYYY")} - {moment(item.expiredDate).format("DD/MM/YYYY")}</Text>
               </View>
             </View>
           </View>

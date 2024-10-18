@@ -43,8 +43,8 @@ export const registerFace = async (id, name, buffer) => {
   const base64String = buffer.buffer.toString('base64');
   const formData = new FormData();
   formData.append('api_key', API_KEY);
-  formData.append('id', "asddasasd");
-  formData.append('name', "asddasasd");
+  formData.append('id', id);
+  formData.append('name', name);
   formData.append('img1', base64String);
   try {
     const response = await axios.put(`${DOMAIN}/api/faceid-update-info/`, formData, {
@@ -59,6 +59,18 @@ export const registerFace = async (id, name, buffer) => {
     }
   } catch (error) {
     console.log(error.response?.data, 22);
+    return { status: 0, mess: 'Đăng ký thất bại' };
+  }
+};
+
+export const deleteFace = async (id) => {
+  const formData = new FormData();
+  formData.append('api_key', API_KEY);
+  formData.append('id', id);
+  try {
+    await axios.delete(`${DOMAIN}/api/faceid-delete/`, formData);
+    return { status: 1 };
+  } catch (error) {
     return { status: 0, mess: 'Đăng ký thất bại' };
   }
 };

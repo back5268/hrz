@@ -27,6 +27,14 @@ export const getListContract = async (req, res) => {
   }
 };
 
+export const getListContractApp = async (req, res) => {
+  try {
+    res.json({ status: 1, data: await listContractMd({ account: req.account?._id }) });
+  } catch (error) {
+    res.status(500).json({ status: 0, mess: error.toString() });
+  }
+};
+
 export const deleteContract = async (req, res) => {
   try {
     const { error, value } = validateData(detailContractValid, req.body);
@@ -97,7 +105,7 @@ export const renderContract = async (req, res) => {
     else {
       const template = await detailTemplateMd({ type: contract.type });
       if (!template || !template.content) return res.status(400).json({ status: 0, mess: 'Không có mẫu hợp đồng!' });
-      const account = await detailAccountMd({ _id: accountz }, [{ path: "jobPosition", select: "name" }]);
+      const account = await detailAccountMd({ _id: accountz }, [{ path: 'jobPosition', select: 'name' }]);
       if (!account) return res.status(400).json({ status: 0, mess: 'Không tìm thấy nhân viên!' });
       const gender = account.gender;
       const banks = await getListBankVietQr();
@@ -115,7 +123,7 @@ export const renderContract = async (req, res) => {
         $so_tai_khoan: account.bankAccount,
         $ngan_hang: banks?.find((b) => b._id === account.bank)?.name,
         $vi_tri_cong_viec: account.jobPosition?.name || '',
-        $ngay_ky: moment(contract.signedDate).format("DD/MM/YYYY")
+        $ngay_ky: moment(contract.signedDate).format('DD/MM/YYYY')
       };
       res.json({ status: 1, data: ghepGiaTri({ params, content }) });
     }

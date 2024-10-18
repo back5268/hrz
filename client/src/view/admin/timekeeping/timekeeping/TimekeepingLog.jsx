@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 const handleParams = (params) => {
   if (Array.isArray(params.dates) && params.dates.length > 0) {
     params.fromDate = databaseDate(params.dates[0]);
-    params.toDate = params.dates[1] ? databaseDate(params.dates[1]) : databaseDate(params.dates[0]);
+    params.toDate = params.dates[1] ? databaseDate(params.dates[1], undefined, true) : databaseDate(params.dates[0], undefined, true);
   }
   return { ...params, dates: undefined };
 };
@@ -20,8 +20,8 @@ const INITPARAMS = {
   page: 1,
   limit: 10,
   dates: [
-    new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7),
-    new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6),
+    new Date(today.getFullYear(), today.getMonth(), today.getDate())
   ]
 };
 export const TimekeepingLog = () => {

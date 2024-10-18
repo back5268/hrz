@@ -1,15 +1,15 @@
 import { Cardz } from '@components/core';
 import { TabPanel, TabView } from 'primereact/tabview';
-import { Notifyz } from './Notifyz';
+import { Newz } from './Newz';
 import { Log } from './Log';
-export * from './DetailNotifyz';
+export * from './DetailNewz';
 
-export const Notify = () => {
+export const New = () => {
   return (
     <Cardz>
       <TabView>
-        <TabPanel header="Danh sách thông báo">
-          <Notifyz />
+        <TabPanel header="Danh sách tin tức">
+          <Newz />
         </TabPanel>
         <TabPanel header="Lịch sử gửi thông báo">
           <Log />

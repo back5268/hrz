@@ -20,7 +20,8 @@ const MainLayout = () => {
 
   const items = [
     { title: 'Nhân viên', name: 'employee' },
-    { title: 'Tin tức', name: 'news' },
+    { title: 'Hợp đồng', name: 'contract' },
+    { title: 'Tin tức', name: 'new' },
     { title: 'Bảng công', name: 'timekeeping' },
     { title: 'Bảng lương', name: 'payroll' },
     { title: 'Thông báo', name: 'notify' },

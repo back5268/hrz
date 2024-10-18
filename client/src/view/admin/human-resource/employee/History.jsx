@@ -1,5 +1,5 @@
 import { getListWorkHistoryApi } from '@api';
-import { personnelTypes } from '@constant';
+import { employeeTypes } from '@constant';
 import { formatNumber } from '@lib/helper';
 import { useGetApi } from '@lib/react-query';
 import { useDataState } from '@store';
@@ -25,7 +25,7 @@ export const History = () => {
           const dataz = item.after;
           if (check) {
             note = [
-              `Loại nhân sự: ${personnelTypes.find((p) => p._id === dataz.type)?.name}`,
+              `Loại nhân sự: ${employeeTypes.find((p) => p._id === dataz.type)?.name}`,
               `Lương cơ bản: ${formatNumber(dataz.salary)} VNĐ`
             ];
           }

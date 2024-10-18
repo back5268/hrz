@@ -38,7 +38,6 @@ const Other = () => {
       [
         {
           text: 'Hủy',
-          onPress: () => console.log('Cancel Pressed'),
           style: 'cancel'
         },
         { text: 'Xác nhận', onPress: () => logout() }
@@ -58,12 +57,12 @@ const Other = () => {
 
   return (
     <SafeAreaView className="h-full">
-      <View className="w-full px-4">
+      <View className="w-full px-6">
         <View className="flex flex-row items-center justify-start my-16 ml-8">
-          <View className="w-20 h-20 border border-secondary rounded-lg flex justify-center items-center">
+          <View className="w-20 h-20 rounded-lg flex justify-center items-center">
             <Image
               source={userInfo?.avatar ? { uri: userInfo?.avatar } : images.avatar}
-              className="w-[90%] h-[90%] rounded-lg"
+              className="w-full h-full rounded-lg"
               resizeMode="cover"
             />
           </View>
@@ -75,7 +74,16 @@ const Other = () => {
         </View>
         <Hrz />
         {items.map((item, index) => (
-          <Item label={item.label} icon={item.icon} key={index} onPress={item.onPress} />
+          <Fragment key={index}>
+            <TouchableOpacity onPress={item.onPress} className="flex flex-row w-full justify-between items-center py-4 px-4">
+              <View className="flex flex-row items-center">
+                <Iconz size={20} name={item.icon} />
+                <Text className="text-base ml-4">{item.label}</Text>
+              </View>
+              <Iconz size={20} name="chevron-right" />
+            </TouchableOpacity>
+            <Hrz />
+          </Fragment>
         ))}
       </View>
     </SafeAreaView>

@@ -201,7 +201,7 @@ export const tools = [
       },
       {
         name: 'Thông tin nhân sự',
-        route: '/personnel',
+        route: '/employee',
         actions: ['delete', 'create', 'update', 'read']
       },
       {
@@ -268,7 +268,7 @@ export const tools = [
       },
       {
         name: 'Quản lý thông báo',
-        route: '/notify',
+        route: '/new',
         actions: ['delete', 'create', 'update', 'read']
       },
       {

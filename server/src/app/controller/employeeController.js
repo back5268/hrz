@@ -1,6 +1,6 @@
-import { personnelTypes } from '@constant';
+import { EmployeeTypes } from '@constant';
 import { uploadFileToFirebase } from '@lib/firebase';
-import { createPersonnelValid, detailPersonnelValid, listPersonnelValid, updatePersonnelValid } from '@lib/validation';
+import { createEmployeeValid, detailEmployeeValid, listEmployeeValid, updateEmployeeValid } from '@lib/validation';
 import {
   countAccountMd,
   createAccountMd,
@@ -29,11 +29,11 @@ import {
 import { formatNumber, generateRandomString, validateData } from '@utils';
 import moment from 'moment';
 import bcrypt from 'bcrypt';
-import { registerFace } from '@lib/face-id';
+import { deleteFace, registerFace } from '@lib/face-id';
 
 export const getListWorkHistory = async (req, res) => {
   try {
-    const { error, value } = validateData(detailPersonnelValid, req.query);
+    const { error, value } = validateData(detailEmployeeValid, req.query);
     const { _id } = value;
     if (error) return res.status(400).json({ status: 0, mess: error });
     res.json({ status: 1, data: await listWorkHistoryMd({ account: _id }) });
@@ -65,9 +65,9 @@ export const getListEmployeeApp = async (req, res) => {
   }
 };
 
-export const getListPersonnel = async (req, res) => {
+export const getListEmployee = async (req, res) => {
   try {
-    const { error, value } = validateData(listPersonnelValid, req.query);
+    const { error, value } = validateData(listEmployeeValid, req.query);
     if (error) return res.status(400).json({ status: 0, mess: error });
     const { page, limit, keySearch, email, department, position, jobPosition, status } = value;
     const where = {};
@@ -89,9 +89,9 @@ export const getListPersonnel = async (req, res) => {
   }
 };
 
-export const deletePersonnel = async (req, res) => {
+export const deleteEmployee = async (req, res) => {
   try {
-    const { error, value } = validateData(detailPersonnelValid, req.body);
+    const { error, value } = validateData(detailEmployeeValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
     const { _id } = value;
     const data = await deleteAccountMd({ _id });
@@ -104,9 +104,9 @@ export const deletePersonnel = async (req, res) => {
   }
 };
 
-export const detailPersonnel = async (req, res) => {
+export const detailEmployee = async (req, res) => {
   try {
-    const { error, value } = validateData(detailPersonnelValid, req.query);
+    const { error, value } = validateData(detailEmployeeValid, req.query);
     if (error) return res.status(400).json({ status: 0, mess: error });
     const { _id } = value;
     const data = {
@@ -122,9 +122,9 @@ export const detailPersonnel = async (req, res) => {
   }
 };
 
-export const updatePersonnel = async (req, res) => {
+export const updateEmployee = async (req, res) => {
   try {
-    const { error, value } = validateData(updatePersonnelValid, req.body);
+    const { error, value } = validateData(updateEmployeeValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
     const { _id, staffCode, email, phone, cmt, type, department, salary, position, jobPosition } = value;
     value._id = undefined;
@@ -157,6 +157,7 @@ export const updatePersonnel = async (req, res) => {
       if (checkCmt) return res.status(400).json({ status: 0, mess: 'Số CMT/CCCD đã tồn tại!' });
     }
     if (req.files?.['avatar']?.length > 0) {
+      await deleteFace();
       const { status, mess } = await registerFace(_id, value.fullName || dataz.fullName, req.files['avatar'][0]);
       if (!status && mess) return res.status(400).json({ status: 0, mess });
       for (const file of req.files['avatar']) {
@@ -196,7 +197,7 @@ export const updatePersonnel = async (req, res) => {
       const note = [];
       if (type)
         note.push(
-          `Thay đổi loại nhân sự từ ${personnelTypes.find((p) => p._id === dataz.type)?.name} thành ${personnelTypes.find((p) => p._id === type)?.name}`
+          `Thay đổi loại nhân sự từ ${EmployeeTypes.find((p) => p._id === dataz.type)?.name} thành ${EmployeeTypes.find((p) => p._id === type)?.name}`
         );
       if (department) {
         if (dataz.department?.name) note.push(`Điều chuyển phòng ban từ ${dataz.department?.name} sang ${checkDepartment?.name}`);
@@ -223,9 +224,9 @@ export const updatePersonnel = async (req, res) => {
   }
 };
 
-export const createPersonnel = async (req, res) => {
+export const createEmployee = async (req, res) => {
   try {
-    const { error, value } = validateData(createPersonnelValid, req.body);
+    const { error, value } = validateData(createEmployeeValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
     const { staffCode, email, phone, cmt } = value;
     const checkCode = await detailAccountMd({ staffCode });
@@ -287,7 +288,7 @@ export const createPersonnel = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   try {
-    const { error, value } = validateData(detailPersonnelValid, req.body);
+    const { error, value } = validateData(detailEmployeeValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
     const { _id } = value;
     const newPassword = generateRandomString(8);

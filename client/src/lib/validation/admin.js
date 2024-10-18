@@ -18,7 +18,7 @@ export const DepartmentValidation = yup.object({
   code: yup.string().required('Mã công việc không được bỏ trống!')
 });
 
-export const PersonnelValidation = yup.object({
+export const EmployeeValidation = yup.object({
   staffCode: yup.string().required('Mã nhân viên không được bỏ trống!'),
   fullName: yup.string().required('Tên nhân viên không được bỏ trống!'),
   email: yup.string().email('Email không đúng định dạng!').required('Email không được bỏ trống!'),
@@ -53,7 +53,7 @@ export const PermissionValidation = yup.object({
   name: yup.string().required('Tên nhóm quyền không được bỏ trống!')
 });
 
-export const NotifyValidation = yup.object({
+export const NewValidation = yup.object({
   subject: yup.string().required('Tiêu đề không được bỏ trống!')
 });
 

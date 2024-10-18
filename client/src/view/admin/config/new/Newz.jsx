@@ -1,4 +1,4 @@
-import { deleteNotifyApi, getListNotifyApi, updateNotifyApi } from '@api';
+import { deleteNewApi, getListNewApi, updateNewApi } from '@api';
 import { DataTable, DataFilter, UserBody } from '@components/base';
 import { Columnz, Inputzz, Tagz } from '@components/core';
 import { useGetParams } from '@hooks';
@@ -7,12 +7,12 @@ import { useDataState } from '@store';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const Notifyz = () => {
+export const Newz = () => {
   const navigate = useNavigate();
   const initParams = useGetParams();
   const [params, setParams] = useState(initParams);
   const [filter, setFilter] = useState({});
-  const { isLoading, data } = useGetApi(getListNotifyApi, params, 'notify');
+  const { isLoading, data } = useGetApi(getListNewApi, params, 'new');
   const { departments } = useDataState();
 
   const Body = (data = [], value = []) => {
@@ -40,7 +40,7 @@ export const Notifyz = () => {
         />
       </DataFilter>
       <DataTable
-        title="Thông báo"
+        title="tin tức"
         loading={isLoading}
         data={data?.documents}
         total={data?.total}
@@ -48,13 +48,13 @@ export const Notifyz = () => {
         setParams={setParams}
         baseActions={['create', 'detail', 'delete']}
         actionsInfo={{
-          onViewDetail: (item) => navigate(`/notify/detail/${item._id}`),
-          deleteApi: deleteNotifyApi
+          onViewDetail: (item) => navigate(`/new/detail/${item._id}`),
+          deleteApi: deleteNewApi
         }}
-        statusInfo={{ changeStatusApi: updateNotifyApi }}
+        statusInfo={{ changeStatusApi: updateNewApi }}
         headerInfo={{
           onCreate: () => {
-            navigate('/notify/create');
+            navigate('/new/create');
           }
         }}
       >

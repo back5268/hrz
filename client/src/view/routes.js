@@ -1,6 +1,6 @@
-import { DetailNotifyz, DetailPermission, Notify, Permission, Template } from './admin/config';
+import { DetailNewz, DetailPermission, New, Permission, Template } from './admin/config';
 import { DashBoard } from './admin/dashboard';
-import { Department, DetailJobPosition, DetailPersonnel, DetailPosition, JobPosition, Personnel, Position } from './admin/human-resource';
+import { Department, DetailJobPosition, DetailEmployee, DetailPosition, JobPosition, Employee, Position } from './admin/human-resource';
 import { DetailShift, Device, Schedule, Shift, Timekeeping } from './admin/timekeeping';
 import { ForgotPassword, SignIn } from './auth';
 
@@ -16,9 +16,9 @@ export const routes = [
   { path: '/job-position/create', element: DetailJobPosition, layout: true },
   { path: '/job-position/detail/:_id', element: DetailJobPosition, layout: true },
   { path: '/department', element: Department, layout: true },
-  { path: '/personnel', element: Personnel, layout: true },
-  { path: '/personnel/create', element: DetailPersonnel, layout: true },
-  { path: '/personnel/detail/:_id', element: DetailPersonnel, layout: true },
+  { path: '/employee', element: Employee, layout: true },
+  { path: '/employee/create', element: DetailEmployee, layout: true },
+  { path: '/employee/detail/:_id', element: DetailEmployee, layout: true },
 
   { path: '/device', element: Device, layout: true },
   { path: '/shift', element: Shift, layout: true },
@@ -31,7 +31,7 @@ export const routes = [
   { path: '/permission/create', element: DetailPermission, layout: true },
   { path: '/permission/detail/:_id', element: DetailPermission, layout: true },
   { path: '/template', element: Template, layout: true },
-  { path: '/notify', element: Notify, layout: true },
-  { path: '/notify/create', element: DetailNotifyz, layout: true },
-  { path: '/notify/detail/:_id', element: DetailNotifyz, layout: true },
+  { path: '/new', element: New, layout: true },
+  { path: '/new/create', element: DetailNewz, layout: true },
+  { path: '/new/detail/:_id', element: DetailNewz, layout: true },
 ];

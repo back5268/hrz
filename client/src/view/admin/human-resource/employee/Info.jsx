@@ -1,19 +1,19 @@
 import {
-  createPersonnelApi,
-  detailPersonnelApi,
+  createEmployeeApi,
+  detailEmployeeApi,
   getInfoApi,
   getListAccountInfoApi,
   getListBankInfoApi,
   getListJobPositionInfoApi,
   getListPositionInfoApi,
-  updatePersonnelApi
+  updateEmployeeApi
 } from '@api';
 import { MultiRadio, UploadFiles, UploadImage } from '@components/base';
 import { Buttonz, CalendarFormz, DropdownFormz, InputFormz, ProgressSpinnerz } from '@components/core';
-import { genders, graduationTypes, maritalStatus, personnelTypes, qualifications, taxAuths } from '@constant';
+import { genders, graduationTypes, maritalStatus, employeeTypes, qualifications, taxAuths } from '@constant';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useGetApi, usePostApi } from '@lib/react-query';
-import { PersonnelValidation } from '@lib/validation';
+import { EmployeeValidation } from '@lib/validation';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -62,7 +62,7 @@ export const Infos = () => {
   const { setAccounts, departments } = useDataState();
   const { _id } = useParams();
   const isUpdate = Boolean(_id);
-  const { data: item } = useGetApi(detailPersonnelApi, { _id }, 'personnelz', isUpdate);
+  const { data: item } = useGetApi(detailEmployeeApi, { _id }, 'employeez', isUpdate);
   const { data: banks } = useGetApi(getListBankInfoApi, {}, 'banks');
   const { data: positions } = useGetApi(getListPositionInfoApi, {}, 'positions');
   const { data: jobPositions } = useGetApi(getListJobPositionInfoApi, {}, 'jobPositions');
@@ -73,7 +73,7 @@ export const Infos = () => {
   const [healthFiles, setHealthFiles] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [dependents, setDependents] = useState([]);
-  const { mutateAsync, isPending } = usePostApi(isUpdate ? updatePersonnelApi : createPersonnelApi);
+  const { mutateAsync, isPending } = usePostApi(isUpdate ? updateEmployeeApi : createEmployeeApi);
 
   const {
     register,
@@ -82,7 +82,7 @@ export const Infos = () => {
     setValue,
     watch
   } = useForm({
-    resolver: yupResolver(PersonnelValidation),
+    resolver: yupResolver(EmployeeValidation),
     defaultValues
   });
 
@@ -190,7 +190,7 @@ export const Infos = () => {
                   <DropdownFormz
                     id="type"
                     label="Loại nhân sự (*)"
-                    options={personnelTypes}
+                    options={employeeTypes}
                     value={watch('type')}
                     errors={errors}
                     onChange={(e) => setValue('type', e.target.value)}

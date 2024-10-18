@@ -5,7 +5,7 @@ import { History } from './History';
 import { Contracts } from './Contracts';
 import { useParams } from 'react-router-dom';
 
-export const DetailPersonnel = () => {
+export const DetailEmployee = () => {
   const { _id } = useParams();
 
   return (

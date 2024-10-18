@@ -11,9 +11,7 @@ export const Layout = ({ children }) => {
   const onSignOut = () => {
     clearUserInfo();
     localStorage.removeItem('token');
-    setTimeout(() => {
-      showToast({ title: 'Đăng xuất thành công', severity: 'success' });
-    }, 1000);
+    showToast({ title: 'Đăng xuất thành công', severity: 'success' });
     setLoadingz();
   };
 

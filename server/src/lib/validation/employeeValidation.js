@@ -1,4 +1,4 @@
-export const listPersonnelValid = {
+export const listEmployeeValid = {
   page: 'number',
   limit: 'number',
   keySearch: { type: 'string', allowNull: true },
@@ -9,11 +9,11 @@ export const listPersonnelValid = {
   status: { type: 'number', allowNull: true }
 };
 
-export const detailPersonnelValid = {
+export const detailEmployeeValid = {
   _id: 'string'
 };
 
-export const updatePersonnelValid = {
+export const updateEmployeeValid = {
   _id: 'string',
   department: { type: 'string', allowNull: true },
   position: { type: 'string', allowNull: true },
@@ -58,7 +58,7 @@ export const updatePersonnelValid = {
   status: { type: 'number', allowNull: true },
 };
 
-export const createPersonnelValid = {
+export const createEmployeeValid = {
   department: { type: 'string', allowNull: true },
   position: 'string',
   jobPosition: 'string',

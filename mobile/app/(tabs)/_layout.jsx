@@ -1,9 +1,10 @@
-import { Redirect, Tabs } from 'expo-router';
+import { Redirect, Tabs, useSegments } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useUserState } from '@/store';
 
 const TabLayout = () => {
   const { isAuthenticated } = useUserState();
+  const segments = useSegments();
   if (!isAuthenticated) return <Redirect href="/sign-in" />;
 
   return (
@@ -15,9 +16,7 @@ const TabLayout = () => {
         },
         headerShadowVisible: false,
         headerTintColor: '#fff',
-        tabBarStyle: {
-          height: 56,
-        }
+        tabBarStyle: ["home", "other", "(other)"].includes(segments?.[2] ||segments?.[1] ) ? { height: 56 } : { display: 'none' }
       }}
     >
       <Tabs.Screen
@@ -33,9 +32,7 @@ const TabLayout = () => {
         options={{
           title: 'Khác',
           headerShown: false,
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name="list" color={color} size={24} />
-          )
+          tabBarIcon: ({ color, focused }) => <Ionicons name="list" color={color} size={24} />
         }}
       />
     </Tabs>
