@@ -3,39 +3,38 @@ import { Redirect, router } from 'expo-router';
 import { View, Text, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '@/constants';
-import { Buttonz } from '@/components/core';
 import { useUserState } from '@/store';
+import { useEffect } from 'react';
+import { Buttonz } from '@/components/core';
 
 const Welcome = () => {
   const { isAuthenticated } = useUserState();
   if (isAuthenticated) return <Redirect href="/home" />;
 
+  useEffect(() => {
+    const timer = setTimeout(() => router.push('/sign-in'), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className="h-full">
       <ScrollView
         contentContainerStyle={{
           height: '100%'
         }}
       >
         <View className="w-full flex justify-center items-center h-full px-4">
-          <Image source={images.logo} className="w-[130px] h-[84px]" resizeMode="contain" />
-
-          <Image source={images.cards} className="max-w-[380px] w-full h-[298px]" resizeMode="contain" />
-
-          <View className="relative mt-5">
-            <Text className="text-3xl text-white font-bold text-center">
-              Discover Endless{'\n'}
-              Possibilities with <Text className="text-secondary-200">Aora</Text>
+          <Image source={images.logoz} className="w-48 h-48" resizeMode="contain" />
+          <View className="relative mb-4">
+            <Text className="text-xl text-primary font-bold text-center">
+              Phần mềm quản lý nhân sự <Text className="text-secondary-200">Hrz</Text>
             </Text>
-
-            <Image source={images.path} className="w-[136px] h-[15px] absolute -bottom-2 -right-8" resizeMode="contain" />
+            <Image source={images.path} className="w-[40px] h-[20px] absolute -bottom-3 -right-1" resizeMode="contain" />
           </View>
-
-          <Text className="text-sm font-pregular text-gray-100 mt-7 text-center">
-            Where Creativity Meets Innovation: Embark on a Journey of Limitless Exploration with Aora
-          </Text>
-
-          <Buttonz label="Đăng nhập" handlePress={() => router.push('/sign-in')} />
+          <Image source={images.cards} className="max-w-[380px] w-full h-[298px]" resizeMode="contain" />
+          <View className="w-6/12">
+            <Buttonz label="Đăng nhập" handlePress={() => router.push('/sign-in')} />
+          </View>
         </View>
       </ScrollView>
 

@@ -148,7 +148,7 @@ export const DataTable = (props) => {
   );
 
   return (
-    <div className="w-full px-2">
+    <div className="w-full px-2 rounded-md overflow-hidden">
       <Tablez
         header={isHeader && header}
         params={params}

@@ -4,9 +4,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#673AB7',
-        border: 'rgba(0, 0, 0, 0.38)',
-        sidebar: '#F5F5F5'
+        primary: 'var(--primary-color)',
+        secondary: 'var(--secondary-color)',
+        border: 'var(--border-color)',
+        background: 'var(--background-color)'
       },
       fontFamily: {
         pthin: ['Poppins-Thin', 'sans-serif'],

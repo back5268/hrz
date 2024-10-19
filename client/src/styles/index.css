@@ -18,8 +18,9 @@
 
 :root {
   --primary-color: #673AB7;
-  --border-color: rgba(0, 0, 0, 0.38);
-  --background-color: #F5F5F5;
+  --border-color: #b9bfcb;
+  --background-color: rgba(0, 0, 0, 0.04);
+  --secondary-color: #8d95a8;
 }
 
 ::-webkit-scrollbar {

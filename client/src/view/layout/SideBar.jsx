@@ -51,16 +51,15 @@ export const SideBar = (props) => {
 
   return (
     <div
-      className={`fixed left-0 inset-y-0 h-screen z-40 w-full max-w-[18rem] shadow-custom flex flex-col justify-between
-      transition-all duration-500 ease-in-out bg-background ${showSidebar ? '' : '-translate-x-full'}`}
+      className={`fixed left-0 inset-y-0 h-screen z-40 w-full max-w-[20rem] flex flex-col justify-between border-r border-border
+      transition-all duration-500 ease-in-out bg-white ${showSidebar ? '' : '-translate-x-full'}`}
     >
       <div>
         <div className="p-4">
-          <div className="mb-2 flex items-center gap-4 p-4">
-            <Logo />
+          <div className="flex justify-center items-center mb-2">
+            <Logo classNameImg="h-16" />
           </div>
         </div>
-        <hr className="mx-4" />
         <nav className="flex flex-col gap-1 text-sm font-normal text-inherit h-sidebar overflow-scroll mt-4 px-4">
           {tools?.map((item, index) => {
             const Icon = icons[item.icon];

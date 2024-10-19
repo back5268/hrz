@@ -10,10 +10,7 @@ const TabLayout = () => {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: 'rgba(0, 188, 212, 1)',
-        headerStyle: {
-          backgroundColor: '#25292e'
-        },
+        tabBarActiveTintColor: '#673AB7',
         headerShadowVisible: false,
         headerTintColor: '#fff',
         tabBarStyle: ["home", "other", "(other)"].includes(segments?.[2] ||segments?.[1] ) ? { height: 56 } : { display: 'none' }

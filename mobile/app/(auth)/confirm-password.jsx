@@ -1,19 +1,17 @@
 import { useState } from 'react';
-import { Link } from 'expo-router';
+import { Link, router, useGlobalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Text, ScrollView, Dimensions } from 'react-native';
 import { Buttonz, Inputz, Loadingz } from '@/components/core';
-import { signInApi } from '@/api';
-import { useUserState } from '@/store';
+import { confirmPasswordApi } from '@/api';
 import { Logo } from '@/components/base';
 import Toast from 'react-native-toast-message';
-import { asyncStorage } from '@/lib/async-storage';
 
-const SignIn = () => {
-  const { setLoadingz } = useUserState();
+const ForgotPassword = () => {
+  const { username } = useGlobalSearchParams();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
-    username: '',
+    otp: '',
     password: ''
   });
 
@@ -26,22 +24,22 @@ const SignIn = () => {
 
   const submit = async () => {
     const title =
-      !form.username && !form.password
-        ? 'Vui lòng nhập tài khoản, mật khẩu để tiếp tục!'
-        : form.username && !form.password
+      !form.otp && !form.password
+        ? 'Vui lòng nhập mã OTP, mật khẩu để tiếp tục!'
+        : form.otp && !form.password
           ? 'Vui lòng nhập mật khẩu!'
-          : !form.username && form.password
-            ? 'Vui lòng nhập tài khoản'
-            : form.username && form.password && form.password.length < 6
+          : !form.otp && form.password
+            ? 'Vui lòng nhập mã OTP'
+            : form.otp && form.password && form.password.length < 6
               ? 'Mật khẩu dài tối thiểu 6 ký tự!'
               : '';
     if (title) return showToast(title);
-    setLoading(true)
-    const response = await signInApi(form);
-    setLoading(false)
-    if (response) {
-      asyncStorage('token', response);
-      setLoadingz();
+    setLoading(true);
+    const response = await confirmPasswordApi({ ...form, username });
+    setLoading(false);
+    if (response?.status) {
+      showToast('Đổi mật khẩu thành công vui lòng đăng nhập lại!', 'success');
+      router.push('/sign-in');
     }
   };
 
@@ -56,13 +54,9 @@ const SignIn = () => {
           }}
         >
           <Logo />
-          <Text className="text-lg text-center text-primary my-4">Vui lòng đăng nhập để tiếp tục</Text>
-          <Inputz
-            icon="user"
-            placeholder="Tài khoản (*)"
-            value={form.username}
-            handleChangeText={(e) => setForm({ ...form, username: e })}
-          />
+          <Text className="text-lg text-center text-primary my-4">Xác nhận mật khẩu</Text>
+          <Text className="text-center my-2">Mã OTP đã được gửi đến email {username}, có hiệu lực trong vòng 5 phút</Text>
+          <Inputz icon="pocket" placeholder="Mã OTP (*)" value={form.otp} handleChangeText={(e) => setForm({ ...form, otp: e })} />
           <Inputz
             icon="lock"
             type="password"
@@ -71,10 +65,10 @@ const SignIn = () => {
             handleChangeText={(e) => setForm({ ...form, password: e })}
           />
           <View className="mt-8">
-            <Buttonz label="Đăng nhập" handlePress={submit} />
+            <Buttonz label="Xác nhận" handlePress={submit} />
           </View>
-          <Link href="/forgot-password" className="text-primary text-center font-semibold">
-            Quên mật khẩu
+          <Link href="/sign-in" className="text-primary text-center font-semibold">
+            Quay lại đăng nhập
           </Link>
         </View>
       </ScrollView>
@@ -82,4 +76,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default ForgotPassword;

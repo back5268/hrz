@@ -96,6 +96,8 @@ export const Checking = ({ setResult = () => {}, setLoading = () => {} }) => {
         latitude,
         longitude
       });
+      console.log(reponse);
+      
       setLoading(false);
       let address = '',
         status = false;
@@ -116,7 +118,7 @@ export const Checking = ({ setResult = () => {}, setLoading = () => {} }) => {
         ...reponse,
         status,
         render: !pre.render,
-        address: `${address?.street ? address?.street + ', ' : ''}${address?.subregion ? address?.subregion + ', ' : ''}, ${address?.region ? address?.region + ', ' : ''}`
+        address: `${address?.street ? address?.street + ', ' : ''}${address?.subregion ? address?.subregion + ', ' : ''}${address?.region ? address?.region + ', ' : ''}`
       }));
     }
   };

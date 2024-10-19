@@ -15,6 +15,7 @@ export default {
       },
       colors: {
         primary: 'var(--primary-color)',
+        secondary: 'var(--secondary-color)',
         border: 'var(--border-color)',
         background: 'var(--background-color)'
       },

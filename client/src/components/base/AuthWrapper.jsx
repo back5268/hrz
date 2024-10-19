@@ -8,8 +8,8 @@ export const AuthWrapper = (props) => {
       <div className="relative flex justify-center items-center">
         <div className="w-[24rem] py-12 px-6 shadow-custom rounded-md">
           <div className="text-center">
-            <Logo className="m-4" />
-            <p className="mb-8 text-md">{headerLabel}</p>
+            <Logo className="mb-6" />
+            <p className="mb-8 text-md text-primary">{headerLabel}</p>
           </div>
           {children}
           <div className="flex flex-col gap-4 mt-6">

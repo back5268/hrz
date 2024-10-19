@@ -7,7 +7,7 @@ const Wrapper = ({ isModal, children, title, open, setOpen }) => {
   if (isModal)
     return (
       <Dialogz className="w-[1200px]" header={title} open={open} setOpen={setOpen}>
-        {children}
+        <div className="border-t border-border">{children}</div>
       </Dialogz>
     );
   else

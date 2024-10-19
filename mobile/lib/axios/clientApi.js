@@ -1,5 +1,6 @@
 import { getStorage } from '@/lib/async-storage';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 export const clientApi = axios.create({
   baseURL: 'http://192.168.0.101:5000/',
@@ -23,7 +24,10 @@ clientApi.interceptors.response.use(
   },
   async function (error) {
     if (error) {
-      return { status: 0, mess: String(error) };
+      Toast.show({
+        type: 'error',
+        text2: error?.response?.data?.mess || 'Đường truyền không ổn định!'
+      });
     }
   }
 );

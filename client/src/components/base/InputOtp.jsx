@@ -18,7 +18,7 @@ export const InputOtp = (props) => {
   };
 
   return (
-    <div className="flex items-start justify-between w-full">
+    <div className="flex gap-4 items-start justify-between w-full">
       <Inputz label="Mã OTP (*)" {...prop} />
       <Buttonz onClick={onSendOtp} loading={isPending} className="mt-1 text-center min-w-[100px]" label="Gửi OTP" />
     </div>
