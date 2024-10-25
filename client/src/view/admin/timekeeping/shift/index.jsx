@@ -63,7 +63,7 @@ export const Shift = () => {
         total={data?.total}
         params={params}
         setParams={setParams}
-        baseActions={['create', 'detail', 'delete']}
+        baseActions={['create', 'detail']}
         actionsInfo={{
           onViewDetail: (item) => navigate(`/shift/detail/${item._id}`),
           deleteApi: deleteShiftApi

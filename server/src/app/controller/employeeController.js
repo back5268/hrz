@@ -12,6 +12,7 @@ import {
   deleteContactMd,
   deleteEducationMd,
   deleteInsuranceMd,
+  deleteTimekeepingMd,
   detailAccountMd,
   detailContactMd,
   detailDepartmentMd,
@@ -20,6 +21,7 @@ import {
   detailJobPositionMd,
   detailPositionMd,
   listAccountMd,
+  listShiftMd,
   listWorkHistoryMd,
   updateAccountMd,
   updateContactMd,
@@ -30,6 +32,7 @@ import { formatNumber, generateRandomString, validateData } from '@utils';
 import moment from 'moment';
 import bcrypt from 'bcrypt';
 import { deleteFace, registerFace } from '@lib/face-id';
+import { createTimekeepingByAccount } from '@repository';
 
 export const getListWorkHistory = async (req, res) => {
   try {
@@ -110,10 +113,10 @@ export const detailEmployee = async (req, res) => {
     if (error) return res.status(400).json({ status: 0, mess: error });
     const { _id } = value;
     const data = {
-      ...(await detailContactMd({ account: _id }))?._doc,
-      ...(await detailInsuranceMd({ account: _id }))?._doc,
-      ...(await detailEducationMd({ account: _id }))?._doc,
-      ...(await detailAccountMd({ _id }))?._doc
+      ...(await detailContactMd({ account: _id })),
+      ...(await detailInsuranceMd({ account: _id })),
+      ...(await detailEducationMd({ account: _id })),
+      ...(await detailAccountMd({ _id }))
     };
     if (!data?._id || String(data._id) !== _id) return res.status(400).json({ status: 0, mess: 'Nhân viên không tồn tại!' });
     res.json({ status: 1, data });
@@ -218,6 +221,16 @@ export const updateEmployee = async (req, res) => {
       });
     }
 
+    if (department) {
+      await deleteTimekeepingMd({ department: dataz?.department?._id, date: { $gt: new Date() } });
+      const shifts = await listShiftMd({ departments: { $elemMatch: { $eq: department } } });
+      if (shifts?.length > 0) {
+        for (const shift of shifts) {
+          await createTimekeepingByAccount({ ...shift, dateStart: moment().add(1, 'days').format('YYYY-MM-DD') }, data);
+        }
+      }
+    }
+
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -228,7 +241,7 @@ export const createEmployee = async (req, res) => {
   try {
     const { error, value } = validateData(createEmployeeValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
-    const { staffCode, email, phone, cmt } = value;
+    const { staffCode, email, phone, cmt, department } = value;
     const checkCode = await detailAccountMd({ staffCode });
     if (checkCode) return res.status(400).json({ status: 0, mess: 'Mã nhân viên đã tồn tại!' });
     const checkEmail = await detailAccountMd({ email });
@@ -240,8 +253,6 @@ export const createEmployee = async (req, res) => {
 
     (value.avatar = null), (value.cmtFiles = []), (value.taxFiles = []), (value.educationFiles = []), (value.healthFiles = []);
     if (req.files?.['avatar']?.length > 0) {
-      const { status, mess } = await registerFace(_id, value.fullName || dataz.fullName, req.files['avatar'][0]);
-      if (!status && mess) return res.status(400).json({ status: 0, mess });
       for (const file of req.files['avatar']) {
         value.avatar = await uploadFileToFirebase(file);
       }
@@ -280,6 +291,19 @@ export const createEmployee = async (req, res) => {
       note: [`Thêm mới nhân viên, ngày vào ${moment(value.dateIn).format('DD/MM/YYYY')}`]
     });
 
+    if (req.files?.['avatar']?.length > 0) {
+      const { status, mess } = await registerFace(data._id, value.fullName, req.files['avatar'][0]);
+      if (!status && mess) return res.status(400).json({ status: 0, mess });
+    }
+
+    if (department) {
+      const shifts = await listShiftMd({ departments: { $elemMatch: { $eq: department } } });
+      if (shifts?.length > 0) {
+        for (const shift of shifts) {
+          await createTimekeepingByAccount(data, shift);
+        }
+      }
+    }
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

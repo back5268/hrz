@@ -1,7 +1,16 @@
 import { createShiftValid, detailShiftValid, listShiftValid, updateShiftValid } from '@lib/validation';
-import { countShiftMd, createShiftMd, deleteShiftMd, detailShiftMd, listShiftMd, updateManyScheduleMd, updateShiftMd } from '@models';
-import { createScheduleByShift } from '@repository';
+import {
+  countShiftMd,
+  createShiftMd,
+  deleteShiftMd,
+  deleteTimekeepingMd,
+  detailShiftMd,
+  listShiftMd,
+  updateShiftMd
+} from '@models';
+import { createTimekeepingByShift } from '@repository';
 import { validateData } from '@utils';
+import moment from 'moment';
 
 export const getListShift = async (req, res) => {
   try {
@@ -35,7 +44,6 @@ export const deleteShift = async (req, res) => {
     const { _id } = value;
     const data = await deleteShiftMd({ _id });
     if (!data) return res.status(400).json({ status: 0, mess: 'Ca làm việc không tồn tại!' });
-    await updateManyScheduleMd({ shift: _id, date: { $gte: new Date() } }, { deletedAt: new Date() });
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -59,7 +67,7 @@ export const updateShift = async (req, res) => {
   try {
     const { error, value } = validateData(updateShiftValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
-    const { _id, name, code } = value;
+    const { _id, name, code, dateEnd } = value;
     const dataz = await detailShiftMd({ _id });
     if (!dataz) return res.status(400).json({ status: 0, mess: 'Ca làm việc không tồn tại!' });
     if (name) {
@@ -70,7 +78,14 @@ export const updateShift = async (req, res) => {
       const checkCode = await detailShiftMd({ code });
       if (checkCode) return res.status(400).json({ status: 0, mess: 'Mã ca làm việc đã tồn tại!' });
     }
-    const data = await updateShiftMd({ _id }, { updatedBy: req.account._id, ...value });
+    if (dateEnd && new Date(dateEnd) < new Date())
+      return res.status(400).json({ status: 0, mess: 'Ngày kết thúc phải lớn hơn ngày hiện tại!' });
+    const data = await updateShiftMd({ _id }, { updatedBy: req.account._id, name, code, dateEnd });
+    if (dateEnd) {
+      if (new Date(dateEnd) > new Date(dataz.dateEnd))
+        createTimekeepingByShift({ ...dataz, dateStart: moment(dataz.dateStart).add(1, 'days').format('YYYY-MM-DD'), dateEnd });
+      else await deleteTimekeepingMd({ shift: _id, date: { $gt: dateEnd } });
+    }
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -81,14 +96,13 @@ export const createShift = async (req, res) => {
   try {
     const { error, value } = validateData(createShiftValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
-    const { name, code, dateStart } = value;
+    const { name, code } = value;
     const checkName = await detailShiftMd({ name });
     if (checkName) return res.status(400).json({ status: 0, mess: 'Tên ca làm việc đã tồn tại!' });
     const checkCode = await detailShiftMd({ code });
     if (checkCode) return res.status(400).json({ status: 0, mess: 'Mã ca làm việc đã tồn tại!' });
-    if (new Date(dateStart) < new Date()) return res.status(400).json({ status: 0, mess: 'Ngày áp dụng không được nhỏ hơn hiện tại!' });
     const data = await createShiftMd({ updatedBy: req.account._id, ...value });
-    await createScheduleByShift(data);
+    await createTimekeepingByShift(data);
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

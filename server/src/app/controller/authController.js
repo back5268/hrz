@@ -20,7 +20,7 @@ export const getInfo = async (req, res) => {
         items.forEach((c) => {
           if (permissions.find((p) => p.route === c.route)) itemz.push(c);
         });
-        if (itemz.length > 0) return { ...tool?._doc, items: itemz };
+        if (itemz.length > 0) return { ...tool, items: itemz };
       });
       tools = tools.filter((t) => t);
     }

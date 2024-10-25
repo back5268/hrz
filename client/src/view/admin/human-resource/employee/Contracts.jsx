@@ -1,4 +1,4 @@
-import { deleteContractApi, getListContractApi, renderContractApi } from '@api';
+import { cancelContractApi, deleteContractApi, getListContractApi, renderContractApi } from '@api';
 import { Body, DataFilter, TimeBody, UserBody } from '@components/base';
 import { Buttonz, Columnz, Dropdownzz, Tablez } from '@components/core';
 import { useGetApi } from '@lib/react-query';
@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { DetailContract } from './DetailContract';
 import { contractStatus, contractTypes } from '@constant';
 import { useParams } from 'react-router-dom';
-import { DocumentMagnifyingGlassIcon, PrinterIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { DocumentMagnifyingGlassIcon, PrinterIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { useToastState } from '@store';
 import { Print } from './Print';
@@ -35,6 +35,21 @@ export const Contracts = () => {
         if (response) {
           setParams((pre) => ({ ...pre, render: !pre.render }));
           showToast({ title: 'Xóa hợp đồng thành công!', severity: 'success' });
+        }
+      }
+    });
+  };
+
+  const onCancle = (item) => {
+    confirmDialog({
+      message: 'Bạn có chắc chắn muốn kết thúc hợp đồng này!',
+      header: 'HRZ',
+      icon: 'pi pi-info-circle',
+      accept: async () => {
+        const response = await cancelContractApi({ account: _id, _id: item._id });
+        if (response) {
+          setParams((pre) => ({ ...pre, render: !pre.render }));
+          showToast({ title: 'Kết thúc hợp đồng thành công!', severity: 'success' });
         }
       }
     });
@@ -87,6 +102,28 @@ export const Contracts = () => {
         <Columnz header="Thời gian cập nhật" body={(e) => UserBody(e.updatedAt, e.updatedBy || e.by)} />
         <Columnz header="Trạng thái" body={(e) => Body(contractStatus, e.status)} />
         <Columnz
+          header="Hành động"
+          body={(e) => (
+            <div className="flex justify-center items-center gap-2">
+              {e.status !== 4 && (
+                <Buttonz
+                  severity="danger"
+                  outlined
+                  onClick={() => onCancle(e)}
+                  className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                  icon={<XMarkIcon className="w-5" />}
+                />
+              )}
+              <Buttonz
+                onClick={() => onViewPrint(e)}
+                outlined
+                className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                icon={<PrinterIcon className="w-5" />}
+              />
+            </div>
+          )}
+        />
+        <Columnz
           header="Thao tác"
           body={(e) => (
             <div className="flex justify-center items-center gap-2">
@@ -102,12 +139,6 @@ export const Contracts = () => {
                 onClick={() => onDelete(e)}
                 className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
                 icon={<TrashIcon className="w-5" />}
-              />
-              <Buttonz
-                onClick={() => onViewPrint(e)}
-                outlined
-                className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
-                icon={<PrinterIcon className="w-5" />}
               />
             </div>
           )}

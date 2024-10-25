@@ -86,15 +86,10 @@ export const Infos = () => {
     defaultValues
   });
 
-  const getSalaryTitle = (type, jobPositionId) => {
-    let title = '';
+  const getSalaryTitle = (type) => {
+    let title = type === 3 ? 'Lương dịch vụ theo ngày' : 'Lương theo tháng'
     if (type === 3) title = 'Lương dịch vụ theo ngày';
-    else {
-      const jobPosition = jobPositions?.find((j) => j._id === jobPositionId);
-      if (jobPosition) title = `Khoảng lương: ${formatNumber(jobPosition.minSalary)} - ${formatNumber(jobPosition.maxSalary)}`;
-      else title = 'Vui lòng chọn vị trí công việc';
-    }
-    return title;
+    return title
   };
 
   useEffect(() => {
@@ -228,7 +223,7 @@ export const Infos = () => {
                   <CalendarFormz id="dateIn" label="Ngày vào (*)" value={watch('dateIn')} errors={errors} register={register} />
                   <div className="mb-4 w-full mt-6 px-2">
                     <label className="inline-block font-medium text-left">
-                      Thông tin nhận lương ({getSalaryTitle(watch('type'), watch('jobPosition'))}) (VNĐ)
+                      Thông tin nhận lương ({getSalaryTitle(watch('type'))}) (VNĐ)
                     </label>
                     <hr />
                   </div>

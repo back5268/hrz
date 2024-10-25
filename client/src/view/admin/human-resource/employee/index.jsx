@@ -114,7 +114,7 @@ export const Employee = () => {
         setParams={setParams}
         baseActions={['create', 'detail', 'delete']}
         actionsInfo={{
-          onViewDetail: (item) => navigate(`/Employee/detail/${item._id}`),
+          onViewDetail: (item) => navigate(`/employee/detail/${item._id}`),
           deleteApi: deleteEmployeeApi,
           moreActions: [
             {
@@ -126,7 +126,7 @@ export const Employee = () => {
         statusInfo={{ changeStatusApi: updateEmployeeApi }}
         headerInfo={{
           onCreate: () => {
-            navigate('/Employee/create');
+            navigate('/employee/create');
           }
         }}
         onSuccess={onSuccess}

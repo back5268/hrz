@@ -13,6 +13,8 @@ import { shiftRouter } from './shift';
 import { deviceRouter } from './device';
 import { scheduleRouter } from './schedule';
 import { timekeepingRouter } from './timekeeping';
+import { applicationRouter } from './application';
+import { importLogRouter } from './importLog';
 
 export const webRouter = express.Router();
 
@@ -30,3 +32,5 @@ webRouter.use('/schedule', scheduleRouter);
 webRouter.use('/shift', shiftRouter);
 webRouter.use('/device', deviceRouter);
 webRouter.use('/timekeeping', timekeepingRouter);
+webRouter.use('/application', applicationRouter);
+webRouter.use('/import-log', importLogRouter);

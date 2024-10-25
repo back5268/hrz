@@ -2,7 +2,6 @@ import { deleteJobPositionApi, getListJobPositionApi, updateJobPositionApi } fro
 import { DataTable, FormList, DataFilter, UserBody } from '@components/base';
 import { Columnz, Inputzz } from '@components/core';
 import { useGetParams } from '@hooks';
-import { formatNumber } from '@lib/helper';
 import { useGetApi } from '@lib/react-query';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -45,14 +44,6 @@ export const JobPosition = () => {
       >
         <Columnz header="Tên công việc" field="name" />
         <Columnz header="Mã công việc" field="code" />
-        <Columnz
-          header="Khoảng lương (VNĐ)"
-          body={(e) => (
-            <span>
-              {formatNumber(e.minSalary)} - {formatNumber(e.maxSalary)}
-            </span>
-          )}
-        />
         <Columnz header="Thời gian cập nhật" body={(e) => UserBody(e.updatedAt, e.updatedBy)} />
       </DataTable>
     </FormList>

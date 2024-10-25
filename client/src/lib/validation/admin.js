@@ -9,8 +9,6 @@ export const PositionValidation = yup.object({
 export const JobPositionValidation = yup.object({
   name: yup.string().required('Tên công việc không được bỏ trống!'),
   code: yup.string().required('Mã công việc không được bỏ trống!'),
-  minSalary: yup.number().required('Mức lương tối thiểu không được bỏ trống!').typeError('Mức lương tối thiểu không được bỏ trống!'),
-  maxSalary: yup.number().required('Mức lương tối đa không được bỏ trống!').typeError('Mức lương tối thiểu không được bỏ trống!')
 });
 
 export const DepartmentValidation = yup.object({
@@ -67,4 +65,5 @@ export const ShiftValidation = yup.object({
   name: yup.string().required('Tên ca làm việc không được bỏ trống!'),
   code: yup.string().required('Mã ca làm việc không được bỏ trống!'),
   dateStart: yup.string().required('Ngày áp dụng không được bỏ trống!'),
+  dateEnd: yup.string(),
 });

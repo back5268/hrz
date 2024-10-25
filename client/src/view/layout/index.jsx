@@ -37,7 +37,7 @@ export const Layout = ({ children }) => {
       )}
       <TopBar showSidebar={showSidebar} setShowSidebar={setShowSidebar} onSignOut={onSignOut} />
       <SideBar showSidebar={showSidebar} onSignOut={onSignOut} />
-      <div className={`relative transition-all duration-500 ease-in-out py-8 px-6 mt-14 ${showSidebar ? 'lg:ml-[20rem]' : ''}`}>{children}</div>
+      <div className={`relative transition-all duration-500 ease-in-out py-8 px-6 mt-14 ${showSidebar ? 'lg:ml-[18rem]' : ''}`}>{children}</div>
     </div>
   );
 };

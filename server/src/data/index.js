@@ -24,8 +24,6 @@ export const jobPositions = [
     updatedBy: 0,
     name: 'Lập trình viên (Software Developer)',
     code: 'DEV',
-    minSalary: 15000000,
-    maxSalary: 45000000,
     description:
       'Phát triển, thử nghiệm và duy trì các phần mềm, ứng dụng. Lập trình viên cần hiểu sâu về ngôn ngữ lập trình (như JavaScript, Python, C++, v.v.) và phối hợp với các bộ phận khác để phát triển sản phẩm.'
   },
@@ -33,8 +31,6 @@ export const jobPositions = [
     updatedBy: 0,
     name: 'Chuyên viên phân tích hệ thống (System Analyst)',
     code: 'SA',
-    minSalary: 20000000,
-    maxSalary: 35000000,
     description:
       'Phân tích yêu cầu của hệ thống công nghệ thông tin, đưa ra các giải pháp công nghệ để giải quyết vấn đề kinh doanh. Họ làm việc với các lập trình viên và quản lý dự án để đảm bảo hệ thống hoạt động trơn tru.'
   },
@@ -42,8 +38,6 @@ export const jobPositions = [
     updatedBy: 0,
     name: 'Quản lý dự án (Project Manager)',
     code: 'PM',
-    minSalary: 25000000,
-    maxSalary: 50000000,
     description:
       'Quản lý, theo dõi và giám sát tiến độ của các dự án công nghệ. Họ phải phối hợp giữa các bộ phận khác nhau, đảm bảo dự án hoàn thành đúng hạn và trong ngân sách.'
   },
@@ -51,8 +45,6 @@ export const jobPositions = [
     updatedBy: 0,
     name: 'Thiết kế UI/UX (UI/UX Designer)',
     code: 'DESIGN',
-    minSalary: 15000000,
-    maxSalary: 30000000,
     description:
       'Thiết kế giao diện và trải nghiệm người dùng cho các sản phẩm phần mềm và ứng dụng. Họ tập trung vào việc tạo ra các giao diện dễ sử dụng, trực quan, và mang lại trải nghiệm tốt nhất cho người dùng.'
   },
@@ -60,8 +52,6 @@ export const jobPositions = [
     updatedBy: 0,
     name: 'Chuyên viên kiểm thử phần mềm (QA/QC Tester)',
     code: 'TEST',
-    minSalary: 12000000,
-    maxSalary: 30000000,
     description:
       'Đảm bảo chất lượng của phần mềm thông qua việc kiểm tra, phát hiện lỗi (bug) và đề xuất các biện pháp khắc phục trước khi sản phẩm được phát hành.'
   }
@@ -236,21 +226,58 @@ export const tools = [
         name: 'Quản lý chấm công',
         route: '/timekeeping',
         actions: ['delete', 'create', 'update', 'read']
+      },
+      {
+        name: 'Lịch sử import',
+        route: '/import-log',
+        actions: ['read']
       }
     ]
   },
-  // {
-  //   name: 'Quản lý tiền lương',
-  //   icon: 'CircleStackIcon',
-  //   sort: 4,
-  //   items: []
-  // },
-  // {
-  //   name: 'Quản lý phê duyệt',
-  //   sort: 5,
-  //   icon: 'InboxStackIcon',
-  //   items: []
-  // },
+  {
+    name: 'Quản lý tiền lương',
+    icon: 'CircleStackIcon',
+    sort: 4,
+    items: [
+      {
+        name: 'Tính toán công lương',
+        route: '/salary-calcultation',
+        actions: ['create', 'update', 'read']
+      },
+      {
+        name: 'Các khoản thưởng',
+        route: '/bonuses',
+        actions: ['delete', 'create', 'update', 'read']
+      },
+      {
+        name: 'Phiếu lương chờ duyệt',
+        route: '/pending-payslip',
+        actions: ['delete', 'update', 'read']
+      },
+      {
+        name: 'Phiếu lương đã duyệt',
+        route: '/approved-payslip',
+        actions: ['update', 'read']
+      }
+    ]
+  },
+  {
+    name: 'Quản lý phê duyệt',
+    sort: 5,
+    icon: 'InboxStackIcon',
+    items: [
+      {
+        name: 'Quản lý đơn từ',
+        route: '/application',
+        actions: ['update', 'read']
+      },
+      {
+        name: 'Yêu cầu phê duyệt',
+        route: '/request',
+        actions: ['update', 'read']
+      }
+    ]
+  },
   {
     name: 'Cấu hình',
     icon: 'Cog6ToothIcon',

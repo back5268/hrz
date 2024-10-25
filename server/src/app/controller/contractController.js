@@ -5,7 +5,6 @@ import {
   deleteContractMd,
   detailAccountMd,
   detailContractMd,
-  detailJobPositionMd,
   detailTemplateMd,
   listContractMd,
   updateContractMd
@@ -51,10 +50,42 @@ export const updateContract = async (req, res) => {
   try {
     const { error, value } = validateData(updateContractValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
-    const { _id, code, account } = value;
+    let { _id, code, account, signedDate, expiredDate } = value;
+    const contract = await detailContractMd({ _id, account });
+    if (!contract) return res.status(400).json({ status: 0, mess: 'Không tìm thấy hợp đồng!' });
     if (code) {
-      const checkCode = await detailContractMd({ code });
+      const checkCode = await detailContractMd({ code, account });
       if (checkCode) return res.status(400).json({ status: 0, mess: 'Số hợp đồng đã tồn tại!' });
+    }
+    if (signedDate || expiredDate) {
+      signedDate = signedDate || contract.signedDate;
+      expiredDate = expiredDate || contract.expiredDate;
+      const checkContract = await detailContractMd({
+        $or: [
+          {
+            signedDate: {
+              $gte: signedDate,
+              $lte: expiredDate
+            }
+          },
+          {
+            expiredDate: {
+              $gte: signedDate,
+              $lte: expiredDate
+            }
+          }
+        ],
+        status: { $ne: 4 },
+        _id: { $ne: _id },
+        account
+      });
+      if (checkContract)
+        return res.status(400).json({ status: 0, mess: 'Khoảng thời gian này đã có hợp đồng, vui lòng xác nhận hủy trước khi cập nhật!' });
+      if (new Date(signedDate) > new Date(expiredDate))
+        return res.status(400).json({ status: 0, mess: 'Ngày ký không thể lớn hơn ngày hết hạn!' });
+      if (new Date() > new Date(expiredDate)) value.status = 2;
+      else if (new Date() > new Date(signedDate) && new Date() < new Date(expiredDate)) value.status = 1;
+      else if (new Date() < new Date(signedDate)) value.status = 3;
     }
     const data = await updateContractMd({ _id, account }, { updatedBy: req.account._id, ...value });
     res.status(201).json({ status: 1, data });
@@ -80,6 +111,27 @@ export const createContract = async (req, res) => {
     const { error, value } = validateData(createContractValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
     const { code, signedDate, expiredDate } = value;
+    const checkContract = await detailContractMd({
+      $or: [
+        {
+          signedDate: {
+            $gte: signedDate,
+            $lte: expiredDate
+          }
+        },
+        {
+          expiredDate: {
+            $gte: signedDate,
+            $lte: expiredDate
+          }
+        }
+      ],
+      status: { $ne: 4 },
+      account: value.account
+    });
+    if (checkContract)
+      return res.status(400).json({ status: 0, mess: 'Khoảng thời gian này đã có hợp đồng, vui lòng xác nhận hủy trước khi thêm!' });
+
     if (new Date(signedDate) > new Date(expiredDate))
       return res.status(400).json({ status: 0, mess: 'Ngày ký không thể lớn hơn ngày hết hạn!' });
     if (new Date() > new Date(expiredDate)) value.status = 2;

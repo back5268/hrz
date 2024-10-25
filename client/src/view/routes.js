@@ -1,7 +1,8 @@
+import { Application } from './admin/approval';
 import { DetailNewz, DetailPermission, New, Permission, Template } from './admin/config';
 import { DashBoard } from './admin/dashboard';
 import { Department, DetailJobPosition, DetailEmployee, DetailPosition, JobPosition, Employee, Position } from './admin/human-resource';
-import { DetailShift, Device, Schedule, Shift, Timekeeping } from './admin/timekeeping';
+import { DetailShift, Device, ImportLog, Schedule, Shift, Timekeeping } from './admin/timekeeping';
 import { ForgotPassword, SignIn } from './auth';
 
 export const routes = [
@@ -26,6 +27,9 @@ export const routes = [
   { path: '/shift/detail/:_id', element: DetailShift, layout: true },
   { path: '/schedule', element: Schedule, layout: true },
   { path: '/timekeeping', element: Timekeeping, layout: true },
+  { path: '/import-log', element: ImportLog, layout: true },
+
+  { path: '/application', element: Application, layout: true },
 
   { path: '/permission', element: Permission, layout: true },
   { path: '/permission/create', element: DetailPermission, layout: true },

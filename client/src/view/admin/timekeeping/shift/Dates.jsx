@@ -31,7 +31,7 @@ const getDate = (date) => {
 };
 
 export const Dates = (props) => {
-  const { data = [], setData = () => {} } = props;
+  const { data = [], setData = () => {}, disabled } = props;
 
   const onChange = (item, field, value) => {
     if (item && field) {
@@ -50,6 +50,7 @@ export const Dates = (props) => {
       <div className="flex justify-between mb-4 items-center">
         <label className="inline-block font-medium text-left">Thời gian làm việc theo tuần</label>
         <MultiSelectFormz
+          disabled={disabled}
           label="Thời gian làm việc"
           options={days}
           value={data?.map((d) => d.date)}
@@ -83,28 +84,36 @@ export const Dates = (props) => {
           header="Thời gian bắt đầu"
           body={(item) => (
             <Calendar
+              disabled={disabled}
               timeOnly
               hideOnDateTimeSelect
               value={getDate(item.timeStart)}
               onChange={(e) => onChange(item, 'timeStart', e.value)}
-              className="w-full"
+              className="w-full disabledz"
             />
           )}
         />
         <Columnz
           header="Thời gian kết thúc"
           body={(item) => (
-            <Calendar timeOnly value={getDate(item.timeEnd)} onChange={(e) => onChange(item, 'timeEnd', e.value)} className="w-full" />
+            <Calendar
+              disabled={disabled}
+              timeOnly
+              value={getDate(item.timeEnd)}
+              onChange={(e) => onChange(item, 'timeEnd', e.value)}
+              className="w-full disabledz"
+            />
           )}
         />
         <Columnz
           header="Thời gian bắt đầu nghỉ"
           body={(item) => (
             <Calendar
+              disabled={disabled}
               timeOnly
               value={getDate(item.timeBreakStart)}
               onChange={(e) => onChange(item, 'timeBreakStart', e.value)}
-              className="w-full"
+              className="w-full disabledz"
             />
           )}
         />
@@ -112,23 +121,27 @@ export const Dates = (props) => {
           header="Thời gian kết thúc nghỉ"
           body={(item) => (
             <Calendar
+              disabled={disabled}
               timeOnly
               value={getDate(item.timeBreakEnd)}
               onChange={(e) => onChange(item, 'timeBreakEnd', e.value)}
-              className="w-full"
+              className="w-full disabledz"
             />
           )}
         />
-        <Columnz header="Tổng thời gian (giờ)" field="totalTime" />
+        <Columnz disabled={disabled} header="Tổng thời gian (giờ)" field="totalTime" />
         <Columnz
           header="Tổng công tính"
           body={(item) => (
-            <InputText
-              type="number"
-              value={item.totalWork}
-              onChange={(e) => onChange(item, 'totalWork', e.target.value)}
-              className="w-full"
-            />
+            <div className="disabledz">
+              <InputText
+                disabled={disabled}
+                type="number"
+                value={item.totalWork}
+                onChange={(e) => onChange(item, 'totalWork', e.target.value)}
+                className="w-full"
+              />
+            </div>
           )}
         />
         <Columnz
@@ -136,6 +149,7 @@ export const Dates = (props) => {
           body={(item) => (
             <div className="w-full flex justify-center">
               <Buttonz
+                disabled={disabled}
                 severity="danger"
                 outlined
                 onClick={() => setData((pre) => pre.filter((p) => p.date !== item.date))}

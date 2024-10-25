@@ -22,7 +22,7 @@ class ModelBase {
     if (populates && populates.length > 0) {
       populates.forEach((p) => query.populate(p));
     }
-    return query.exec();
+    return query.lean().exec();
   }
 
   static count({ where = {} }) {
@@ -38,7 +38,7 @@ class ModelBase {
     if (populates && populates.length > 0) {
       populates.forEach((p) => query.populate(p));
     }
-    return query.exec();
+    return query.lean().exec();
   }
 
   static create({ attr = {} }) {
@@ -50,7 +50,7 @@ class ModelBase {
   static update({ where = {}, attr = {} }) {
     if (Object.keys(where).length === 0) return;
     if (!attr.updatedAt) attr.updatedAt = new Date();
-    return this.model.findOneAndUpdate(where, attr, { new: true });
+    return this.model.updateMany(where, attr, { new: true });
   }
 
   static updateMany({ where = {}, attr = {} }) {
@@ -61,7 +61,7 @@ class ModelBase {
 
   static delete({ where = {} }) {
     if (Object.keys(where).length === 0) return;
-    return this.model.findOneAndUpdate(where, { updatedAt: new Date(), deletedAt: new Date() }, { new: true });
+    return this.model.updateMany(where, { updatedAt: new Date(), deletedAt: new Date() }, { new: true });
   }
 }
 

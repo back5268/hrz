@@ -76,8 +76,10 @@ export const DetailShift = () => {
         timeBreakEnd: databaseDateToTime(date.timeBreakEnd)
       }))
     };
-    if (new Date(data.dateStart) < new Date()) return "Ngày áp dụng không được nhỏ hơn hiện tại!"
-    if (isUpdate) return { ...checkEqualProp(newData, item), _id };
+    if (isUpdate) {
+      if (newData.dateEnd && new Date(newData.dateEnd) < new Date()) return "Ngày kết thúc phải lớn hơn ngày hiện tại!"
+      return { ...checkEqualProp(newData, item), _id }
+    }
     else return newData;
   };
 
@@ -94,7 +96,7 @@ export const DetailShift = () => {
       <div className="flex flex-wrap w-full">
         <InputFormz id="name" label="Tên ca làm việc (*)" value={watch('name')} errors={errors} register={register} />
         <InputFormz id="code" label="Mã ca làm việc (*)" value={watch('code')} errors={errors} register={register} />
-        <CalendarFormz id="dateStart" label="Ngày áp dụng (*)" value={watch('dateStart')} errors={errors} register={register} />
+        <CalendarFormz id="dateStart" label="Ngày áp dụng (*)" disabled={isUpdate} value={watch('dateStart')} errors={errors} register={register} />
         <CalendarFormz id="dateEnd" label="Ngày kết thúc" value={watch('dateEnd')} errors={errors} register={register} />
         <MultiSelectFormz
           id="departments"
@@ -104,8 +106,9 @@ export const DetailShift = () => {
           errors={errors}
           onChange={(e) => setValue('departments', e.target.value)}
           filter
+          disabled={isUpdate}
         />
-        <Dates data={dates} setData={setDates} />
+        <Dates data={dates} setData={setDates} disabled={isUpdate} />
       </div>
     </FormDetail>
   );

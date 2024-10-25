@@ -107,10 +107,31 @@ export const days = [
   { name: 'Thứ 4', _id: 'we' },
   { name: 'Thứ 5', _id: 'th' },
   { name: 'Thứ 6', _id: 'fr' },
-  { name: 'Thứ 7', _id: 'sa' },
-]
+  { name: 'Thứ 7', _id: 'sa' }
+];
 
 export const sheduleTypes = [
   { name: 'Ca bình thường', _id: 1 },
-  { name: 'Ca OT', _id: 2 },
-]
+  { name: 'Ca OT', _id: 2 }
+];
+
+export const applicationTypes = [
+  { name: 'Đơn xin nghỉ phép (phép năm)', _id: 1 },
+  { name: 'Đơn xin nghỉ (không phép)', _id: 2 },
+  { name: 'Đơn xác nhận công', _id: 3 },
+  { name: 'Đơn xin đi trễ, về sớm', _id: 4 },
+  { name: 'Đơn xin làm thêm giờ', _id: 5 },
+  { name: 'Đơn công tác', _id: 6 }
+];
+
+export const applicationStatus = [
+  { name: 'Chờ duyệt', _id: 1, severity: 'warning' },
+  { name: 'Đã duyệt', _id: 2, severity: 'success' },
+  { name: 'Từ chối', _id: 3, severity: 'danger' },
+  { name: 'Hủy', _id: 4, severity: 'info' }
+];
+
+export const importLogStatus = [
+  { name: 'Thành công', _id: 1, severity: 'success' },
+  { name: 'Thất bại', _id: 0, severity: 'danger' }
+];

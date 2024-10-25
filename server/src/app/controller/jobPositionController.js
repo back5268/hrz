@@ -66,13 +66,9 @@ export const updateJobPosition = async (req, res) => {
   try {
     const { error, value } = validateData(updateJobPositionValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
-    const { _id, name, code, minSalary, maxSalary } = value;
+    const { _id, name, code } = value;
     const dataz = await detailJobPositionMd({ _id });
     if (!dataz) return res.status(400).json({ status: 0, mess: 'Vị trí công việc không tồn tại!' });
-    if (typeof minSalary === 'number' || typeof maxSalary === 'number') {
-      if ((typeof minSalary === 'number' ? minSalary : dataz.minSalary) > (typeof maxSalary === 'number' ? maxSalary : dataz.maxSalary))
-        return res.status(400).json({ status: 0, mess: 'Mức lương tối thiểu không thể lớn hơn mức lương tối đa!' });
-    }
     if (name) {
       const checkName = await detailJobPositionMd({ name });
       if (checkName) return res.status(400).json({ status: 0, mess: 'Tên vị trí công việc đã tồn tại!' });
@@ -92,8 +88,7 @@ export const createJobPosition = async (req, res) => {
   try {
     const { error, value } = validateData(createJobPositionValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
-    const { name, code, minSalary, maxSalary } = value;
-    if (minSalary > maxSalary) return res.status(400).json({ status: 0, mess: 'Mức lương tối thiểu không thể lớn hơn mức lương tối đa!' });
+    const { name, code } = value;
     const checkName = await detailJobPositionMd({ name });
     if (checkName) return res.status(400).json({ status: 0, mess: 'Tên vị trí công việc đã tồn tại!' });
     const checkCode = await detailJobPositionMd({ code });

@@ -20,7 +20,8 @@ import {
   detailShiftMd,
   listTimekeepingMd,
   listTimekeepingLogMd,
-  updateTimekeepingMd
+  updateTimekeepingMd,
+  createImportLogMd
 } from '@models';
 import { calTimekeeping, syntheticTimekeeping } from '@repository';
 import { checkValidTime, convertDateToString, convertNumberToTime, getDates, validateData } from '@utils';
@@ -326,6 +327,13 @@ export const importTimekeeping = async (req, res) => {
             datum.mess ? 'Thất bại' : 'Thành công',
             datum.mess || 'Import máy chấm công thành công'
           ]);
+          await createImportLogMd({
+            ...datum,
+            timeStart: datum.checkInTime,
+            timeEnd: datum.checkOutTime,
+            status: datum.mess ? 0 : 1,
+            by: req.account?._id
+          });
         }
       }
       res
@@ -353,7 +361,7 @@ export const checkTimekeepingApp = async (req, res) => {
         status: 1,
         data: await createTimekeepingLogMd({ ...value, account: req.account?._id, department: req.account?.department?._id })
       });
-    } else res.status(400).json({ status: 0, mess: mess || "Không tìm thấy nhân viên!" });
+    } else res.status(400).json({ status: 0, mess: mess || 'Không tìm thấy nhân viên!' });
   } catch (error) {
     console.log(error, 358);
     res.status(500).json({ status: 0, mess: error.toString() });

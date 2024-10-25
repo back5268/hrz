@@ -44,7 +44,7 @@ export const DetailContract = (props) => {
   const handleData = (data) => {
     const newData = { ...data, account };
     if (new Date(newData.signedDate) > new Date(newData.expiredDate)) return 'Ngày ký không thể lớn hơn ngày hết hạn!';
-    if (isUpdate) return { ...checkEqualProp(newData, item), _id: open };
+    if (isUpdate) return { ...checkEqualProp(newData, item), _id: open, account };
     else return newData;
   };
 

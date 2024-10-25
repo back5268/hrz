@@ -59,6 +59,7 @@
 
 .disabledz .p-disabled {
     background-color: var(--background-color);
+    opacity: 100;
 }
 
 .p-dropdown,

@@ -51,8 +51,8 @@ export const SideBar = (props) => {
 
   return (
     <div
-      className={`fixed left-0 inset-y-0 h-screen z-40 w-full max-w-[20rem] flex flex-col justify-between border-r border-border
-      transition-all duration-500 ease-in-out bg-white ${showSidebar ? '' : '-translate-x-full'}`}
+      className={`fixed left-0 inset-y-0 h-screen z-40 w-full lg:max-w-[18rem] flex flex-col justify-between border-r
+      transition-all duration-500 ease-in-out shadow-custom bg-white ${showSidebar ? '' : '-translate-x-full'}`}
     >
       <div>
         <div className="p-4">

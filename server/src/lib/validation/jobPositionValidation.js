@@ -14,8 +14,6 @@ export const updateJobPositionValid = {
   name: { type: 'string', allowNull: true },
   code: { type: 'string', allowNull: true },
   description: { type: 'string', allowNull: true },
-  minSalary: { type: 'number', allowNull: true },
-  maxSalary: { type: 'number', allowNull: true },
   status: { type: 'number', allowNull: true }
 };
 
@@ -23,6 +21,4 @@ export const createJobPositionValid = {
   name: 'string',
   code: 'string',
   description: { type: 'string', allowNull: true },
-  minSalary: 'number',
-  maxSalary: 'number'
 };

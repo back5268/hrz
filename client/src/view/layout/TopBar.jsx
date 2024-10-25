@@ -8,8 +8,8 @@ export const TopBar = (props) => {
   const { showSidebar, setShowSidebar, onSignOut } = props;
 
   return (
-    <div className="fixed top-0 inset-x-0 px-8 z-10 border-b border-border py-1 bg-white">
-      <div className={`h-14 transition-all duration-500 ease-in-out bg-white ${showSidebar ? 'lg:ml-[20rem]' : ''}`}>
+    <div className="fixed top-0 inset-x-0 px-8 z-20 border-b border-border py-1 bg-white">
+      <div className={`h-14 transition-all duration-500 ease-in-out bg-white ${showSidebar ? 'lg:ml-[18rem]' : ''}`}>
         <div className="flex justify-between items-center h-full">
           <Buttonz
             onClick={() => setShowSidebar(!showSidebar)}
