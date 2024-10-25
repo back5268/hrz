@@ -112,7 +112,8 @@ export const createShift = async (req, res) => {
 export const getListShiftApp = async (req, res) => {
   try {
     const where = { departments: { $elemMatch: { $eq: req.account?.department?._id } }, status: 1 };
-    res.json({ status: 1, data: await listShiftMd(where) });
+    const data = await listShiftMd(where)
+    res.json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
   }

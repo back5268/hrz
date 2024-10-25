@@ -13,18 +13,18 @@ export const Selectz = ({
   value,
   setValue,
   options = [],
-  optionValue = "key",
-  optionLabel = "label",
+  optionValue = "_id",
+  optionLabel = "name",
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
-    <View>
+    <View className="px-3">
       <TouchableOpacity
-        className="w-48 h-12 border border-gray-400 rounded justify-center items-center"
+        className="w-40 h-12 border border-gray-400 rounded justify-center items-center"
         onPress={() => setModalVisible(true)}
       >
-        <Text className="text-base">{value ? value : `Chọn ${label}`}</Text>
+        <Text className="text-base">{value ? options.find(o => String(o[optionValue]) === String(value))?.[optionLabel] : `Chọn ${label}`}</Text>
       </TouchableOpacity>
 
       <Modal animationType="fade" transparent={true} visible={modalVisible}>
@@ -48,7 +48,7 @@ export const Selectz = ({
                   <TouchableOpacity
                     key={index}
                     className={`py-3 text-center rounded-md ${
-                      value === key ? "bg-primary" : ""
+                      String(value) === key ? "bg-[#673AB7]/70" : ""
                     }`}
                     onPress={() => {
                       setValue(key);
@@ -57,7 +57,7 @@ export const Selectz = ({
                   >
                     <Text
                       className={`text-center ${
-                        value === key ? "text-white font-medium" : ""
+                        String(value) === key ? "text-white font-medium" : ""
                       }`}
                     >
                       {label}

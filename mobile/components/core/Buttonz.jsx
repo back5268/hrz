@@ -6,7 +6,7 @@ export const Buttonz = ({ children, label, handlePress, containerClassName = '',
       <TouchableOpacity
         onPress={handlePress}
         activeOpacity={0.7}
-        className={`bg-primary rounded-md min-h-[48px] px-2 flex flex-row justify-center items-center ${containerClassName} ${
+        className={`bg-[#673AB7] rounded-md min-h-[48px] px-2 flex flex-row justify-center items-center ${containerClassName} ${
           isLoading ? 'opacity-50' : ''
         }`}
         disabled={isLoading}

@@ -37,7 +37,7 @@ const ForgotPassword = () => {
     setLoading(true);
     const response = await confirmPasswordApi({ ...form, username });
     setLoading(false);
-    if (response?.status) {
+    if (response) {
       showToast('Đổi mật khẩu thành công vui lòng đăng nhập lại!', 'success');
       router.push('/sign-in');
     }

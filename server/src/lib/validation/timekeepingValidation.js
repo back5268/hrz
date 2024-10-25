@@ -53,5 +53,5 @@ export const listTimekeepingLogAppValid = {
 export const listTimekeepingAppValid = {
   fromDate: 'date',
   toDate: 'date',
-  shift: 'string'
+  shift: { type: 'string', allowNull: true }
 };

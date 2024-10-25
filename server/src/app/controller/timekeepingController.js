@@ -189,19 +189,20 @@ export const exportSyntheticTimekeeping = async (req, res) => {
     ]);
     const documents = syntheticTimekeeping(data);
     const dataz = [];
-    const arr1 = ['STT', 'Nhân viên', 'Mã NV', 'Ca làm việc', 'Tổng công', 'Thực tế'];
-    const arr2 = ['STT', 'Nhân viên', 'Mã NV', 'Ca làm việc', 'Tổng công', 'Thực tế'];
+    const arr1 = ['STT', 'Nhân viên', 'Mã NV', 'Ca làm việc', 'Công OT', 'Tổng công', 'Thực tế'];
+    const arr2 = ['STT', 'Nhân viên', 'Mã NV', 'Ca làm việc', 'Công OT', 'Tổng công', 'Thực tế'];
     const dates = getDates(fromDate, toDate);
     dates.forEach((date) => {
       arr1.push(days[new Date(date).getDay()]?.name);
       arr2.push(moment(date).format('DD/MM'));
     });
+
     dataz.push(arr1);
     dataz.push(arr2);
     if (documents?.length > 0) {
       let index = 1;
       for (const datum of documents) {
-        const arr = [index, datum.account?.fullName, datum.account?.staffCode, datum.shift?.name, datum.total, datum.reality];
+        const arr = [index, datum.account?.fullName, datum.account?.staffCode, datum.shift?.name, datum.totalOt, datum.total, datum.reality];
         dates.forEach((date) => {
           const datez = datum.data?.find((d) => convertDateToString(d.date, 'date') === convertDateToString(date, 'date'));
           arr.push(datez ? datez.summary || '-' : '');
@@ -350,6 +351,7 @@ export const importTimekeeping = async (req, res) => {
 //====================================App====================================
 export const checkTimekeepingApp = async (req, res) => {
   try {
+    console.log(122);
     const { error, value } = validateData(checkTimekeepingAppValid, req.body);
     if (error) return res.status(400).json({ status: 0, mess: error });
     if (!req.file) return res.status(400).json({ status: 0, mess: 'Vui lòng truyền hình ảnh!' });
@@ -410,8 +412,8 @@ export const getListSyntheticTimekeepingApp = async (req, res) => {
         $gte: fromDate,
         $lte: toDate
       },
-      shift
     };
+    if (shift) where.shift = shift
     const data = await listTimekeepingMd(where);
     res.json({ status: 1, data: syntheticTimekeeping(data) });
   } catch (error) {

@@ -52,7 +52,7 @@ export const calTimekeeping = (schedule = {}, checkInTime, checkOutTime) => {
 export const syntheticTimekeeping = (data = []) => {
   const dataz = [];
   data.forEach((datum) => {
-    const index = dataz.findIndex((n) => String(n.account) === String(datum.account) && String(n.shift) === String(datum.shift));
+    const index = dataz.findIndex((n) => String(n.account?._id) === String(datum.account?._id) && String(n.shift?._id) === String(datum.shift?._id));
     if (index >= 0) {
       dataz[index].total += datum.totalWork;
       dataz[index].reality += Number(datum.summary) || 0;
@@ -62,6 +62,7 @@ export const syntheticTimekeeping = (data = []) => {
         account: datum.account,
         shift: datum.shift,
         total: datum.totalWork,
+        totalOt: 0,
         reality: Number(datum.summary) || 0,
         data: [datum]
       });

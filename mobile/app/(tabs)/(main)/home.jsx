@@ -3,7 +3,6 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '@/constants';
 import { IconBoldz, Iconz } from '@/components/core';
-import { icons } from '@/constants';
 import { useRouter } from 'expo-router';
 
 const Home = () => {

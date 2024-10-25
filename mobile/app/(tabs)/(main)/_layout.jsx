@@ -40,7 +40,7 @@ const MainLayout = () => {
             options={{
               title: item.title,
               headerTitleStyle: {
-                fontSize: 18
+                fontSize: 18,
               },
               headerTitleAlign: 'center',
               headerShadowVisible: false,

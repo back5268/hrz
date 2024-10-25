@@ -1,5 +1,5 @@
 import { getListTimekeepingLogApi } from '@/api/timekeeping';
-import { Hrz, Loadingz } from '@/components/core';
+import { Loadingz } from '@/components/core';
 import moment from 'moment';
 import { FlatList, Text, View } from 'react-native';
 import { Checking, CheckTimekeepingResult } from '@/components/check-timekeeping';

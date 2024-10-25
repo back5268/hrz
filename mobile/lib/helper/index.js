@@ -207,3 +207,19 @@ export const convertNumberToString = (amount) => {
   }
   return words + ' đồng.';
 };
+
+export const getMonths = () => {
+  const months = []
+  for (let i = 1; i < 13; i ++) {
+    months.push({ _id: i, name: `Tháng ${i}` })
+  }
+  return months
+}
+
+export const getYears = () => {
+  const years = []
+  for (let i = 2023; i < 2025; i ++) {
+    years.push({ _id: i, name: `Năm ${i}` })
+  }
+  return years
+}
