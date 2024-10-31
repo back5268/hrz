@@ -2,6 +2,7 @@ import { deleteShiftApi, getListShiftApi, updateShiftApi } from '@api';
 import { DataTable, FormList, DataFilter, UserBody } from '@components/base';
 import { Columnz, Dropdownzz, Inputzz, Tagz } from '@components/core';
 import { status } from '@constant';
+import { DocumentDuplicateIcon } from '@heroicons/react/24/outline';
 import { useGetParams } from '@hooks';
 import { useGetApi } from '@lib/react-query';
 import { useDataState } from '@store';
@@ -66,7 +67,13 @@ export const Shift = () => {
         baseActions={['create', 'detail']}
         actionsInfo={{
           onViewDetail: (item) => navigate(`/shift/detail/${item._id}`),
-          deleteApi: deleteShiftApi
+          deleteApi: deleteShiftApi,
+          moreActions: [
+            {
+              icon: DocumentDuplicateIcon,
+              onClick: (item) => navigate(`/shift/create/${item._id}`)
+            }
+          ]
         }}
         statusInfo={{ changeStatusApi: updateShiftApi }}
         headerInfo={{

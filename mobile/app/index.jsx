@@ -33,7 +33,7 @@ const Welcome = () => {
           </View>
           <Image source={images.cards} className="max-w-[380px] w-full h-[298px]" resizeMode="contain" />
           <View className="w-6/12">
-            <Buttonz label="Đăng nhập" handlePress={() => router.push('/sign-in')} />
+            <Buttonz label="Đăng nhập" onPress={() => router.push('/sign-in')} />
           </View>
         </View>
       </ScrollView>

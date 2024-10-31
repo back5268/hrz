@@ -3,7 +3,7 @@ import axios from 'axios';
 import Toast from 'react-native-toast-message';
 
 export const clientApi = axios.create({
-  baseURL: 'http://192.168.0.101:5000/',
+  baseURL: 'http://192.168.6.53:5000/',
   timeout: 10000
 });
 
@@ -20,13 +20,13 @@ clientApi.interceptors.request.use(
 clientApi.interceptors.response.use(
   async function (res) {
     if (res.data?.status) return res.data.data;
-    else return res.data;
+    else Toast.show({ type: 'error', text2: res.data?.mess });
   },
   async function (error) {
     if (error) {
       Toast.show({
         type: 'error',
-        text2: error?.response?.data?.mess || 'Đường truyền không ổn định!'
+        text2: 'Đường truyền không ổn định!'
       });
     }
   }

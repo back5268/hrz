@@ -128,8 +128,16 @@ export const multiFormatDateString = (timestamp = '') => {
 };
 
 export const databaseDate = (date, type = 'datetime', isFinal) => {
+  if (!date) return ''
   let format = type === 'time' ? 'HH:mm:ss' : type === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss';
-  if (isFinal) return moment(date.setHours(23, 59, 59)).format('YYYY-MM-DD HH:mm:ss')
+  if (isFinal) return moment(date.setHours(23, 59, 59)).format('YYYY-MM-DD HH:mm:ss');
+  return moment(date).format(format);
+};
+
+export const formatDate = (date, type = 'datetime', isFinal) => {
+  if (!date) return ''
+  let format = type === 'time' ? 'HH:mm:ss' : type === 'timez' ? 'HH:mm' : type === 'date' ? 'DD/MM/YYYY' : 'DD/MM/YYYY HH:mm:ss';
+  if (isFinal) return moment(date.setHours(23, 59, 59)).format('DD/MM/YYYY HH:mm:ss');
   return moment(date).format(format);
 };
 

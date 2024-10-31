@@ -71,7 +71,7 @@ const SignIn = () => {
             handleChangeText={(e) => setForm({ ...form, password: e })}
           />
           <View className="mt-8">
-            <Buttonz label="Đăng nhập" handlePress={submit} />
+            <Buttonz label="Đăng nhập" onPress={submit} />
           </View>
           <Link href="/forgot-password" className="text-primary text-center font-semibold">
             Quên mật khẩu

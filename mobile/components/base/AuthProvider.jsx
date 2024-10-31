@@ -34,6 +34,6 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, [loadingz]);
 
-  if (loading) return <Loadingz className="h-8 w-8 border-4" />;
+  if (loading) return <Loadingz className="h-8 w-8 border-4" root={true} />;
   return <Fragment>{children}</Fragment>;
 };

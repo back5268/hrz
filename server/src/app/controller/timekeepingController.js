@@ -24,7 +24,7 @@ import {
   createImportLogMd
 } from '@models';
 import { calTimekeeping, syntheticTimekeeping } from '@repository';
-import { checkValidTime, convertDateToString, convertNumberToTime, getDates, validateData } from '@utils';
+import { checkValidTime, convertDateToString, convertNumberToTime, databaseDate, getDates, validateData } from '@utils';
 import moment from 'moment';
 
 const handleParams = (value) => {
@@ -43,7 +43,7 @@ const handleParams = (value) => {
 export const getListTimekeepingLog = async (req, res) => {
   try {
     const { error, value } = validateData(listTimekeepingLogValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { page, limit } = value;
     const where = handleParams(value);
     const documents = await listTimekeepingLogMd(where, page, limit);
@@ -57,7 +57,7 @@ export const getListTimekeepingLog = async (req, res) => {
 export const exportTimekeepingLog = async (req, res) => {
   try {
     const { error, value } = validateData(exportTimekeepingValid, req.query);
-    if (error) return res.status(400).json({ status: false, mess: error });
+    if (error) return res.json({ status: false, mess: error });
     const where = handleParams(value);
     const data = await listTimekeepingLogMd(where, false, false, [
       { path: 'account', select: 'fullName staffCode' },
@@ -95,7 +95,7 @@ export const exportTimekeepingLog = async (req, res) => {
 export const getListTimekeeping = async (req, res) => {
   try {
     const { error, value } = validateData(listTimekeepingValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { page, limit } = value;
     const where = handleParams(value);
     const documents = await listTimekeepingMd(where, page, limit);
@@ -109,7 +109,7 @@ export const getListTimekeeping = async (req, res) => {
 export const exportTimekeeping = async (req, res) => {
   try {
     const { error, value } = validateData(exportTimekeepingValid, req.query);
-    if (error) return res.status(400).json({ status: false, mess: error });
+    if (error) return res.json({ status: false, mess: error });
     const where = handleParams(value);
     const data = await listTimekeepingMd(where, false, false, [
       { path: 'account', select: 'fullName staffCode' },
@@ -167,7 +167,7 @@ export const exportTimekeeping = async (req, res) => {
 export const getListSyntheticTimekeeping = async (req, res) => {
   try {
     const { error, value } = validateData(listSyntheticTimekeepingValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const where = handleParams(value);
     const data = await listTimekeepingMd(where);
     res.json({ status: 1, data: syntheticTimekeeping(data) });
@@ -179,7 +179,7 @@ export const getListSyntheticTimekeeping = async (req, res) => {
 export const exportSyntheticTimekeeping = async (req, res) => {
   try {
     const { error, value } = validateData(exportTimekeepingValid, req.query);
-    if (error) return res.status(400).json({ status: false, mess: error });
+    if (error) return res.json({ status: false, mess: error });
     const { fromDate, toDate } = value;
     const where = handleParams(value);
     const data = await listTimekeepingMd(where, false, false, [
@@ -341,7 +341,7 @@ export const importTimekeeping = async (req, res) => {
         .status(200)
         .attachment('file.xlsx')
         .send(await convertToExcel(dataz));
-    } else res.status(400).json({ status: 0, mess: 'Vui lòng truyền file excel!' });
+    } else res.json({ status: 0, mess: 'Vui lòng truyền file excel!' });
   } catch (error) {
     console.log(error);
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -351,21 +351,17 @@ export const importTimekeeping = async (req, res) => {
 //====================================App====================================
 export const checkTimekeepingApp = async (req, res) => {
   try {
-    console.log(122);
     const { error, value } = validateData(checkTimekeepingAppValid, req.body);
-    if (error) return res.status(400).json({ status: 0, mess: error });
-    if (!req.file) return res.status(400).json({ status: 0, mess: 'Vui lòng truyền hình ảnh!' });
+    if (error) return res.json({ status: 0, mess: error });
+    if (!req.file) return res.json({ status: 0, mess: 'Vui lòng truyền hình ảnh!' });
     const { status, mess, data } = await checkFace(req.file);
-    console.log(String(data));
-    console.log(String(req.account?._id));
     if (status && String(data) === String(req.account?._id)) {
       res.json({
         status: 1,
-        data: await createTimekeepingLogMd({ ...value, account: req.account?._id, department: req.account?.department?._id })
+        data: await createTimekeepingLogMd({ ...value, account: req.account?._id, department: req.account?.department?._id, date: databaseDate(value.date, 'date') })
       });
-    } else res.status(400).json({ status: 0, mess: mess || 'Không tìm thấy nhân viên!' });
+    } else res.json({ status: 0, mess: mess || 'Không tìm thấy nhân viên!' });
   } catch (error) {
-    console.log(error, 358);
     res.status(500).json({ status: 0, mess: error.toString() });
   }
 };
@@ -373,7 +369,7 @@ export const checkTimekeepingApp = async (req, res) => {
 export const getListTimekeepingLogApp = async (req, res) => {
   try {
     const { error, value } = validateData(listTimekeepingLogAppValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { date, shift } = value;
     const where = { account: req.account?._id, date, shift };
     res.json({ status: 1, data: await listTimekeepingLogMd(where) });
@@ -385,7 +381,7 @@ export const getListTimekeepingLogApp = async (req, res) => {
 export const getListTimekeepingApp = async (req, res) => {
   try {
     const { error, value } = validateData(listTimekeepingAppValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { fromDate, toDate, shift } = value;
     const where = {
       account: req.account?._id,
@@ -404,7 +400,7 @@ export const getListTimekeepingApp = async (req, res) => {
 export const getListSyntheticTimekeepingApp = async (req, res) => {
   try {
     const { error, value } = validateData(listTimekeepingAppValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { fromDate, toDate, shift } = value;
     const where = {
       account: req.account?._id,

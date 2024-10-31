@@ -19,17 +19,19 @@ export const updateApplicationValid = {
 };
 
 export const createApplicationValid = {
-  department: 'string',
-  account: 'string',
   shift: 'string',
   type: 'number',
-  detail: 'json',
-  reason: 'string'
+  dates: 'json',
+  reason: 'string',
+  fromTime: { type: 'string', allowNull: true },
+  toTime: { type: 'string', allowNull: true },
+  late: { type: 'string', allowNull: true },
+  soon: { type: 'string', allowNull: true }
 };
 
 export const listApplicationAppValid = {
   status: { type: 'number', allowNull: true },
   type: { type: 'number', allowNull: true },
   fromDate: { type: 'date', allowNull: true },
-  tpDate: { type: 'date', allowNull: true }
+  toDate: { type: 'date', allowNull: true }
 };

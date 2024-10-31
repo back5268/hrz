@@ -6,16 +6,16 @@ export const listTimekeepingLogValid = {
   shift: { type: 'string', allowNull: true },
   department: { type: 'string', allowNull: true },
   account: { type: 'string', allowNull: true },
-  fromDate: 'date',
-  toDate: 'date'
+  fromDate: 'string',
+  toDate: 'string'
 };
 
 export const exportTimekeepingValid = {
   shift: { type: 'string', allowNull: true },
   department: { type: 'string', allowNull: true },
   account: { type: 'string', allowNull: true },
-  fromDate: 'date',
-  toDate: 'date'
+  fromDate: 'string',
+  toDate: 'string'
 };
 
 export const listTimekeepingValid = {
@@ -24,21 +24,21 @@ export const listTimekeepingValid = {
   shift: { type: 'string', allowNull: true },
   department: { type: 'string', allowNull: true },
   account: { type: 'string', allowNull: true },
-  fromDate: 'date',
-  toDate: 'date'
+  fromDate: 'string',
+  toDate: 'string'
 };
 
 export const listSyntheticTimekeepingValid = {
   shift: { type: 'string', allowNull: true },
   department: { type: 'string', allowNull: true },
   account: { type: 'string', allowNull: true },
-  fromDate: 'date',
-  toDate: 'date'
+  fromDate: 'string',
+  toDate: 'string'
 };
 
 export const checkTimekeepingAppValid = {
   // shift: 'string',
-  date: 'date',
+  date: 'string',
   time: { type: 'string', pattern: REGEX.TIME },
   deviceName: 'string',
   latitude: 'string',
@@ -46,12 +46,12 @@ export const checkTimekeepingAppValid = {
 };
 
 export const listTimekeepingLogAppValid = {
-  date: 'date',
+  date: 'string',
   // shift: 'string'
 };
 
 export const listTimekeepingAppValid = {
-  fromDate: 'date',
-  toDate: 'date',
+  fromDate: 'string',
+  toDate: 'string',
   shift: { type: 'string', allowNull: true }
 };

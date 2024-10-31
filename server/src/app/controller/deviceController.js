@@ -5,7 +5,7 @@ import { validateData } from '@utils';
 export const getListDevice = async (req, res) => {
   try {
     const { error, value } = validateData(listDeviceValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { page, limit, keySearch, type, department, status } = value;
     const where = {};
     if (keySearch) where.$or = [{ name: { $regex: keySearch, $options: 'i' } }, { code: { $regex: keySearch, $options: 'i' } }];
@@ -23,10 +23,10 @@ export const getListDevice = async (req, res) => {
 export const deleteDevice = async (req, res) => {
   try {
     const { error, value } = validateData(detailDeviceValid, req.body);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { _id } = value;
     const data = await deleteDeviceMd({ _id });
-    if (!data) return res.status(400).json({ status: 0, mess: 'Thiết bị không tồn tại!' });
+    if (!data) return res.json({ status: 0, mess: 'Thiết bị không tồn tại!' });
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -36,10 +36,10 @@ export const deleteDevice = async (req, res) => {
 export const detailDevice = async (req, res) => {
   try {
     const { error, value } = validateData(detailDeviceValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { _id } = value;
     const data = await detailDeviceMd({ _id });
-    if (!data) return res.status(400).json({ status: 0, mess: 'Thiết bị không tồn tại!' });
+    if (!data) return res.json({ status: 0, mess: 'Thiết bị không tồn tại!' });
     res.json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -49,17 +49,17 @@ export const detailDevice = async (req, res) => {
 export const updateDevice = async (req, res) => {
   try {
     const { error, value } = validateData(updateDeviceValid, req.body);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { _id, name, code } = value;
     const dataz = await detailDeviceMd({ _id });
-    if (!dataz) return res.status(400).json({ status: 0, mess: 'Thiết bị không tồn tại!' });
+    if (!dataz) return res.json({ status: 0, mess: 'Thiết bị không tồn tại!' });
     if (name) {
       const checkName = await detailDeviceMd({ name });
-      if (checkName) return res.status(400).json({ status: 0, mess: 'Tên thiết bị đã tồn tại!' });
+      if (checkName) return res.json({ status: 0, mess: 'Tên thiết bị đã tồn tại!' });
     }
     if (code) {
       const checkCode = await detailDeviceMd({ code });
-      if (checkCode) return res.status(400).json({ status: 0, mess: 'Mã thiết bị đã tồn tại!' });
+      if (checkCode) return res.json({ status: 0, mess: 'Mã thiết bị đã tồn tại!' });
     }
     const data = await updateDeviceMd({ _id }, { updatedBy: req.account._id, ...value });
     res.status(201).json({ status: 1, data });
@@ -71,12 +71,12 @@ export const updateDevice = async (req, res) => {
 export const createDevice = async (req, res) => {
   try {
     const { error, value } = validateData(createDeviceValid, req.body);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { name, code } = value;
     const checkName = await detailDeviceMd({ name });
-    if (checkName) return res.status(400).json({ status: 0, mess: 'Tên thiết bị đã tồn tại!' });
+    if (checkName) return res.json({ status: 0, mess: 'Tên thiết bị đã tồn tại!' });
     const checkCode = await detailDeviceMd({ code });
-    if (checkCode) return res.status(400).json({ status: 0, mess: 'Mã thiết bị đã tồn tại!' });
+    if (checkCode) return res.json({ status: 0, mess: 'Mã thiết bị đã tồn tại!' });
     const data = await createDeviceMd({ updatedBy: req.account._id, ...value });
     res.status(201).json({ status: 1, data });
   } catch (error) {

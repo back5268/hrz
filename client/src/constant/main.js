@@ -118,10 +118,11 @@ export const sheduleTypes = [
 export const applicationTypes = [
   { name: 'Đơn xin nghỉ phép (phép năm)', _id: 1 },
   { name: 'Đơn xin nghỉ (không phép)', _id: 2 },
-  { name: 'Đơn xác nhận công', _id: 3 },
-  { name: 'Đơn xin đi trễ, về sớm', _id: 4 },
-  { name: 'Đơn xin làm thêm giờ', _id: 5 },
-  { name: 'Đơn công tác', _id: 6 }
+  { name: 'Đơn xin nghỉ phép (phép đặc biệt)', _id: 3 },
+  { name: 'Đơn xác nhận công', _id: 4 },
+  { name: 'Đơn xin đi trễ, về sớm', _id: 5 },
+  { name: 'Đơn xin làm thêm giờ', _id: 6 },
+  { name: 'Đơn công tác', _id: 7 }
 ];
 
 export const applicationStatus = [
@@ -135,3 +136,7 @@ export const importLogStatus = [
   { name: 'Thành công', _id: 1, severity: 'success' },
   { name: 'Thất bại', _id: 0, severity: 'danger' }
 ];
+
+// Vị trí chấm công []
+// Thời gian cảnh báo chấm công
+

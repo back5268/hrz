@@ -9,7 +9,7 @@ TimekeepingLogMd.init('TimekeepingLog', {
   department: { type: ObjectId, ref: 'Department', required: true },
   account: { type: ObjectId, ref: 'Account', required: true },
   shift: { type: ObjectId, ref: 'Account' },
-  date: { type: Date, required: true },
+  date: { type: String, required: true },
   time: { type: String, required: true },
   device: { type: String },
   deviceName: { type: String },

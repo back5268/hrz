@@ -27,9 +27,11 @@ const databaseDateToTime = (date) => {
 };
 
 export const DetailShift = () => {
-  const { _id } = useParams();
+  const { _id, _idz } = useParams();
   const isUpdate = Boolean(_id);
+  const isDuplicate = Boolean(_idz);
   const { data: item } = useGetApi(detailShiftApi, { _id }, 'shiftz', isUpdate);
+  const { data: itemz } = useGetApi(detailShiftApi, { _id: _idz }, 'shiftzz', isDuplicate);
   const [dates, setDates] = useState([]);
   const { departments } = useDataState();
 
@@ -45,12 +47,13 @@ export const DetailShift = () => {
   });
 
   useEffect(() => {
-    if (isUpdate && item) {
-      if (item.dateStart) setValue('dateStart', new Date(item.dateStart));
-      if (item.dateEnd) setValue('dateEnd', new Date(item.dateEnd));
-      if (item.dates)
+    if ((isUpdate && item) || (isDuplicate && itemz)) {
+      const dataz = item || itemz
+      if (dataz.dateStart) setValue('dateStart', new Date(dataz.dateStart));
+      if (dataz.dateEnd) setValue('dateEnd', new Date(dataz.dateEnd));
+      if (dataz.dates)
         setDates(
-          item.dates.map((i, index) => ({
+          dataz.dates.map((i, index) => ({
             ...i,
             idz: index + 1,
             timeStart: convertTimeToDate(i.timeStart),

@@ -10,14 +10,15 @@ ApplicationMd.init('Application', {
   type: {
     type: Number,
     required: true,
-    enum: [1, 2, 3, 4, 5, 6],
+    enum: [1, 2, 3, 4, 5, 6, 7],
     description:
-      '1: Đơn xin nghỉ (phép năm), 2: Đơn xin nghỉ (không phép) 3: Đơn xác nhận công, 4: Đơn xin đi trễ, về sớm, 5: Đơn OT, 6: Đơn công tác'
+      '1: Đơn xin nghỉ (phép năm), 2: Đơn xin nghỉ (không phép), 3: Đơn xin nghỉ (phép đặc biệt), 4: Đơn xác nhận công, 5: Đơn xin đi trễ, về sớm, 6: Đơn OT, 7: Đơn công tác'
   },
-  detail: { type: Object, required: true },
+  dates: [{ type: String, required: true }],
   reason: { type: String, required: true },
+  detail: { type: Object },
   files: [{ type: String }],
-  status: { type: Number, enum: [1, 2, 3, 4], description: '1: Chờ duyệt, 2: Đã duyệt, 3: Từ chối, 4: Hủy' },
+  status: { type: Number, enum: [1, 2, 3, 4], default: 1, description: '1: Chờ duyệt, 2: Đã duyệt, 3: Từ chối, 4: Hủy' },
   deletedAt: { type: Date }
 });
 

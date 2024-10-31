@@ -1,7 +1,8 @@
-import { Redirect, Stack } from 'expo-router';
+import { Redirect, router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useUserState } from '@/store';
-import { Text, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const MainLayout = () => {
   const { isAuthenticated } = useUserState();
@@ -9,12 +10,10 @@ const MainLayout = () => {
 
   const HeaderButton = () => (
     <TouchableOpacity
-      onPress={() => {
-        console.log('Button Pressed');
-      }}
+      onPress={() => router.push('/application/create')}
       style={{ marginRight: 15 }}
     >
-      <Text style={{ fontWeight: 'bold' }}>Action</Text>
+      <MaterialCommunityIcons name="plus-circle" size={24} />
     </TouchableOpacity>
   );
 
@@ -26,6 +25,8 @@ const MainLayout = () => {
     { title: 'Bảng lương', name: 'payroll' },
     { title: 'Thông báo', name: 'notify' },
     { title: 'Chấm công', name: 'check-timekeeping' },
+    { title: 'Tạo đơn', name: 'application/create' },
+    { title: 'Chi tiết đơn', name: 'application/[_id]' },
     { title: 'Đơn từ', name: 'application', headerRight: () => <HeaderButton /> }
   ];
 

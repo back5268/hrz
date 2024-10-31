@@ -15,7 +15,7 @@ import moment from 'moment';
 export const getListContract = async (req, res) => {
   try {
     const { error, value } = validateData(listContractValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { account, type, status } = value;
     const where = { account };
     if (status || status === 0) where.status = status;
@@ -37,7 +37,7 @@ export const getListContractApp = async (req, res) => {
 export const deleteContract = async (req, res) => {
   try {
     const { error, value } = validateData(detailContractValid, req.body);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { _id, account } = value;
     const data = await deleteContractMd({ _id, account });
     res.status(201).json({ status: 1, data });
@@ -49,13 +49,13 @@ export const deleteContract = async (req, res) => {
 export const updateContract = async (req, res) => {
   try {
     const { error, value } = validateData(updateContractValid, req.body);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     let { _id, code, account, signedDate, expiredDate } = value;
     const contract = await detailContractMd({ _id, account });
-    if (!contract) return res.status(400).json({ status: 0, mess: 'Không tìm thấy hợp đồng!' });
+    if (!contract) return res.json({ status: 0, mess: 'Không tìm thấy hợp đồng!' });
     if (code) {
       const checkCode = await detailContractMd({ code, account });
-      if (checkCode) return res.status(400).json({ status: 0, mess: 'Số hợp đồng đã tồn tại!' });
+      if (checkCode) return res.json({ status: 0, mess: 'Số hợp đồng đã tồn tại!' });
     }
     if (signedDate || expiredDate) {
       signedDate = signedDate || contract.signedDate;
@@ -80,9 +80,9 @@ export const updateContract = async (req, res) => {
         account
       });
       if (checkContract)
-        return res.status(400).json({ status: 0, mess: 'Khoảng thời gian này đã có hợp đồng, vui lòng xác nhận hủy trước khi cập nhật!' });
+        return res.json({ status: 0, mess: 'Khoảng thời gian này đã có hợp đồng, vui lòng xác nhận hủy trước khi cập nhật!' });
       if (new Date(signedDate) > new Date(expiredDate))
-        return res.status(400).json({ status: 0, mess: 'Ngày ký không thể lớn hơn ngày hết hạn!' });
+        return res.json({ status: 0, mess: 'Ngày ký không thể lớn hơn ngày hết hạn!' });
       if (new Date() > new Date(expiredDate)) value.status = 2;
       else if (new Date() > new Date(signedDate) && new Date() < new Date(expiredDate)) value.status = 1;
       else if (new Date() < new Date(signedDate)) value.status = 3;
@@ -97,7 +97,7 @@ export const updateContract = async (req, res) => {
 export const cancelContract = async (req, res) => {
   try {
     const { error, value } = validateData(detailContractValid, req.body);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { _id, account } = value;
     const data = await updateContractMd({ _id, account }, { updatedBy: req.account._id, status: 4 });
     res.status(201).json({ status: 1, data });
@@ -109,7 +109,7 @@ export const cancelContract = async (req, res) => {
 export const createContract = async (req, res) => {
   try {
     const { error, value } = validateData(createContractValid, req.body);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { code, signedDate, expiredDate } = value;
     const checkContract = await detailContractMd({
       $or: [
@@ -130,15 +130,15 @@ export const createContract = async (req, res) => {
       account: value.account
     });
     if (checkContract)
-      return res.status(400).json({ status: 0, mess: 'Khoảng thời gian này đã có hợp đồng, vui lòng xác nhận hủy trước khi thêm!' });
+      return res.json({ status: 0, mess: 'Khoảng thời gian này đã có hợp đồng, vui lòng xác nhận hủy trước khi thêm!' });
 
     if (new Date(signedDate) > new Date(expiredDate))
-      return res.status(400).json({ status: 0, mess: 'Ngày ký không thể lớn hơn ngày hết hạn!' });
+      return res.json({ status: 0, mess: 'Ngày ký không thể lớn hơn ngày hết hạn!' });
     if (new Date() > new Date(expiredDate)) value.status = 2;
     else if (new Date() > new Date(signedDate) && new Date() < new Date(expiredDate)) value.status = 1;
     else if (new Date() < new Date(signedDate)) value.status = 3;
     const checkCode = await detailContractMd({ code });
-    if (checkCode) return res.status(400).json({ status: 0, mess: 'Số hợp đồng đã tồn tại!' });
+    if (checkCode) return res.json({ status: 0, mess: 'Số hợp đồng đã tồn tại!' });
     const data = await createContractMd({ by: req.account._id, ...value });
     res.status(201).json({ status: 1, data });
   } catch (error) {
@@ -149,16 +149,16 @@ export const createContract = async (req, res) => {
 export const renderContract = async (req, res) => {
   try {
     const { error, value } = validateData(detailContractValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { account: accountz, _id } = value;
     const contract = await detailContractMd({ _id, account: accountz });
-    if (!contract) res.status(400).json({ status: 0, mess: 'Không tìm thấy hợp đồng!' });
+    if (!contract) res.json({ status: 0, mess: 'Không tìm thấy hợp đồng!' });
     if (contract.template) return res.json({ status: 1, data: contract.template });
     else {
       const template = await detailTemplateMd({ type: contract.type });
-      if (!template || !template.content) return res.status(400).json({ status: 0, mess: 'Không có mẫu hợp đồng!' });
+      if (!template || !template.content) return res.json({ status: 0, mess: 'Không có mẫu hợp đồng!' });
       const account = await detailAccountMd({ _id: accountz }, [{ path: 'jobPosition', select: 'name' }]);
-      if (!account) return res.status(400).json({ status: 0, mess: 'Không tìm thấy nhân viên!' });
+      if (!account) return res.json({ status: 0, mess: 'Không tìm thấy nhân viên!' });
       const gender = account.gender;
       const banks = await getListBankVietQr();
       const content = template.content;

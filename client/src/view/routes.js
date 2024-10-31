@@ -24,6 +24,7 @@ export const routes = [
   { path: '/device', element: Device, layout: true },
   { path: '/shift', element: Shift, layout: true },
   { path: '/shift/create', element: DetailShift, layout: true },
+  { path: '/shift/create/:_idz', element: DetailShift, layout: true },
   { path: '/shift/detail/:_id', element: DetailShift, layout: true },
   { path: '/schedule', element: Schedule, layout: true },
   { path: '/timekeeping', element: Timekeeping, layout: true },

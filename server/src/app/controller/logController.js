@@ -5,7 +5,7 @@ import { validateData } from '@utils';
 export const getListLog = async (req, res) => {
   try {
     const { error, value } = validateData(listLogValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { page, limit, keySearch, status } = value;
     const where = {};
     if (keySearch) where.$or = [{ subject: { $regex: keySearch, $options: 'i' } }, { to: { $regex: keySearch, $options: 'i' } }];

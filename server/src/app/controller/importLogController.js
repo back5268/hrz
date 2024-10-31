@@ -5,7 +5,7 @@ import { validateData } from '@utils';
 export const getListImportLog = async (req, res) => {
   try {
     const { error, value } = validateData(listImportLogValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { page, limit, status, keySearch, fromDate, toDate } = value;
     const where = {};
     if (status || status === 0) where.status = status;

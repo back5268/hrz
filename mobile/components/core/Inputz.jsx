@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { useController } from 'react-hook-form';
+import { TextInput } from 'react-native-paper';
 
-export const Inputz = ({ icon, label, type, value, placeholder, handleChangeText, className = '', ...props }) => {
+export const Inputz = ({ icon, label, type, value, handleChangeText, className = '', ...props }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -17,7 +19,6 @@ export const Inputz = ({ icon, label, type, value, placeholder, handleChangeText
         <TextInput
           className="flex-1 text-color text-base"
           value={value}
-          placeholder={placeholder}
           placeholderTextColor="#7B7B8B"
           onChangeText={handleChangeText}
           secureTextEntry={type === 'password' && !showPassword}
@@ -29,6 +30,33 @@ export const Inputz = ({ icon, label, type, value, placeholder, handleChangeText
           </TouchableOpacity>
         )}
       </View>
+    </View>
+  );
+};
+
+export const InputForm = ({ label, name, control, errors = {}, left, right, className = '', ...props }) => {
+  const {
+    field: { onChange, onBlur, value }
+  } = useController({
+    control,
+    defaultValue: '',
+    name
+  });
+
+  return (
+    <View className="flex flex-col w-full p-2">
+      <TextInput
+        label={label}
+        value={value}
+        placeholderTextColor="#7B7B8B"
+        onChangeText={onChange}
+        onBlur={onBlur}
+        left={left ? <TextInput.Icon name={left} /> : null}
+        right={right ? <TextInput.Icon name={right} /> : null}
+        error={!!errors[name]}
+        {...props}
+      />
+      {errors[name] && <Text className="text-red-400 text-xs ml-2 mt-1">{errors[name]?.message}</Text>}
     </View>
   );
 };

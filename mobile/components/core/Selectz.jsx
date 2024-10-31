@@ -1,78 +1,111 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  Pressable,
-  ScrollView,
-} from "react-native";
+import React, { useState } from 'react';
+import { useController } from 'react-hook-form';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { TextInput, Menu } from 'react-native-paper';
 
-export const Selectz = ({
-  label = "",
-  value,
-  setValue,
-  options = [],
-  optionValue = "_id",
-  optionLabel = "name",
-}) => {
-  const [modalVisible, setModalVisible] = useState(false);
+export const Selectz = (props) => {
+  const { name, label = '', control, errors = {}, options = [], optionLabel = 'name', optionValue = '_id' } = props;
+  const [visible, setVisible] = useState(false);
+  const {
+    field: { onChange, onBlur, value }
+  } = useController({
+    control,
+    defaultValue: '',
+    name
+  });
+
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+  const handleSelect = (item) => {
+    onChange(item);
+    closeMenu();
+  };
 
   return (
-    <View className="px-3">
-      <TouchableOpacity
-        className="w-40 h-12 border border-gray-400 rounded justify-center items-center"
-        onPress={() => setModalVisible(true)}
+    <View className="flex flex-col w-full p-2">
+      <Menu
+        visible={visible}
+        onDismiss={closeMenu}
+        anchor={
+          <TouchableOpacity onPress={openMenu}>
+            <TextInput
+              error={!!errors[name]}
+              onBlur={onBlur}
+              label={label}
+              value={options?.find((o) => (o[optionValue] || o) === value)?.[optionLabel]}
+              editable={false}
+              right={<TextInput.Icon onPress={openMenu} icon="menu-down" />}
+            />
+          </TouchableOpacity>
+        }
+        className="mt-24 ml-1 w-11/12"
       >
-        <Text className="text-base">{value ? options.find(o => String(o[optionValue]) === String(value))?.[optionLabel] : `Chọn ${label}`}</Text>
-      </TouchableOpacity>
+        <ScrollView style={{ maxHeight: 200 }}>
+          {options.map((item, index) => {
+            let key, text;
+            if (typeof item === 'object') {
+              key = item[optionValue];
+              text = item[optionLabel];
+            } else key = text = item;
+            return <Menu.Item key={index} onPress={() => handleSelect(key)} title={text} />;
+          })}
+        </ScrollView>
+      </Menu>
+      {errors[name] && <Text className="text-red-400 text-xs ml-2 mt-1">{errors[name]?.message}</Text>}
+    </View>
+  );
+};
 
-      <Modal animationType="fade" transparent={true} visible={modalVisible}>
-        <Pressable
-          className="absolute inset-x-0 inset-y-0 bg-black opacity-40"
-          onPress={() => {
-            setModalVisible(false);
-          }}
-        />
-        <View className="absolute bottom-0 w-full h-72 bg-white rounded-t-lg py-4 px-2">
-          <ScrollView className="w-full">
-            {options?.length > 0 ? (
-              options.map((item, index) => {
-                let key, label;
-                if (typeof item === "object") {
-                  key = String(item[optionValue]);
-                  label = String(item[optionLabel]);
-                } else key = label = String(item);
+export const SelectForm = (props) => {
+  const { name, label = '', control, handleOnchange = () => {}, errors = {}, options = [], optionLabel = 'name', optionValue = '_id' } = props;
+  const [visible, setVisible] = useState(false);
+  const {
+    field: { onChange, onBlur, value }
+  } = useController({
+    control,
+    defaultValue: '',
+    name
+  });
 
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    className={`py-3 text-center rounded-md ${
-                      String(value) === key ? "bg-[#673AB7]/70" : ""
-                    }`}
-                    onPress={() => {
-                      setValue(key);
-                      setModalVisible(false);
-                    }}
-                  >
-                    <Text
-                      className={`text-center ${
-                        String(value) === key ? "text-white font-medium" : ""
-                      }`}
-                    >
-                      {label}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })
-            ) : (
-              <Text className="text-center text-lg">
-                Không có dữ liệu {label}
-              </Text>
-            )}
-          </ScrollView>
-        </View>
-      </Modal>
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+  const handleSelect = (item) => {
+    onChange(item);
+    handleOnchange()
+    closeMenu();
+  };
+
+  return (
+    <View className="flex flex-col w-full p-2">
+      <Menu
+        visible={visible}
+        onDismiss={closeMenu}
+        anchor={
+          <TouchableOpacity onPress={openMenu}>
+            <TextInput
+              error={!!errors[name]}
+              onBlur={onBlur}
+              label={label}
+              value={options?.find((o) => (o[optionValue] || o) === value)?.[optionLabel]}
+              editable={false}
+              right={<TextInput.Icon onPress={openMenu} icon="menu-down" />}
+            />
+          </TouchableOpacity>
+        }
+        className="mt-24 ml-1 w-11/12"
+      >
+        <ScrollView style={{ maxHeight: 200 }}>
+          {options.map((item, index) => {
+            let key, text;
+            if (typeof item === 'object') {
+              key = item[optionValue];
+              text = item[optionLabel];
+            } else key = text = item;
+            return <Menu.Item key={index} onPress={() => handleSelect(key)} title={text} />;
+          })}
+        </ScrollView>
+      </Menu>
+      {errors[name] && <Text className="text-red-400 text-xs ml-2 mt-1">{errors[name]?.message}</Text>}
     </View>
   );
 };

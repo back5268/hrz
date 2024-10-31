@@ -1,11 +1,12 @@
 import { getListSyntheticTimekeepingApi } from '@/api';
-import { Hrz, Selectz } from '@/components/core';
+import { Hrz, Loadingz, Selectz } from '@/components/core';
 import { getMonths, getYears } from '@/lib/helper';
 import { useGetApi } from '@/lib/react-query';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 import { Text, View } from 'react-native';
+import { Card } from 'react-native-paper';
 
 const Calendar = ({ days = [] }) => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -30,7 +31,7 @@ const Calendar = ({ days = [] }) => {
   };
 
   return (
-    <View className="mt-6">
+    <Card className="mt-6">
       <View className="flex flex-row">
         {dayNames.map((dayName, index) => (
           <Text key={index} className="text-center w-11 h-11 m-1 leading-12 text-gray-500">
@@ -39,7 +40,7 @@ const Calendar = ({ days = [] }) => {
         ))}
       </View>
       <FlatList data={days} numColumns={7} keyExtractor={(_, index) => index.toString()} renderItem={renderItem} />
-    </View>
+    </Card>
   );
 };
 
@@ -62,7 +63,7 @@ const INITPARAMS = {
 const Timekeeping = () => {
   const [params, setParams] = useState(INITPARAMS);
   const [days, setDays] = useState([]);
-  const { data } = useGetApi(getListSyntheticTimekeepingApi, handleParams(params), 'syntheticTimekeeping');
+  const { data, isLoading } = useGetApi(getListSyntheticTimekeepingApi, handleParams(params), 'syntheticTimekeeping');
 
   useEffect(() => {
     const timekeeping = data?.[0]?.data || [];
@@ -89,7 +90,9 @@ const Timekeeping = () => {
       });
     }
     setDays(newDays);
-  }, [JSON.stringify(params)]);
+  }, [JSON.stringify(params), JSON.stringify(data)]);
+
+  if (isLoading) return <Loadingz />;
 
   return (
     <View className="flex flex-col items-center">

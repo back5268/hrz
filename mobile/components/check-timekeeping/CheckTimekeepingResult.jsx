@@ -26,7 +26,7 @@ export const CheckTimekeepingResult = ({ result = {} }) => {
           </>
         )}
         <View className="w-6/12 mt-2">
-          <Buttonz label="Xác nhận" handlePress={() => setVisible(false)} />
+          <Buttonz label="Xác nhận" onPress={() => setVisible(false)} />
         </View>
       </View>
     </Modalz>

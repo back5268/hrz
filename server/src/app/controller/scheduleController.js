@@ -5,7 +5,7 @@ import { validateData } from '@utils';
 export const getListSchedule = async (req, res) => {
   try {
     const { error, value } = validateData(listScheduleValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { type, department, account, shift, fromDate, toDate } = value;
     const where = {};
     if (type) where.type = type;

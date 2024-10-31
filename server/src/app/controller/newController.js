@@ -6,7 +6,7 @@ import { validateData } from '@utils';
 export const getListNew = async (req, res) => {
   try {
     const { error, value } = validateData(listNewValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { page, limit, keySearch, status } = value;
     const where = {};
     if (keySearch) where.$or = [{ subject: { $regex: keySearch, $options: 'i' } }];
@@ -30,10 +30,10 @@ export const getListNewApp = async (req, res) => {
 export const deleteNew = async (req, res) => {
   try {
     const { error, value } = validateData(detailNewValid, req.body);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { _id } = value;
     const data = await deleteNewMd({ _id });
-    if (!data) return res.status(400).json({ status: 0, mess: 'Tin tức không tồn tại!' });
+    if (!data) return res.json({ status: 0, mess: 'Tin tức không tồn tại!' });
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -43,10 +43,10 @@ export const deleteNew = async (req, res) => {
 export const detailNew = async (req, res) => {
   try {
     const { error, value } = validateData(detailNewValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { _id } = value;
     const data = await detailNewMd({ _id });
-    if (!data) return res.status(400).json({ status: 0, mess: 'Tin tức không tồn tại!' });
+    if (!data) return res.json({ status: 0, mess: 'Tin tức không tồn tại!' });
     res.json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -56,13 +56,13 @@ export const detailNew = async (req, res) => {
 export const updateNew = async (req, res) => {
   try {
     const { error, value } = validateData(updateNewValid, req.body);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { _id, subject } = value;
     const dataz = await detailNewMd({ _id });
-    if (!dataz) return res.status(400).json({ status: 0, mess: 'Tin tức không tồn tại!' });
+    if (!dataz) return res.json({ status: 0, mess: 'Tin tức không tồn tại!' });
     if (subject) {
       const checkSubject = await detailNewMd({ subject });
-      if (checkSubject) return res.status(400).json({ status: 0, mess: 'Tiêu đề đã tồn tại!' });
+      if (checkSubject) return res.json({ status: 0, mess: 'Tiêu đề đã tồn tại!' });
     }
     if (req.files?.['avatar']?.length > 0) {
       for (const file of req.files['avatar']) {
@@ -85,10 +85,10 @@ export const updateNew = async (req, res) => {
 export const createNew = async (req, res) => {
   try {
     const { error, value } = validateData(createNewValid, req.body);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { subject } = value;
     const checkSubject = await detailNewMd({ subject });
-    if (checkSubject) return res.status(400).json({ status: 0, mess: 'Tiêu đề đã tồn tại!' });
+    if (checkSubject) return res.json({ status: 0, mess: 'Tiêu đề đã tồn tại!' });
     value.files = [];
     if (req.files?.['avatar']?.length > 0) {
       for (const file of req.files['avatar']) {

@@ -13,7 +13,7 @@ import { validateData } from '@utils';
 export const getListPermission = async (req, res) => {
   try {
     const { error, value } = validateData(listPermissionValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { page, limit, keySearch, status } = value;
     const where = {};
     if (keySearch) where.$or = [{ name: { $regex: keySearch, $options: 'i' } }];
@@ -37,10 +37,10 @@ export const getListTool = async (req, res) => {
 export const deletePermission = async (req, res) => {
   try {
     const { error, value } = validateData(detailPermissionValid, req.body);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { _id } = value;
     const data = await deletePermissionMd({ _id });
-    if (!data) return res.status(400).json({ status: 0, mess: 'Nhóm quyền không tồn tại!' });
+    if (!data) return res.json({ status: 0, mess: 'Nhóm quyền không tồn tại!' });
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -50,10 +50,10 @@ export const deletePermission = async (req, res) => {
 export const detailPermission = async (req, res) => {
   try {
     const { error, value } = validateData(detailPermissionValid, req.query);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { _id } = value;
     const data = await detailPermissionMd({ _id });
-    if (!data) return res.status(400).json({ status: 0, mess: 'Nhóm quyền không tồn tại!' });
+    if (!data) return res.json({ status: 0, mess: 'Nhóm quyền không tồn tại!' });
     res.json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -63,13 +63,13 @@ export const detailPermission = async (req, res) => {
 export const updatePermission = async (req, res) => {
   try {
     const { error, value } = validateData(updatePermissionValid, req.body);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { _id, name, code } = value;
     const dataz = await detailPermissionMd({ _id });
-    if (!dataz) return res.status(400).json({ status: 0, mess: 'Nhóm quyền không tồn tại!' });
+    if (!dataz) return res.json({ status: 0, mess: 'Nhóm quyền không tồn tại!' });
     if (name) {
       const checkName = await detailPermissionMd({ name });
-      if (checkName) return res.status(400).json({ status: 0, mess: 'Tên nhóm quyền đã tồn tại!' });
+      if (checkName) return res.json({ status: 0, mess: 'Tên nhóm quyền đã tồn tại!' });
     }
     const data = await updatePermissionMd({ _id }, { updatedBy: req.account._id, ...value });
     res.status(201).json({ status: 1, data });
@@ -81,10 +81,10 @@ export const updatePermission = async (req, res) => {
 export const createPermission = async (req, res) => {
   try {
     const { error, value } = validateData(createPermissionValid, req.body);
-    if (error) return res.status(400).json({ status: 0, mess: error });
+    if (error) return res.json({ status: 0, mess: error });
     const { name } = value;
     const checkName = await detailPermissionMd({ name });
-    if (checkName) return res.status(400).json({ status: 0, mess: 'Tên nhóm quyền đã tồn tại!' });
+    if (checkName) return res.json({ status: 0, mess: 'Tên nhóm quyền đã tồn tại!' });
     const data = await createPermissionMd({ updatedBy: req.account._id, ...value });
     res.status(201).json({ status: 1, data });
   } catch (error) {

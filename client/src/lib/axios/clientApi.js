@@ -20,12 +20,12 @@ clientApi.interceptors.request.use(
 
 clientApi.interceptors.response.use(
   async function (res) {
-    if (res && res.data && res.data.status) return res.data.data;
-    else return res.data;
+    if (res.data?.status) return res.data.data;
+    else showToast({ title: res.data?.mess, severity: 'error' });
   },
   async function (error) {
     if (error) {
-      showToast({ title: error.response?.data?.mess || 'Đường truyền không ổn định vui lòng thử lại sau', severity: 'error' });
+      showToast({ title: 'Đường truyền không ổn định vui lòng thử lại sau', severity: 'error' });
     }
   }
 );

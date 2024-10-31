@@ -1,5 +1,5 @@
 import { dateData } from '@constant';
-import { createScheduleMd, listAccountMd } from '@models';
+import { createScheduleMd, listAccountMd, listTimekeepingMd } from '@models';
 import moment from 'moment';
 
 export const addTimekeepingByShift = async (shift) => {
@@ -36,4 +36,8 @@ export const addTimekeepingByShift = async (shift) => {
       }
     }
   }
+};
+
+export const warningTimekeeping = async () => {
+  const timekeepings = await listTimekeepingMd({  })
 };

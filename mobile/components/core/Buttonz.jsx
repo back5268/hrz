@@ -1,20 +1,14 @@
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { Button } from 'react-native-paper';
 
-export const Buttonz = ({ children, label, handlePress, containerClassName = '', labelClassName = '', isLoading }) => {
+export const Buttonz = (props) => {
+  const { children, label = 'Xác nhận', mode = 'contained', onPress = () => {}, ...prop } = props;
+
   return (
-    <View className="my-4">
-      <TouchableOpacity
-        onPress={handlePress}
-        activeOpacity={0.7}
-        className={`bg-[#673AB7] rounded-md min-h-[48px] px-2 flex flex-row justify-center items-center ${containerClassName} ${
-          isLoading ? 'opacity-50' : ''
-        }`}
-        disabled={isLoading}
-      >
-        {children ? children : <Text className={`text-white font-psemibold text-nomal uppercase ${labelClassName}`}>{label}</Text>}
-
-        {isLoading && <ActivityIndicator animating={isLoading} color="#fff" size="small" className="ml-2" />}
-      </TouchableOpacity>
+    <View className="w-full p-1">
+      <Button mode={mode} onPress={onPress} className="rounded-md" contentStyle={{ height: 48 }} {...prop}>
+        {children ? children : <Text className="font-semibold text-nomal uppercase">{label}</Text>}
+      </Button>
     </View>
   );
 };
