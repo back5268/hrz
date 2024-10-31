@@ -1,46 +1,50 @@
 import { getListContractApi } from '@/api';
 import { useGetApi } from '@/lib/react-query';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, Pressable, Text, View } from 'react-native';
 import { Loadingz } from '@/components/core';
-import moment from 'moment';
 import { contractStatus, contractTypes } from '@/constants';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useState } from 'react';
+import { themeColor } from '@/theme';
+import { formatDate } from '@/lib/helper';
 
 const Employee = () => {
-  const { isLoading, data } = useGetApi(getListContractApi, {}, 'contract');
-  if (isLoading) {
-    return <Loadingz />;
-  }
+  const [render, setRender] = useState(false);
+  const { isLoading, data } = useGetApi(getListContractApi, { render }, 'contract');
+  if (isLoading) return <Loadingz />;
 
   return (
-    <View className="flex-1 mx-4 py-4">
+    <SafeAreaView className="flex-1">
       <FlatList
         data={data}
         keyExtractor={(item) => item._id?.toString()}
         showsVerticalScrollIndicator={true}
+        onEndReached={() => console.log('Load more data')}
+        onRefresh={() => setRender((pre) => !pre)}
+        refreshing={false}
         renderItem={({ item }) => {
           const status = contractStatus.find((s) => s._id === item.status);
 
           return (
-            <View className="flex-row items-center justify-between p-4 border-border/20 bg-white my-2 rounded-lg">
-              <View className="flex flex-row items-center justify-start">
-                <View className="flex flex-col ml-4 font-lg">
-                  <Text className="text-lg font-medium mb-1">Số hiệu: {item.code}</Text>
-                  <Text className="leading-6">Loại hợp đồng: {contractTypes?.find((c) => c._id === item.type)?.name}</Text>
-                  <Text className="leading-6">
-                    Thời gian: {moment(item.signedDate).format('DD/MM/YYYY')} - {moment(item.expiredDate).format('DD/MM/YYYY')}
-                  </Text>
-                  <View>
-                    <View className="flex justify-center items-center p-2 rounded-md mt-1" style={{ backgroundColor: status?.color }}>
-                      <Text className="uppercase text-white font-semibold">{status?.name}</Text>
-                    </View>
-                  </View>
-                </View>
+            <Pressable
+              className="rounded-md my-2 p-3 flex flex-row justify-between items-center mx-4"
+              style={{ backgroundColor: themeColor.surfaceVariant }}
+            >
+              <View className="w-8/12">
+                <Text className="font-semibold text-md uppercase mb-1">Số hiệu: {item.code}</Text>
+                <Text className="leading-6">{contractTypes?.find((c) => c._id === item.type)?.name}</Text>
+                <Text className="leading-6">
+                  {formatDate(item.signedDate, 'date')} - {formatDate(item.expiredDate, 'date')}
+                </Text>
               </View>
-            </View>
+              <View className="flex justify-center items-center rounded-md p-2 min-w-[100]" style={{ backgroundColor: status?.color }}>
+                <Text className="uppercase text-white font-semibold text-xs">{status?.name}</Text>
+              </View>
+            </Pressable>
           );
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

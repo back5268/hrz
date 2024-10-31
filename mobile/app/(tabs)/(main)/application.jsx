@@ -7,6 +7,7 @@ import { themeColor } from '@/theme';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Dimensions, FlatList, Pressable, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { TabBar, TabView } from 'react-native-tab-view';
 
 const Scene = ({ status, index, shifts }) => {
@@ -20,7 +21,7 @@ const Scene = ({ status, index, shifts }) => {
   if (isLoading) return <Loadingz />;
 
   return (
-    <View className="flex-1 mx-4 py-4">
+    <SafeAreaView className="flex-1">
       <FlatList
         data={data}
         keyExtractor={(item) => item._id?.toString()}
@@ -41,23 +42,23 @@ const Scene = ({ status, index, shifts }) => {
           return (
             <Pressable
               onPress={() => router.push(`/application/${item._id}`)}
-              className="rounded-md my-2 p-3 flex flex-row justify-between items-center"
+              className="rounded-md my-2 p-3 flex flex-row justify-between items-center mx-4"
               style={{ backgroundColor: themeColor.surfaceVariant }}
             >
-              <View>
+              <View className="w-8/12">
                 <Text className="font-semibold text-md uppercase mb-1">{type?.name}</Text>
-                <Text className="text-md">Ca làm việc: {shift?.name}</Text>
-                <Text className="text-md">Ngày: {dateTitle}</Text>
-                <Text className="text-md">Lý do tạo đơn: {item.reason}</Text>
+                <Text className="leading-6">Ca làm việc: {shift?.name}</Text>
+                <Text className="leading-6">Ngày: {dateTitle}</Text>
+                <Text className="leading-6">Lý do tạo đơn: {item.reason}</Text>
               </View>
-              <View className="flex justify-center items-center rounded-md p-2" style={{ backgroundColor: status?.color }}>
+              <View className="flex justify-center items-center rounded-md p-2 min-w-[80]" style={{ backgroundColor: status?.color }}>
                 <Text className="uppercase text-white font-semibold text-xs">{status?.name}</Text>
               </View>
             </Pressable>
           );
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -6,7 +6,7 @@ import { Iconz } from './Iconz';
 import { themeColor } from '@/theme';
 
 export const FilePickerz = (props) => {
-  const { label = 'File đính kèm', files = [], setFiles = () => {}, multiple = true } = props;
+  const { label = 'File đính kèm', disabled, files = [], setFiles = () => {}, multiple = true } = props;
   const pickFile = async () => {
     try {
       const res = await DocumentPicker.getDocumentAsync({
@@ -22,7 +22,7 @@ export const FilePickerz = (props) => {
 
   return (
     <View className="w-full p-2">
-      <Buttonz icon={() => <Iconz name="upload" color="white" />} label={label} onPress={pickFile} />
+      <Buttonz disabled={disabled} icon={() => <Iconz name="upload" color="white" />} label={label} onPress={pickFile} />
       {files?.length > 0 && (
         <View className="w-full flex flex-col p-1">
           {files.map((file, index) => (
@@ -33,11 +33,13 @@ export const FilePickerz = (props) => {
             >
               <Iconz name="file" />
               <Text numberOfLines={1} className="flex-1 text-center mx-2" style={{ color: themeColor.primary }}>
-                {file.name}
+                {file.name || file}
               </Text>
-              <TouchableOpacity onPress={() => setFiles((pre) => pre.filter((p, i) => i !== index))}>
-                <Iconz name="delete" color="red" />
-              </TouchableOpacity>
+              {!disabled && (
+                <TouchableOpacity onPress={() => setFiles((pre) => pre.filter((p, i) => i !== index))}>
+                  <Iconz name="delete" color="red" />
+                </TouchableOpacity>
+              )}
             </View>
           ))}
         </View>

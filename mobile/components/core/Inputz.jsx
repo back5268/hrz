@@ -34,7 +34,7 @@ export const Inputz = ({ icon, label, type, value, handleChangeText, className =
   );
 };
 
-export const InputForm = ({ label, name, control, errors = {}, left, right, className = '', ...props }) => {
+export const InputForm = ({ label, name, disabled, control, errors = {}, left, right, className = '', ...props }) => {
   const {
     field: { onChange, onBlur, value }
   } = useController({
@@ -51,6 +51,7 @@ export const InputForm = ({ label, name, control, errors = {}, left, right, clas
         placeholderTextColor="#7B7B8B"
         onChangeText={onChange}
         onBlur={onBlur}
+        editable={!disabled}
         left={left ? <TextInput.Icon name={left} /> : null}
         right={right ? <TextInput.Icon name={right} /> : null}
         error={!!errors[name]}

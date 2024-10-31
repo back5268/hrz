@@ -4,33 +4,24 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { TextInput, Menu } from 'react-native-paper';
 
 export const Selectz = (props) => {
-  const { name, label = '', control, errors = {}, options = [], optionLabel = 'name', optionValue = '_id' } = props;
+  const { label = '', value = '', setValue = () => {}, options = [], optionLabel = 'name', optionValue = '_id', menuClassname = "" } = props;
   const [visible, setVisible] = useState(false);
-  const {
-    field: { onChange, onBlur, value }
-  } = useController({
-    control,
-    defaultValue: '',
-    name
-  });
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
   const handleSelect = (item) => {
-    onChange(item);
+    setValue(item);
     closeMenu();
   };
 
   return (
-    <View className="flex flex-col w-full p-2">
+    <View className="w-full p-2">
       <Menu
         visible={visible}
         onDismiss={closeMenu}
         anchor={
           <TouchableOpacity onPress={openMenu}>
             <TextInput
-              error={!!errors[name]}
-              onBlur={onBlur}
               label={label}
               value={options?.find((o) => (o[optionValue] || o) === value)?.[optionLabel]}
               editable={false}
@@ -38,7 +29,7 @@ export const Selectz = (props) => {
             />
           </TouchableOpacity>
         }
-        className="mt-24 ml-1 w-11/12"
+        className={`mt-24 ml-1 w-5/12 ${menuClassname}`}
       >
         <ScrollView style={{ maxHeight: 200 }}>
           {options.map((item, index) => {
@@ -51,13 +42,22 @@ export const Selectz = (props) => {
           })}
         </ScrollView>
       </Menu>
-      {errors[name] && <Text className="text-red-400 text-xs ml-2 mt-1">{errors[name]?.message}</Text>}
     </View>
   );
 };
 
 export const SelectForm = (props) => {
-  const { name, label = '', control, handleOnchange = () => {}, errors = {}, options = [], optionLabel = 'name', optionValue = '_id' } = props;
+  const {
+    name,
+    label = '',
+    disabled,
+    control,
+    handleOnchange = () => {},
+    errors = {},
+    options = [],
+    optionLabel = 'name',
+    optionValue = '_id'
+  } = props;
   const [visible, setVisible] = useState(false);
   const {
     field: { onChange, onBlur, value }
@@ -71,7 +71,7 @@ export const SelectForm = (props) => {
   const closeMenu = () => setVisible(false);
   const handleSelect = (item) => {
     onChange(item);
-    handleOnchange()
+    handleOnchange();
     closeMenu();
   };
 
@@ -81,14 +81,14 @@ export const SelectForm = (props) => {
         visible={visible}
         onDismiss={closeMenu}
         anchor={
-          <TouchableOpacity onPress={openMenu}>
+          <TouchableOpacity disabled={disabled} onPress={openMenu}>
             <TextInput
               error={!!errors[name]}
               onBlur={onBlur}
               label={label}
               value={options?.find((o) => (o[optionValue] || o) === value)?.[optionLabel]}
               editable={false}
-              right={<TextInput.Icon onPress={openMenu} icon="menu-down" />}
+              right={<TextInput.Icon disabled={disabled} onPress={openMenu} icon="menu-down" />}
             />
           </TouchableOpacity>
         }

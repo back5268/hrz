@@ -1,5 +1,5 @@
-import { createApplicationApi, detailApplicationApi, getListShiftApi } from '@/api';
-import { ScrollView, View } from 'react-native';
+import { cancelApplicationApi, createApplicationApi, detailApplicationApi, getListShiftApi } from '@/api';
+import { Alert, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Buttonz, DateTimePickerz, InputForm, Loadingz, SelectForm } from '../core';
 import { useForm } from 'react-hook-form';
@@ -51,7 +51,7 @@ export const Application = ({ _id }) => {
   });
 
   useEffect(() => {
-    if (isUpdate) {
+    if (isUpdate && item) {
       if (item?.dates?.length > 0) {
         const type = item.type;
         if ([1, 2, 4, 5, 6].includes(type)) setValue('date', new Date(item.dates[0]));
@@ -60,6 +60,7 @@ export const Application = ({ _id }) => {
           setValue('toDate', new Date(item.dates[item.dates.length - 1]));
         }
       }
+      if (item.files) setFiles(item.files);
       for (const key in defaultValues) {
         setValue(key, item[key]);
       }
@@ -77,8 +78,37 @@ export const Application = ({ _id }) => {
     setValue('toTime', '');
   };
 
+  const showAlert = () => {
+    Alert.alert(
+      'Thông báo',
+      'Bạn có chắc chắn muốn hủy đơn',
+      [
+        {
+          text: 'Hủy',
+          style: 'cancel'
+        },
+        {
+          text: 'Xác nhận',
+          onPress: async () => {
+            setLoading(true);
+            const response = await cancelApplicationApi({ _id });
+            setLoading(false);
+            if (response) {
+              showToast('Hủy đơn thành công!', 'success');
+              router.push('/application');
+            }
+          }
+        }
+      ],
+      { cancelable: false }
+    );
+  };
+
   const onSubmit = async (value) => {
-    if (isUpdate) return router.back();
+    if (isUpdate) {
+      if (item?.status === 1) return showAlert();
+      else return router.back();
+    }
     const params = { shift: value.shift, type: value.type, reason: value.reason };
     if ([1, 2].includes(type)) {
       if (!value.date) return showToast('Ngày nghỉ không được bỏ trống!');
@@ -132,16 +162,16 @@ export const Application = ({ _id }) => {
     setLoading(false);
     if (response) {
       showToast('Thêm mới đơn thành công!', 'success');
-      router.back();
+      router.push('/application');
     }
   };
 
   return (
     <>
       {loading && <Loadingz />}
-      <SafeAreaView className="bg-primary h-full px-2">
-        <ScrollView className="pb-16">
-          <SelectForm label="Ca làm việc (*)" name="shift" options={shifts} errors={errors} control={control} />
+      <SafeAreaView className="flex-1">
+        <ScrollView className="pb-16 px-2">
+          <SelectForm label="Ca làm việc (*)" name="shift" options={shifts} errors={errors} control={control} disabled={isUpdate} />
           <SelectForm
             label="Loại đơn (*)"
             name="type"
@@ -149,41 +179,93 @@ export const Application = ({ _id }) => {
             errors={errors}
             control={control}
             handleOnchange={handleOnchange}
+            disabled={isUpdate}
           />
           {[1, 2].includes(type) ? (
-            <DateTimePickerz label="Ngày nghỉ (*)" value={watch('date')} setValue={(e) => setValue('date', e)} />
+            <DateTimePickerz label="Ngày nghỉ (*)" value={watch('date')} setValue={(e) => setValue('date', e)} disabled={isUpdate} />
           ) : [3, 7].includes(type) ? (
             <>
-              <DateTimePickerz label="Ngày bắt đầu (*)" value={watch('fromDate')} setValue={(e) => setValue('fromDate', e)} />
-              <DateTimePickerz label="Ngày kết thúc (*)" value={watch('toDate')} setValue={(e) => setValue('toDate', e)} />
+              <DateTimePickerz
+                label="Ngày bắt đầu (*)"
+                value={watch('fromDate')}
+                setValue={(e) => setValue('fromDate', e)}
+                disabled={isUpdate}
+              />
+              <DateTimePickerz
+                label="Ngày kết thúc (*)"
+                value={watch('toDate')}
+                setValue={(e) => setValue('toDate', e)}
+                disabled={isUpdate}
+              />
             </>
           ) : type === 4 ? (
-            <DateTimePickerz label="Ngày xác nhận công (*)" value={watch('date')} setValue={(e) => setValue('date', e)} />
+            <DateTimePickerz
+              label="Ngày xác nhận công (*)"
+              value={watch('date')}
+              setValue={(e) => setValue('date', e)}
+              disabled={isUpdate}
+            />
           ) : type === 5 ? (
             <>
-              <DateTimePickerz label="Ngày" value={watch('date')} setValue={(e) => setValue('date', e)} />
-              <DateTimePickerz label="Số thời gian đi trễ" value={watch('late')} setValue={(e) => setValue('late', e)} mode="timez" />
-              <DateTimePickerz label="Số thời gian về sớm" value={watch('soon')} setValue={(e) => setValue('soon', e)} mode="timez" />
+              <DateTimePickerz label="Ngày" value={watch('date')} setValue={(e) => setValue('date', e)} disabled={isUpdate} />
+              <DateTimePickerz
+                label="Số thời gian đi trễ"
+                value={watch('late')}
+                setValue={(e) => setValue('late', e)}
+                mode="timez"
+                disabled={isUpdate}
+              />
+              <DateTimePickerz
+                label="Số thời gian về sớm"
+                value={watch('soon')}
+                setValue={(e) => setValue('soon', e)}
+                mode="timez"
+                disabled={isUpdate}
+              />
             </>
           ) : type === 6 ? (
             <>
-              <DateTimePickerz label="Ngày" value={watch('date')} setValue={(e) => setValue('date', e)} />
-              <DateTimePickerz label="Thời gian bắt đầu" value={watch('fromTime')} setValue={(e) => setValue('fromTime', e)} mode="timez" />
-              <DateTimePickerz label="Thời gian kết thúc" value={watch('toTime')} setValue={(e) => setValue('toTime', e)} mode="timez" />
+              <DateTimePickerz label="Ngày" value={watch('date')} setValue={(e) => setValue('date', e)} disabled={isUpdate} />
+              <DateTimePickerz
+                label="Thời gian bắt đầu"
+                value={watch('fromTime')}
+                setValue={(e) => setValue('fromTime', e)}
+                mode="timez"
+                disabled={isUpdate}
+              />
+              <DateTimePickerz
+                label="Thời gian kết thúc"
+                value={watch('toTime')}
+                setValue={(e) => setValue('toTime', e)}
+                mode="timez"
+                disabled={isUpdate}
+              />
             </>
           ) : (
             <></>
           )}
 
-          <InputForm label="Lý do tạo đơn (*)" name="reason" control={control} errors={errors} multiline numberOfLines={4} />
-          <FilePickerz files={files} setFiles={setFiles} />
+          <InputForm
+            label="Lý do tạo đơn (*)"
+            name="reason"
+            control={control}
+            errors={errors}
+            multiline
+            numberOfLines={4}
+            disabled={isUpdate}
+          />
+          <FilePickerz files={files} setFiles={setFiles} disabled={isUpdate} />
         </ScrollView>
         <View className="flex flex-row flex-wrap w-full my-2">
           <View className="w-6/12 px-1">
             <Buttonz label="Trở lại" mode="outlined" onPress={() => router.back()} />
           </View>
           <View className="w-6/12 px-1">
-            <Buttonz label="Xác nhận" onPress={handleSubmit(onSubmit)} />
+            <Buttonz
+              label={isUpdate && item?.status === 1 ? 'Hủy' : 'Xác nhận'}
+              className={isUpdate && item?.status === 1 ? 'bg-red-700' : ''}
+              onPress={handleSubmit(onSubmit)}
+            />
           </View>
         </View>
       </SafeAreaView>

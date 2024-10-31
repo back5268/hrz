@@ -7,21 +7,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Hrz, Iconz } from '@/components/core';
 import { images } from '@/constants';
 
-const Item = ({ label, icon, onPress }) => {
-  return (
-    <Fragment>
-      <TouchableOpacity onPress={onPress} className="flex flex-row w-full justify-between items-center py-4 px-4">
-        <View className="flex flex-row items-center">
-          <Iconz size={20} name={icon} />
-          <Text className="text-base ml-4">{label}</Text>
-        </View>
-        <Iconz size={20} name="chevron-right" />
-      </TouchableOpacity>
-      <Hrz />
-    </Fragment>
-  );
-};
-
 const Other = () => {
   const { userInfo, clearUserInfo } = useUserState();
   const router = useRouter();

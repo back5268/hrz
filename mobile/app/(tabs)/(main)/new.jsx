@@ -1,25 +1,30 @@
 import { getListNewApi } from '@/api';
 import { useGetApi } from '@/lib/react-query';
-import { FlatList, Image, Text, View } from 'react-native';
+import { FlatList, Image, Pressable, Text, View } from 'react-native';
 import { images } from '@/constants';
 import { Loadingz } from '@/components/core';
 import moment from 'moment';
+import { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { themeColor } from '@/theme';
 
 const New = () => {
-  const { isLoading, data } = useGetApi(getListNewApi, {}, 'new');
-  if (isLoading) {
-    return <Loadingz />;
-  }
+  const [render, setRender] = useState(false);
+  const { isLoading, data } = useGetApi(getListNewApi, { render }, 'new');
+  if (isLoading) return <Loadingz />;
 
   return (
-    <View className="flex-1 mx-4 py-4">
+    <SafeAreaView className="flex-1">
       <FlatList
         data={data}
         keyExtractor={(item) => item._id?.toString()}
         showsVerticalScrollIndicator={true}
+        onEndReached={() => console.log('Load more data')}
+        onRefresh={() => setRender((pre) => !pre)}
+        refreshing={false}
         renderItem={({ item }) => (
-          <View className="p-4 border-border/20 bg-white my-2 rounded-lg">
-            <View className="flex flex-row items-start justify-start">
+          <Pressable className="rounded-md p-3 mx-4 my-2" style={{ backgroundColor: themeColor.surfaceVariant }}>
+            <View className="flex flex-row justify-between items-center">
               <View className="w-20 h-20 rounded-lg flex justify-center items-center">
                 <Image
                   source={item?.avatar ? { uri: item?.avatar } : images.avatar}
@@ -27,16 +32,18 @@ const New = () => {
                   resizeMode="cover"
                 />
               </View>
-              <View className="flex flex-col ml-4 font-lg">
-                <Text className="text-lg font-medium mb-1">{item?.subject}</Text>
+              <View className="w-8/12">
+                <Text className="font-semibold text-md uppercase mb-1">{item?.subject}</Text>
                 <Text className="leading-6">Thời gian viết: {moment(item?.createedAt).format('DD/MM/YYYY HH:mm:ss')}</Text>
               </View>
             </View>
-            <Text className="leading-6 mt-4 text-start" numberOfLines={5}>Mô tả: {item?.description}</Text>
-          </View>
+            <Text className="leading-6 mt-4 text-start" numberOfLines={5}>
+              Mô tả: {item?.description}
+            </Text>
+          </Pressable>
         )}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
