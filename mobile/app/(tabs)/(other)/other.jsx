@@ -32,16 +32,16 @@ const Other = () => {
   };
 
   const items = [
-    { label: 'Thông tin cá nhân', icon: 'user' },
-    { label: 'Bảng công', icon: 'clipboard' },
-    { label: 'Bảng lương', icon: 'clipboard' },
-    { label: 'Đơn từ', icon: 'clipboard' },
-    { label: 'Đổi mật khẩu', icon: 'refresh-ccw', onPress: () => router.push('/change-password') },
-    { label: 'Đăng xuất', icon: 'log-out', onPress: showAlert }
+    { label: 'Thông tin cá nhân', icon: 'card-account-details' },
+    { label: 'Bảng công', icon: 'briefcase-clock' },
+    { label: 'Bảng lương', icon: 'credit-card' },
+    { label: 'Đơn từ', icon: 'archive' },
+    { label: 'Đổi mật khẩu', icon: 'key-change', onPress: () => router.push('/change-password') },
+    { label: 'Đăng xuất', icon: 'logout', onPress: showAlert }
   ];
 
   return (
-    <SafeAreaView className="h-full">
+    <SafeAreaView className="flex-1">
       <View className="w-full px-6">
         <View className="flex flex-row items-center justify-start my-16 ml-8">
           <View className="w-20 h-20 rounded-lg flex justify-center items-center">

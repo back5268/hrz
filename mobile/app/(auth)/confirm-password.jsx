@@ -1,79 +1,60 @@
 import { useState } from 'react';
 import { Link, router, useGlobalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text, ScrollView, Dimensions } from 'react-native';
-import { Buttonz, Inputz, Loadingz } from '@/components/core';
+import { View, Text } from 'react-native';
+import { Buttonz, InputForm, Loadingz } from '@/components/core';
 import { confirmPasswordApi } from '@/api';
 import { Logo } from '@/components/base';
+import { ConfirmPasswordValidation } from '@/lib/validation';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 import Toast from 'react-native-toast-message';
+import { themeColor } from '@/theme';
 
-const ForgotPassword = () => {
+const ConfirmPassword = () => {
   const { username } = useGlobalSearchParams();
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({
-    otp: '',
-    password: ''
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(ConfirmPasswordValidation)
   });
 
-  const showToast = (title, type = 'error') => {
-    Toast.show({
-      type: type,
-      text2: title
-    });
-  };
-
-  const submit = async () => {
-    const title =
-      !form.otp && !form.password
-        ? 'Vui lòng nhập mã OTP, mật khẩu để tiếp tục!'
-        : form.otp && !form.password
-          ? 'Vui lòng nhập mật khẩu!'
-          : !form.otp && form.password
-            ? 'Vui lòng nhập mã OTP'
-            : form.otp && form.password && form.password.length < 6
-              ? 'Mật khẩu dài tối thiểu 6 ký tự!'
-              : '';
-    if (title) return showToast(title);
+  const onSubmit = async (value) => {
     setLoading(true);
-    const response = await confirmPasswordApi({ ...form, username });
+    const response = await confirmPasswordApi({ ...value, username });
     setLoading(false);
     if (response) {
-      showToast('Đổi mật khẩu thành công vui lòng đăng nhập lại!', 'success');
+      Toast.show({
+        type: 'success',
+        text2: 'Đổi mật khẩu thành công vui lòng đăng nhập lại!'
+      });
       router.push('/sign-in');
     }
   };
 
   return (
-    <SafeAreaView className="bg-background h-full">
+    <>
       {loading && <Loadingz />}
-      <ScrollView>
-        <View
-          className="justify-center h-full px-6"
-          style={{
-            minHeight: Dimensions.get('window').height - 100
-          }}
-        >
+      <SafeAreaView className="flex-1">
+        <View className="justify-center h-full px-6">
           <Logo />
-          <Text className="text-lg text-center text-primary my-4">Xác nhận mật khẩu</Text>
+          <Text className="text-lg font-semibold text-center my-4" style={{ color: themeColor.primary }}>Xác nhận mật khẩu</Text>
           <Text className="text-center my-2">Mã OTP đã được gửi đến email {username}, có hiệu lực trong vòng 5 phút</Text>
-          <Inputz icon="pocket" placeholder="Mã OTP (*)" value={form.otp} handleChangeText={(e) => setForm({ ...form, otp: e })} />
-          <Inputz
-            icon="lock"
-            type="password"
-            placeholder="Mật khẩu (*)"
-            value={form.password}
-            handleChangeText={(e) => setForm({ ...form, password: e })}
-          />
-          <View className="mt-8">
-            <Buttonz label="Xác nhận" onPress={submit} />
+          <InputForm left="account" label="Mã OTP (*)" name="otp" control={control} errors={errors} />
+          <InputForm left="lock" type="password" label="Mật khẩu (*)" name="password" control={control} errors={errors} />
+          <View className="mt-4">
+            <Buttonz label="Xác nhận" onPress={handleSubmit(onSubmit)} />
           </View>
-          <Link href="/sign-in" className="text-primary text-center font-semibold">
+          <Link href="/sign-in" className="text-center font-semibold mt-4" style={{ color: themeColor.primary }}>
             Quay lại đăng nhập
           </Link>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 };
 
-export default ForgotPassword;
+export default ConfirmPassword;

@@ -34,7 +34,9 @@ export const Inputz = ({ icon, label, type, value, handleChangeText, className =
   );
 };
 
-export const InputForm = ({ label, name, disabled, control, errors = {}, left, right, className = '', ...props }) => {
+export const InputForm = ({ label, name, type, disabled, control, errors = {}, left, right, className = '', ...props }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  right = right ? right : type === 'password' ? (showPassword ? 'eye-off' : 'eye') : '';
   const {
     field: { onChange, onBlur, value }
   } = useController({
@@ -52,9 +54,10 @@ export const InputForm = ({ label, name, disabled, control, errors = {}, left, r
         onChangeText={onChange}
         onBlur={onBlur}
         editable={!disabled}
-        left={left ? <TextInput.Icon name={left} /> : null}
-        right={right ? <TextInput.Icon name={right} /> : null}
+        right={right ? <TextInput.Icon onPress={() => type === 'password' && setShowPassword(!showPassword)} icon={right} /> : ''}
+        left={left ? <TextInput.Icon icon={left} /> : ''}
         error={!!errors[name]}
+        secureTextEntry={type === 'password' && !showPassword}
         {...props}
       />
       {errors[name] && <Text className="text-red-400 text-xs ml-2 mt-1">{errors[name]?.message}</Text>}

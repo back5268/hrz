@@ -1,30 +1,28 @@
 import { useState } from 'react';
 import { Link, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text, ScrollView, Dimensions } from 'react-native';
-import { Buttonz, Inputz, Loadingz } from '@/components/core';
+import { View, Text } from 'react-native';
+import { Buttonz, InputForm, Loadingz } from '@/components/core';
 import { sendOtpForgotPasswordApi } from '@/api';
 import { Logo } from '@/components/base';
-import Toast from 'react-native-toast-message';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { ForgotPasswordValidation } from '@/lib/validation';
+import { themeColor } from '@/theme';
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({
-    username: ''
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(ForgotPasswordValidation)
   });
 
-  const showToast = (title, type = 'error') => {
-    Toast.show({
-      type: type,
-      text2: title
-    });
-  };
-
-  const submit = async () => {
-    const title = !form.username ? 'Vui lòng nhập tài khoản để tiếp tục!' : '';
-    if (title) return showToast(title);
+  const onSubmit = async (value) => {
     setLoading(true);
-    const response = await sendOtpForgotPasswordApi(form);
+    const response = await sendOtpForgotPasswordApi(value);
     setLoading(false);
     if (response) {
       router.push({
@@ -37,32 +35,22 @@ const ForgotPassword = () => {
   };
 
   return (
-    <SafeAreaView className="bg-background h-full">
+    <>
       {loading && <Loadingz />}
-      <ScrollView>
-        <View
-          className="justify-center h-full px-6"
-          style={{
-            minHeight: Dimensions.get('window').height - 100
-          }}
-        >
+      <SafeAreaView className="flex-1">
+        <View className="justify-center h-full px-6">
           <Logo />
-          <Text className="text-lg text-center text-primary my-4">Quên mật khẩu</Text>
-          <Inputz
-            icon="user"
-            placeholder="Tài khoản (*)"
-            value={form.username}
-            handleChangeText={(e) => setForm({ ...form, username: e })}
-          />
-          <View className="mt-8">
-            <Buttonz label="Gửi mã OTP" onPress={submit} />
+          <Text className="text-lg font-semibold text-center my-4" style={{ color: themeColor.primary }}>Quên mật khẩu</Text>
+          <InputForm left="account" label="Tài khoản (*)" name="username" control={control} errors={errors} />
+          <View className="mt-4">
+            <Buttonz label="Gửi mã OTP" onPress={handleSubmit(onSubmit)} />
           </View>
-          <Link href="/sign-in" className="text-primary text-center font-semibold">
+          <Link href="/sign-in" className="text-center font-semibold mt-4" style={{ color: themeColor.primary }}>
             Quay lại đăng nhập
           </Link>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 };
 

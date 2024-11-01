@@ -5,7 +5,7 @@ import { useGetApi } from '@/lib/react-query';
 import { themeColor } from '@/theme';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { FlatList, ScrollView, TouchableOpacity } from 'react-native';
+import { FlatList, TouchableOpacity } from 'react-native';
 import { Text, View } from 'react-native';
 import { Card, DataTable } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -35,7 +35,7 @@ const Calendar = ({ days = [] }) => {
   };
 
   return (
-    <Card className="mt-6 py-4 mx-2 justify-center items-center">
+    <Card className="mt-6 py-4 mx-2 justify-center items-center mb-8">
       <View className="h-80">
         <View className="flex flex-row">
           {dayNames.map((dayName, index) => (
@@ -48,7 +48,7 @@ const Calendar = ({ days = [] }) => {
       </View>
 
       <View className="px-2">
-        <Text className="uppercase font-semibold mb-1">Ngày {formatDate(selectedDate?.date, 'date')}</Text>
+        <Text className="uppercase font-semibold mb-2">Ngày {formatDate(selectedDate?.date, 'date')}</Text>
         <Hrz />
         <View className="mt-4">
           <DataTable>
@@ -63,8 +63,12 @@ const Calendar = ({ days = [] }) => {
               { name: 'Về sớm', value: selectedDate?.late || '-' }
             ].map((item, index) => (
               <DataTable.Row key={index}>
-                <DataTable.Title style={{ flex: 2 }}>{item.name}</DataTable.Title>
-                <DataTable.Title style={{ flex: 1 }}>{item.value}</DataTable.Title>
+                <DataTable.Title style={{ flex: 2 }}>
+                  <Text className="text-sm font-semibold">{item.name}</Text>
+                </DataTable.Title>
+                <DataTable.Title style={{ flex: 1 }}>
+                  <Text className="text-base font-semibold">{item.value}</Text>
+                </DataTable.Title>
               </DataTable.Row>
             ))}
           </DataTable>
@@ -120,7 +124,7 @@ const Timekeeping = () => {
       });
     }
     setDays(newDays);
-  }, [JSON.stringify(params), JSON.stringify(data)]);
+  }, [JSON.stringify(data)]);
 
   return (
     <SafeAreaView className="flex-1">
