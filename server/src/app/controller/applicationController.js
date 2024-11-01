@@ -8,14 +8,20 @@ import {
 import {
   countApplicationMd,
   createApplicationMd,
+  createNotifyMd,
+  createTimekeepingMd,
   detailApplicationMd,
   detailShiftMd,
   detailTimekeepingMd,
+  listAccountMd,
   listApplicationMd,
+  listPermissionMd,
   listTimekeepingMd,
-  updateApplicationMd
+  updateApplicationMd,
+  updateTimekeepingMd
 } from '@models';
-import { validateData } from '@utils';
+import { addTimes, calTime, subtractTimes, validateData } from '@utils';
+import { ioSk } from 'src';
 
 export const getListApplication = async (req, res) => {
   try {
@@ -80,10 +86,64 @@ export const updateApplication = async (req, res) => {
   try {
     const { error, value } = validateData(updateApplicationValid, req.body);
     if (error) return res.json({ status: 0, mess: error });
-    const { _id } = value;
+    const { _id, status } = value;
     const dataz = await detailApplicationMd({ _id });
     if (!dataz) return res.json({ status: 0, mess: 'Đơn không tồn tại!' });
     const data = await updateApplicationMd({ _id }, { updatedBy: req.account._id, ...value });
+    if (status === 2) {
+      const type = dataz.type;
+      if (type === 1) {
+        const timekeeping = await detailTimekeepingMd({ account: dataz.account, date: dataz.dates?.[0], shift: dataz.shift });
+        await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, summary: timekeeping.totalWork });
+      } else if (type === 2)
+        await updateTimekeepingMd(
+          { account: dataz.account, date: dataz.dates?.[0], shift: dataz.shift },
+          { $addToSet: { applications: dataz._id } }
+        );
+      else if (type === 3) {
+        const dates = dataz.dates;
+        for (const date of dates) {
+          const timekeeping = await detailTimekeepingMd({ account: dataz.account, date, shift: dataz.shift });
+          await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, summary: timekeeping.totalWork });
+        }
+      } else if (type === 4) {
+        const timekeeping = await detailTimekeepingMd({ account: dataz.account, date: dataz.dates?.[0], shift: dataz.shift });
+        await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, summary: timekeeping.totalWork });
+      } else if (type === 5) {
+        const timekeeping = await detailTimekeepingMd({ account: dataz.account, date: dataz.dates?.[0], shift: dataz.shift });
+        const timeStart = addTimes(timekeeping.timeStart, dataz.late);
+        const timeEnd = subtractTimes(timekeeping.timeEnd, dataz.soon);
+        await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, timeStart, timeEnd });
+      } else if (type === 6) {
+        const timekeeping = await detailTimekeepingMd({ account: dataz.account, shift: dataz.shift });
+        const totalTime = calTime(`2024-11-01 ${dataz.fromTime}:00`, `2024-11-01 ${dataz.toTime}:00`);
+        const totalWork = (timekeeping.totalWork / timekeeping.totalTime) * totalTime;
+        await createTimekeepingMd({
+          department: dataz.department,
+          account: dataz.account,
+          shift: dataz.shift,
+          date: dataz.dates?.[0],
+          timeStart: dataz.fromTime,
+          timeEnd: dataz.toTime,
+          totalTime,
+          totalWork,
+          type: 2
+        });
+      } else if (type === 7) {
+        const dates = dataz.dates;
+        for (const date of dates) {
+          const timekeeping = await detailTimekeepingMd({ account: dataz.account, date, shift: dataz.shift });
+          await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, summary: timekeeping.totalWork });
+        }
+      }
+    }
+    await createNotifyMd({
+      account: dataz.account,
+      content: status === 2 ? 'Đơn bạn tạo đã được duyệt!' : 'Đơn bạn tạo không được duyệt!',
+      type: 3,
+      data: { _id: dataz._id }
+    });
+    ioSk.emit(`notify_${account._id}`, { data });
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -97,7 +157,7 @@ export const cancelApplication = async (req, res) => {
     const { _id } = value;
     const dataz = await detailApplicationMd({ _id });
     if (!dataz) return res.json({ status: 0, mess: 'Đơn không tồn tại!' });
-    const data = await updateApplicationMd({ _id }, { updatedBy: req.account._id, status: 4 });
+    const data = await updateApplicationMd({ _id }, { status: 4 });
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -127,6 +187,22 @@ export const createApplication = async (req, res) => {
       if (checkOt) return res.json({ status: 0, mess: 'Đã có lịch làm việc không thể tạo đơn OT!' });
     }
     const data = await createApplicationMd({ account: req.account?._id, department: req.account?.department?._id, ...value });
+    const permissions = await listPermissionMd({ 'tools.route': 'application' });
+    const accounts = await listAccountMd({ role: 'admin' })
+    for (const permission of permissions) {
+      const accountz = await listAccountMd({ department: { $in: permission.departments }, position: { $in: permission.positions } });
+      accountz.forEach((az) => !accounts.find((a) => a._id === az._id) && accounts.push(az));
+    }
+    for (const account of accounts) {
+      const data = await createNotifyMd({
+        account: account._id,
+        content: `${req.account.fullName} đã thêm một đơn mới cần duyệt!`,
+        type: 2,
+        data: { _id: data._id }
+      });
+      ioSk.emit(`notify_${account._id}`, { data });
+    }
+
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

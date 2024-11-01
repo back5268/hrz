@@ -1,4 +1,4 @@
-import { ModelBase } from "@config";
+import { ModelBase } from '@config';
 
 class NotifyMd extends ModelBase {}
 
@@ -6,15 +6,17 @@ NotifyMd.init('Notify', {
   fromBy: {
     type: Number,
     enum: [1, 2],
-    required: true,
+    detault: 1,
     description: '1: Thông báo từ hệ thống, 2: Thông báo từ người dùng'
   },
   by: { type: String },
-  to: { type: String, required: true },
+  account: { type: String, required: true },
   content: { type: String, required: true },
   type: {
     type: Number,
-    required: true
+    enum: [1, 2],
+    required: true,
+    description: '1: Cảnh báo chấm công, 2: Tạo đơn từ, 3: Duyệt đơn từ'
   },
   status: {
     type: Number,

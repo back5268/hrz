@@ -7,6 +7,7 @@ export * from './importLog';
 export * from './info';
 export * from './job-position';
 export * from './new';
+export * from './notify';
 export * from './permission';
 export * from './position';
 export * from './schedule';

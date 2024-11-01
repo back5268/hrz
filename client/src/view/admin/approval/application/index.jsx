@@ -1,4 +1,4 @@
-import { getListApplicationApi } from '@api';
+import { getListApplicationApi, getListShiftInfoApi } from '@api';
 import { DataTable, FormList, DataFilter, UserBody, Body } from '@components/base';
 import { Columnz, Dropdownzz } from '@components/core';
 import { useGetParams } from '@hooks';
@@ -14,11 +14,12 @@ export const Application = () => {
   const [filter, setFilter] = useState({});
   const [open, setOpen] = useState(false);
   const { isLoading, data } = useGetApi(getListApplicationApi, params, 'application');
+  const { data: shifts } = useGetApi(getListShiftInfoApi, {}, 'shifts');
   const { departments, accounts } = useDataState();
 
   return (
     <FormList title="Danh sách đơn từ">
-      <DetailApplication open={open} setOpen={setOpen} setParams={setParams} data={data?.documents} />
+      <DetailApplication open={open} setOpen={setOpen} setParams={setParams} data={data?.documents} shifts={shifts} />
       <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-full">
         <Dropdownzz
           value={filter.department}
@@ -65,13 +66,12 @@ export const Application = () => {
         }}
       >
         <Columnz header="Phòng ban" body={(e) => Body(departments, e.department)} />
-        <Columnz header="Nhân viên" body={(e) => Body(accounts, e.account, '_id', 'fullName')} />
+        <Columnz header="Nhân viên" body={(e) => <span className='text-nowrap'>{Body(accounts, e.account, '_id', 'fullName')}</span>} />
         <Columnz header="Mã NV" body={(e) => Body(accounts, e.account, '_id', 'staffCode')} />
         <Columnz header="Loại đơn" body={(e) => Body(applicationTypes, e.type)} />
         <Columnz header="Lý do tạo đơn" field="reason" />
         <Columnz header="Thời gian duyệt" body={(e) => (e.updatedBy ? UserBody(e.updatedAt, e.updatedBy) : '')} />
         <Columnz header="Trạng thái" body={(e) => Body(applicationStatus, e.status)} />
-        <Columnz header="File đính kèm" />
       </DataTable>
     </FormList>
   );

@@ -18,7 +18,7 @@ export const Body = (data = [], value, key = '_id', label = 'name') => {
   if (item.severity)
     return (
       <div className="flex justify-center w-full">
-        <Tagz severity={item.severity} value={item[label]} className="text-center" />
+        <Tagz severity={item.severity} value={item[label]} className="text-center text-nowrap w-full" />
       </div>
     );
   else return item[label];

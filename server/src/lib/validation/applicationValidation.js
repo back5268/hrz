@@ -15,7 +15,8 @@ export const detailApplicationValid = {
 
 export const updateApplicationValid = {
   _id: 'string',
-  status: { type: 'number', allowNull: true }
+  status: { type: 'number', allowNull: true },
+  note: { type: 'string', allowNull: true },
 };
 
 export const createApplicationValid = {

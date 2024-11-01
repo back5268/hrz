@@ -24,7 +24,7 @@ TimekeepingMd.init('Timekeeping', {
   totalWorkReality: { type: Number },
   summary: { type: Number },
   type: { type: Number, enum: [1, 2], default: 1, description: '1: Công việc bình thường, 2: OT' },
-  applications: { type: Array },
+  applications: [{ type: ObjectId, ref: 'Application' }],
   deletedAt: { type: Date }
 });
 

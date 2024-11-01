@@ -15,9 +15,9 @@ export const Inputz = (props) => {
   );
 };
 
-export const Inputzz = ({ ...prop }) => {
+export const Inputzz = ({ className = "", ...prop }) => {
   return (
-    <div className="p-2 w-full md:w-6/12 lg:w-3/12">
+    <div className={`p-2 w-full md:w-6/12 lg:w-3/12 ${className}`}>
       <Inputz {...prop} />
     </div>
   );

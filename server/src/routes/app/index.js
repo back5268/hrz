@@ -5,6 +5,7 @@ import { shiftRouter } from './shift';
 import { employeeRouter } from './employee';
 import { newRouter } from './new';
 import { applicationRouter } from './application';
+import { notifyRouter } from './notify';
 
 export const appRouter = express.Router();
 
@@ -14,3 +15,4 @@ appRouter.use('/timekeeping', timekeepingRouter);
 appRouter.use('/employee', employeeRouter);
 appRouter.use('/new', newRouter);
 appRouter.use('/application', applicationRouter);
+appRouter.use('/notify', notifyRouter);

@@ -16,9 +16,13 @@ ApplicationMd.init('Application', {
   },
   dates: [{ type: String, required: true }],
   reason: { type: String, required: true },
-  detail: { type: Object },
+  soon: { type: String },
+  late: { type: String },
+  fromTime: { type: String },
+  toTime: { type: String },
   files: [{ type: String }],
   status: { type: Number, enum: [1, 2, 3, 4], default: 1, description: '1: Chờ duyệt, 2: Đã duyệt, 3: Từ chối, 4: Hủy' },
+  note: { type: String },
   deletedAt: { type: Date }
 });
 

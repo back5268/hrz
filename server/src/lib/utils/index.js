@@ -110,14 +110,14 @@ export const convertTimeToDate = (time) => {
 };
 
 export const databaseDate = (date, type = 'datetime', isFinal) => {
-  if (!date) return ''
+  if (!date) return '';
   let format = type === 'time' ? 'HH:mm:ss' : type === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss';
   if (isFinal) return moment(date.setHours(23, 59, 59)).format('YYYY-MM-DD HH:mm:ss');
   return moment(date).format(format);
 };
 
 export const formatDate = (date, type = 'datetime', isFinal) => {
-  if (!date) return ''
+  if (!date) return '';
   let format = type === 'time' ? 'HH:mm:ss' : type === 'timez' ? 'HH:mm' : type === 'date' ? 'DD/MM/YYYY' : 'DD/MM/YYYY HH:mm:ss';
   if (isFinal) return moment(date.setHours(23, 59, 59)).format('DD/MM/YYYY HH:mm:ss');
   return moment(date).format(format);
@@ -207,4 +207,45 @@ export const convertNumberToString = (amount) => {
     words = 'Âm ' + words;
   }
   return words + ' đồng.';
+};
+
+export const addTimes = (time1, time2) => {
+  const [hours1, minutes1] = time1.split(':').map(Number);
+  const [hours2, minutes2] = time2.split(':').map(Number);
+  let totalMinutes = hours1 * 60 + minutes1 + hours2 * 60 + minutes2;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+};
+
+export const subtractTimes = (time1, time2) => {
+  const [hours1, minutes1] = time1.split(':').map(Number);
+  const [hours2, minutes2] = time2.split(':').map(Number);
+  let totalMinutes1 = hours1 * 60 + minutes1;
+  let totalMinutes2 = hours2 * 60 + minutes2;
+  let diffMinutes = totalMinutes1 - totalMinutes2;
+  if (diffMinutes < 0) diffMinutes = 0;
+  const hours = Math.floor(diffMinutes / 60);
+  const minutes = diffMinutes % 60;
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+};
+
+export const calTime = (start, end, breakStart, breakEnd) => {
+  if (start && end) {
+    let startTime = moment(start).startOf('minute');
+    let endTime = moment(end).startOf('minute');
+    let workTime;
+    if (startTime > endTime) endTime.add(1, 'days');
+    workTime = endTime - startTime;
+    if (breakStart && breakEnd) {
+      const breakStartTime = moment(breakStart).startOf('minute');
+      const breakEndTime = moment(breakEnd).startOf('minute');
+      if (breakStartTime > breakEndTime) breakEndTime.add(1, 'days');
+      if (breakStartTime < startTime && breakEndTime > endTime) workTime = 0;
+      else if (breakStartTime < startTime && breakEndTime < endTime) workTime = endTime - breakEndTime;
+      else if (breakStartTime > startTime && breakEndTime > endTime) workTime = breakStartTime - startTime;
+      else workTime = endTime - startTime - (breakEndTime - breakStartTime);
+    }
+    return (workTime / 60 / 60 / 1000)?.toFixed(2);
+  }
 };
