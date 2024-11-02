@@ -3,9 +3,9 @@ import { DataTable, FormList, DataFilter, UserBody, Body } from '@components/bas
 import { Columnz, Dropdownzz } from '@components/core';
 import { useGetParams } from '@hooks';
 import { useGetApi } from '@lib/react-query';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DetailApplication } from './Detail';
-import { useDataState } from '@store';
+import { useDataState, useItemState } from '@store';
 import { applicationStatus, applicationTypes } from '@constant';
 
 export const Application = () => {
@@ -16,10 +16,18 @@ export const Application = () => {
   const { isLoading, data } = useGetApi(getListApplicationApi, params, 'application');
   const { data: shifts } = useGetApi(getListShiftInfoApi, {}, 'shifts');
   const { departments, accounts } = useDataState();
+  const { item, setItem } = useItemState();
+
+  useEffect(() => {
+    if (item?.application && !open) {
+      setOpen(item?.application);
+      setItem({});
+    }
+  }, [item?.application]);
 
   return (
     <FormList title="Danh sách đơn từ">
-      <DetailApplication open={open} setOpen={setOpen} setParams={setParams} data={data?.documents} shifts={shifts} />
+      <DetailApplication open={open} setOpen={setOpen} setParams={setParams} data={data?.documents} shifts={shifts} departments={departments} accounts={accounts} />
       <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-full">
         <Dropdownzz
           value={filter.department}
@@ -66,7 +74,7 @@ export const Application = () => {
         }}
       >
         <Columnz header="Phòng ban" body={(e) => Body(departments, e.department)} />
-        <Columnz header="Nhân viên" body={(e) => <span className='text-nowrap'>{Body(accounts, e.account, '_id', 'fullName')}</span>} />
+        <Columnz header="Nhân viên" body={(e) => <span className="text-nowrap">{Body(accounts, e.account, '_id', 'fullName')}</span>} />
         <Columnz header="Mã NV" body={(e) => Body(accounts, e.account, '_id', 'staffCode')} />
         <Columnz header="Loại đơn" body={(e) => Body(applicationTypes, e.type)} />
         <Columnz header="Lý do tạo đơn" field="reason" />

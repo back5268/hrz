@@ -15,8 +15,8 @@ export const contractStatus = [
 export const applicationStatus = [
   { name: 'Chờ duyệt', _id: 1, color: '#f9c42f' },
   { name: 'Đã duyệt', _id: 2, color: '#6a9f4a' },
-  { name: 'Từ chối', _id: 3, color: '#2594f4' },
-  { name: 'Hủy', _id: 4, color: '#d42d2f' }
+  { name: 'Từ chối', _id: 3, color: '#d42d2f' },
+  { name: 'Hủy', _id: 4, color: '#2594f4' }
 ];
 
 export const applicationTypes = [

@@ -11,7 +11,7 @@ export const New = () => {
         <TabPanel header="Danh sách tin tức">
           <Newz />
         </TabPanel>
-        <TabPanel header="Lịch sử gửi thông báo">
+        <TabPanel header="Lịch sử gửi mail">
           <Log />
         </TabPanel>
       </TabView>

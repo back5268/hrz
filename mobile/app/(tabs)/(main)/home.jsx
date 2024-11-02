@@ -6,10 +6,14 @@ import { Iconz } from '@/components/core';
 import { useRouter } from 'expo-router';
 import { Card } from 'react-native-paper';
 import { themeColor } from '../../../theme';
+import { getListNotifyApi, viewAllNotifyApi } from '@/api';
+import { useGetApi } from '@/lib/react-query';
 
 const Home = () => {
   const { userInfo } = useUserState();
   const router = useRouter();
+  const { data } = useGetApi(getListNotifyApi, {}, 'notifyz');
+  const numberView = data?.filter((d) => d.status === 0)?.length;
 
   const items = [
     { label: 'Nhân viên', icon: 'account-multiple', route: '/employee' },
@@ -25,13 +29,24 @@ const Home = () => {
       <View className="px-6">
         <View className="w-full flex flex-row justify-between items-center my-2">
           <Image source={images.logo} className="w-28 h-28" resizeMode="contain" />
-          <TouchableOpacity onPress={() => router.push('/notify')}>
-            <Iconz name="bell" size={24} color={themeColor.secondary} />
+          <TouchableOpacity
+            onPress={async () => {
+              if (numberView > 0) await viewAllNotifyApi();
+              router.push('/notify');
+            }}
+            className="relative"
+          >
+            <Iconz name="bell" size={30} color={themeColor.secondary} />
+            {numberView > 0 && <View className="absolute h-2 w-2 bg-red-500 rounded-full right-1 top-1"></View>}
           </TouchableOpacity>
         </View>
         <View>
-          <Text className="font-pmedium text-sm" style={{ color: themeColor.secondary }}>Xin chào,</Text>
-          <Text className="text-2xl font-semibold" style={{ color: themeColor.secondary }}>{userInfo?.fullName}</Text>
+          <Text className="font-pmedium text-sm" style={{ color: themeColor.secondary }}>
+            Xin chào,
+          </Text>
+          <Text className="text-2xl font-semibold" style={{ color: themeColor.secondary }}>
+            {userInfo?.fullName}
+          </Text>
         </View>
       </View>
 

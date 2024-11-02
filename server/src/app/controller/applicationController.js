@@ -137,15 +137,17 @@ export const updateApplication = async (req, res) => {
         }
       }
     }
-    await createNotifyMd({
+    const application = await createNotifyMd({
       account: dataz.account,
       content: status === 2 ? 'Đơn bạn tạo đã được duyệt!' : 'Đơn bạn tạo không được duyệt!',
       type: 3,
       data: { _id: dataz._id }
     });
-    ioSk.emit(`notify_${account._id}`, { data });
+    ioSk.emit(`notify_${dataz.account}`, { data: application });
     res.status(201).json({ status: 1, data });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({ status: 0, mess: error.toString() });
   }
 };
@@ -178,31 +180,29 @@ export const createApplication = async (req, res) => {
       const checkOt = await detailTimekeepingMd({
         date: dates[0],
         $or: [
-          { timeStart: { $gt: fromTime }, timeEnd: { $lt: toTime } },
-          { timeStart: { $gt: fromTime }, timeEnd: { $gt: toTime } },
-          { timeStart: { $lt: fromTime }, timeEnd: { $gt: toTime } },
-          { timeStart: { $lt: fromTime }, timeEnd: { $lt: toTime } }
+          { timeStart: { $gt: fromTime, $lt: toTime } },
+          { timeEnd: { $gt: fromTime, $lt: toTime } },
+          { timeStart: { $lt: fromTime }, timeEnd: { $gt: toTime } }
         ]
       });
       if (checkOt) return res.json({ status: 0, mess: 'Đã có lịch làm việc không thể tạo đơn OT!' });
     }
     const data = await createApplicationMd({ account: req.account?._id, department: req.account?.department?._id, ...value });
     const permissions = await listPermissionMd({ 'tools.route': 'application' });
-    const accounts = await listAccountMd({ role: 'admin' })
+    const accounts = await listAccountMd({ role: 'admin' });
     for (const permission of permissions) {
       const accountz = await listAccountMd({ department: { $in: permission.departments }, position: { $in: permission.positions } });
       accountz.forEach((az) => !accounts.find((a) => a._id === az._id) && accounts.push(az));
     }
     for (const account of accounts) {
-      const data = await createNotifyMd({
+      const notify = await createNotifyMd({
         account: account._id,
-        content: `${req.account.fullName} đã thêm một đơn mới cần duyệt!`,
+        content: `${req.account.fullName} - ${req.account.staffCode} đã thêm một đơn mới cần duyệt!`,
         type: 2,
         data: { _id: data._id }
       });
-      ioSk.emit(`notify_${account._id}`, { data });
+      ioSk.emit(`notify_${account._id}`, notify);
     }
-
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

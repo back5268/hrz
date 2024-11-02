@@ -1,8 +1,9 @@
 import { getListShiftInfoApi, getListSyntheticTimekeepingApi } from '@/api';
-import { Hrz, Loadingz, Selectz } from '@/components/core';
+import { Buttonz, Hrz, Loadingz, Selectz } from '@/components/core';
 import { formatDate, getMonths, getYears } from '@/lib/helper';
 import { useGetApi } from '@/lib/react-query';
 import { themeColor } from '@/theme';
+import { router } from 'expo-router';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
@@ -18,9 +19,10 @@ const Calendar = ({ days = [] }) => {
   useEffect(() => {
     const date = days?.find((d) => formatDate(d.date, 'date') === moment().format('DD/MM/YYYY'));
     if (date) setSelectedDate(date);
-  }, [JSON.stringify(days)]);
+  }, [days]);
 
   const renderItem = ({ item }) => {
+    if (!item) return null;
     const status = !item.summary ? 0 : item.summary === item.totalWork ? 1 : item.summary < item.totalWork ? 2 : -1;
 
     return (
@@ -56,11 +58,11 @@ const Calendar = ({ days = [] }) => {
               { name: 'Thời gian bắt đầu vào làm', value: selectedDate?.timeStart },
               { name: 'Thời gian kết thúc', value: selectedDate?.timeEnd },
               { name: 'Tổng thời gian', value: selectedDate?.totalTime },
-              { name: 'Tổng công tính', value: selectedDate?.totalWork },
               { name: 'Check in', value: selectedDate?.checkIn || '-' },
               { name: 'Check out', value: selectedDate?.checkOut || '-' },
               { name: 'Đi muộn', value: selectedDate?.soon || '-' },
-              { name: 'Về sớm', value: selectedDate?.late || '-' }
+              { name: 'Về sớm', value: selectedDate?.late || '-' },
+              { name: 'Tổng công tính', value: selectedDate?.summary }
             ].map((item, index) => (
               <DataTable.Row key={index}>
                 <DataTable.Title style={{ flex: 2 }}>
@@ -72,6 +74,18 @@ const Calendar = ({ days = [] }) => {
               </DataTable.Row>
             ))}
           </DataTable>
+          <Text className="uppercase font-semibold my-2">Đơn từ</Text>
+          <Hrz />
+          {selectedDate?.applications?.map((app, index) => {
+            return (
+              <TouchableOpacity key={index} onPress={() => router.push(`/application/${app}`)}>
+                <Text className="leading-10 px-4" style={{ color: themeColor.primary }}>
+                  {app}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+          <Buttonz label="Tạo đơn" onPress={() => router.push("/application/create")} className="mt-4" />
         </View>
       </View>
     </Card>
@@ -124,7 +138,7 @@ const Timekeeping = () => {
       });
     }
     setDays(newDays);
-  }, [JSON.stringify(data)]);
+  }, [data]);
 
   return (
     <SafeAreaView className="flex-1">
@@ -152,7 +166,7 @@ const Timekeeping = () => {
               ))}
             </View>
 
-            <View className="w-full mt-4">
+            {/* <View className="w-full mt-4">
               <Selectz label="Ca làm việc" value={params.shift} options={shifts} setValue={(e) => setParams({ ...params, shift: e })} />
             </View>
             <View className="flex flex-row">
@@ -162,7 +176,7 @@ const Timekeeping = () => {
               <View className="w-6/12">
                 <Selectz label="Tháng" value={params.month} options={getMonths()} setValue={(e) => setParams({ ...params, month: e })} />
               </View>
-            </View>
+            </View> */}
           </>
         }
         data={[{ days }]}

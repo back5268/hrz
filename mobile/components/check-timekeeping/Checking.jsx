@@ -96,8 +96,6 @@ export const Checking = ({ setResult = () => {}, setLoading = () => {} }) => {
         latitude,
         longitude
       });
-      console.log(reponse);
-      
       setLoading(false);
       let address = '',
         status = false;

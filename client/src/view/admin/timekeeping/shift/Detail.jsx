@@ -48,7 +48,7 @@ export const DetailShift = () => {
 
   useEffect(() => {
     if ((isUpdate && item) || (isDuplicate && itemz)) {
-      const dataz = item || itemz
+      const dataz = item || (itemz ? { ...itemz, name: itemz.name + '(Copy)', code: itemz.code + ' (Copy)', } : {})
       if (dataz.dateStart) setValue('dateStart', new Date(dataz.dateStart));
       if (dataz.dateEnd) setValue('dateEnd', new Date(dataz.dateEnd));
       if (dataz.dates)
@@ -63,7 +63,7 @@ export const DetailShift = () => {
           }))
         );
       for (const key in defaultValues) {
-        setValue(key, item[key]);
+        setValue(key, dataz[key]);
       }
     }
   }, [item]);

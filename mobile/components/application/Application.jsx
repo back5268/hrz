@@ -1,9 +1,9 @@
 import { cancelApplicationApi, createApplicationApi, detailApplicationApi, getListShiftApi } from '@/api';
-import { Alert, ScrollView, View } from 'react-native';
+import { Alert, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Buttonz, DateTimePickerz, InputForm, Loadingz, SelectForm } from '../core';
 import { useForm } from 'react-hook-form';
-import { applicationTypes } from '../../constants';
+import { applicationStatus, applicationTypes } from '../../constants';
 import { FilePickerz } from '../core/FilePickerz';
 import { useGetApi } from '@/lib/react-query';
 import React, { useEffect, useState } from 'react';
@@ -11,7 +11,7 @@ import { useRouter } from 'expo-router';
 import { ApplicationValidation } from '@/lib/validation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Toast from 'react-native-toast-message';
-import { databaseDate } from '@/lib/helper';
+import { databaseDate, formatDate } from '@/lib/helper';
 import moment from 'moment';
 
 const showToast = (title, type = 'error') => {
@@ -112,11 +112,14 @@ export const Application = ({ _id }) => {
     const params = { shift: value.shift, type: value.type, reason: value.reason };
     if ([1, 2].includes(type)) {
       if (!value.date) return showToast('Ngày nghỉ không được bỏ trống!');
+      else if (new Date(value.date) < new Date()) return showToast('Ngày nghỉ không được nhỏ hơn ngày hiện tại!');
       else params.dates = [databaseDate(value.date, 'date')];
     }
     if ([3, 7].includes(type)) {
       if (!value.fromDate) return showToast('Ngày bắt đầu không được bỏ trống!');
       else if (!value.toDate) return showToast('Ngày kết thúc không được bỏ trống!');
+      else if (new Date(value.fromDate) < new Date()) return showToast('Ngày bắt đầu không được nhỏ hơn ngày hiện tại!');
+      else if (new Date(value.toDate) < new Date()) return showToast('Ngày kết thúc không được nhỏ hơn ngày hiện tại!');
       else if (new Date(value.fromDate) > new Date(value.toDate)) return showToast('Ngày bắt đầu không được lớn hơn ngày kết thúc!');
       const startDate = moment(value.fromDate);
       const endDate = moment(value.toDate);
@@ -131,7 +134,7 @@ export const Application = ({ _id }) => {
     }
     if ([4].includes(type)) {
       if (!value.date) return showToast('Ngày xác nhận công không được bỏ trống!');
-      else if (new Date(value.date) < new Date()) return showToast('Ngày xác nhận công không được nhỏ hơn ngày hiện tại!');
+      else if (new Date(value.date) > new Date()) return showToast('Ngày xác nhận công không được lớn hơn ngày hiện tại!');
       else params.dates = [databaseDate(value.date, 'date')];
     }
     if ([5].includes(type)) {
@@ -166,11 +169,26 @@ export const Application = ({ _id }) => {
     }
   };
 
+  const status = applicationStatus.find((a) => a._id === item?.status);
   return (
     <>
       {loading && <Loadingz />}
       <SafeAreaView className="flex-1">
         <ScrollView className="pb-16 px-2">
+          {isUpdate && (
+            <View className="m-2 mb-4">
+              <View className="flex justify-center items-center rounded-md p-3 my-2" style={{ backgroundColor: status?.color }}>
+                <Text className="uppercase text-white font-semibold text-xs">{status?.name}</Text>
+              </View>
+              {item?.updatedBy && (
+                <>
+                  <Text className="leading-6 font-semibold">Ghi chú duyệt: {item.note}</Text>
+                  <Text className="leading-6 font-semibold">Thời gian duyệt: {formatDate(item.createdAt)}</Text>
+                </>
+              )}
+            </View>
+          )}
+
           <SelectForm label="Ca làm việc (*)" name="shift" options={shifts} errors={errors} control={control} disabled={isUpdate} />
           <SelectForm
             label="Loại đơn (*)"

@@ -25,7 +25,7 @@ export const Log = () => {
         />
       </DataFilter>
       <DataTable
-        title="Lịch sử gửi thông báo"
+        title="Lịch sử gửi mail"
         loading={isLoading}
         data={data?.documents}
         total={data?.total}

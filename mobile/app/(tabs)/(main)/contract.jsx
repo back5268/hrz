@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { themeColor } from '@/theme';
 import { formatDate } from '@/lib/helper';
 
-const Employee = () => {
+const Contract = () => {
   const [render, setRender] = useState(false);
   const { isLoading, data } = useGetApi(getListContractApi, { render }, 'contract');
   if (isLoading) return <Loadingz />;
@@ -48,4 +48,4 @@ const Employee = () => {
   );
 };
 
-export default Employee;
+export default Contract;

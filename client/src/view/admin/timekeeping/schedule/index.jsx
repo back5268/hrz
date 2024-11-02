@@ -69,6 +69,19 @@ const getDatesByWeek = (week) => {
   return days;
 };
 
+const getDaysByWeek = (week) => {
+  const arr = week?.split(' To ');
+  const dayz = [];
+  const startDate = moment(arr?.[0], 'DD/MM/YYYY');
+  const endDate = moment(arr?.[1], 'DD/MM/YYYY');
+  let currentDate = startDate.clone();
+  while (currentDate.isSameOrBefore(endDate)) {
+    dayz.push(days[currentDate.day()]);
+    currentDate.add(1, 'days');
+  }
+  return dayz;
+};
+
 const handleParams = (params) => {
   if (params.week) {
     const arr = params.week?.split(' To ');
@@ -97,14 +110,19 @@ export const Schedule = () => {
         if (index >= 0) newData[index].data.push(datum);
         else newData.push({ account: datum.account, shift: datum.shift, data: [datum] });
       });
+      console.log(newData);
+      
       newData.forEach((n) => {
         const object = {};
         const data = n.data;
         const shift = shifts.find((s) => s._id === n.shift);
-        days.forEach((work, index) => {
-          const date = data?.find((d) => new Date(d.date).getDay() === index);
-          const title = date ? `${date.timeStart} - ${date.timeEnd}` : '';
-          object[work._id] = title;
+
+
+        data.forEach((datum) => {
+          const title = `${datum.timeStart} - ${datum.timeEnd}`
+          const day = days[moment(datum.date).day()]
+          if (object[day._id]) object[day._id].push(title);
+          else object[day._id] = [title];
         });
         dataz.push({ ...n, ...object, shift });
       });
@@ -122,7 +140,7 @@ export const Schedule = () => {
       <Row>
         <Column header="Nhân viên" rowSpan={2} />
         <Column header="Ca làm việc" rowSpan={2} />
-        {days.map((w, index) => (
+        {getDaysByWeek(params.week).map((w, index) => (
           <Column key={index} header={w.name} />
         ))}
       </Row>
@@ -133,6 +151,8 @@ export const Schedule = () => {
       </Row>
     </ColumnGroup>
   );
+
+  console.log(schedule);
 
   return (
     <FormList title="Lịch làm việc">
@@ -217,8 +237,13 @@ export const Schedule = () => {
             )}
             className="min-w-28"
           ></Column>
-          {days.map((work, index) => (
-            <Column key={index} field={work._id} className="min-w-28"></Column>
+          {getDaysByWeek(params.week).map((work, index) => (
+            <Column
+              key={index}
+              field={work._id}
+              body={(e) => e[work._id]?.map((w, index) => <p key={index}>{w}</p>)}
+              className="min-w-28"
+            ></Column>
           ))}
         </DataTable>
       </div>

@@ -3,8 +3,35 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useUserState } from '@/store';
 import { Appbar, BottomNavigation } from 'react-native-paper';
 import { CommonActions } from '@react-navigation/native';
+import { useEffect } from 'react';
+import { socket } from '@/lib/socket-io';
+import Toast from 'react-native-toast-message';
 
 const TabBar = (props) => {
+  const { userInfo } = useUserState();
+
+  useEffect(() => {
+    if (userInfo?._id) {
+      const key = `notify_${userInfo?._id}`;
+      const onConnect = () => console.log('Connecting...');
+      const onDisconnect = (reason) => console.log('Disconnecting...', reason);
+      const onEvent = (event) => {
+        Toast.show({
+          type: 'info',
+          text2: event.data?.content
+        });
+      }
+      socket.on('connect', onConnect);
+      socket.on('disconnect', onDisconnect);
+      socket.on(key, onEvent);
+      return () => {
+        socket.off('connect', onConnect);
+        socket.off('disconnect', onDisconnect);
+        socket.off(key, onEvent);
+      };
+    }
+  }, [userInfo?._id]);
+
   return (
     <BottomNavigation.Bar
       navigationState={props.state}
@@ -52,12 +79,12 @@ const TabsHeader = (props) => (
 const TabLayout = () => {
   const { isAuthenticated } = useUserState();
   const segments = useSegments();
-  const isShow = ["home", "other", "(other)"].includes(segments?.[2] ||segments?.[1] )
+  const isShow = ['home', 'other', '(other)'].includes(segments?.[2] || segments?.[1]);
   if (!isAuthenticated) return <Redirect href="/sign-in" />;
 
   return (
     <Tabs
-      tabBar={(props) => isShow ? <TabBar {...props} /> : <></>}
+      tabBar={(props) => (isShow ? <TabBar {...props} /> : <></>)}
       screenOptions={{
         tabBarHideOnKeyboard: true,
         header: (props) => <TabsHeader navProps={props} children={undefined} />

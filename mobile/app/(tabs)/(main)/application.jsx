@@ -1,5 +1,5 @@
 import { getListApplicationApi, getListShiftInfoApi } from '@/api';
-import { Loadingz } from '@/components/core';
+import { Buttonz, Loadingz } from '@/components/core';
 import { applicationStatus, applicationTypes } from '@/constants';
 import { formatDate } from '@/lib/helper';
 import { useGetApi } from '@/lib/react-query';
@@ -50,6 +50,12 @@ const Scene = ({ status, index, shifts }) => {
                 <Text className="leading-6">Ca làm việc: {shift?.name}</Text>
                 <Text className="leading-6">Ngày: {dateTitle}</Text>
                 <Text className="leading-6">Lý do tạo đơn: {item.reason}</Text>
+                {item.updatedBy && (
+                  <>
+                    <Text className="leading-6">Ghi chú duyệt: {item.note}</Text>
+                    <Text className="leading-6">Thời gian duyệt: {formatDate(item.createdAt)}</Text>
+                  </>
+                )}
               </View>
               <View className="flex justify-center items-center rounded-md p-2 min-w-[80]" style={{ backgroundColor: status?.color }}>
                 <Text className="uppercase text-white font-semibold text-xs">{status?.name}</Text>

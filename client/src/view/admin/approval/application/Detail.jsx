@@ -1,5 +1,5 @@
 import { updateApplicationApi } from '@api';
-import { UploadFiles } from '@components/base';
+import { Body, UploadFiles } from '@components/base';
 import { Buttonz, Dialogz, DropdownFormz, InputFormz, Inputzz } from '@components/core';
 import { applicationTypes } from '@constant';
 import { formatDate } from '@lib/helper';
@@ -7,11 +7,11 @@ import { useToastState } from '@store';
 import React, { useState } from 'react';
 
 export const DetailApplication = (props) => {
-  const { open, setOpen, data, shifts, setParams } = props;
+  const { open, setOpen, data, shifts, setParams, departments = [], accounts } = props;
   const { showToast } = useToastState();
   const [note, setNote] = useState('');
   const isUpdate = typeof open === 'string';
-  const item = isUpdate ? data.find((d) => d._id === open) : {};
+  const item = isUpdate ? data?.find((d) => d._id === open) || {} : {};
   const type = item?.type;
 
   const onSubmit = async (status) => {
@@ -29,6 +29,8 @@ export const DetailApplication = (props) => {
         <div className="w-full max-h-[1200px] overflow-scroll">
           <div className="relative w-full mt-4">
             <div className="flex flex-wrap w-full">
+            <InputFormz label="Phòng ban (*)" value={Body(departments, item.department)} disabled />
+            <InputFormz label="Nhân viên (*)" value={Body(accounts, item.account, '_id', 'fullName')} disabled />
               <DropdownFormz label="Ca làm việc (*)" options={shifts} value={item.shift} disabled />
               <DropdownFormz label="Loại đơn (*)" options={applicationTypes} value={item.type} disabled />
               {[1, 2].includes(type) ? (
