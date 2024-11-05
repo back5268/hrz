@@ -8,7 +8,7 @@ export const PositionValidation = yup.object({
 
 export const JobPositionValidation = yup.object({
   name: yup.string().required('Tên công việc không được bỏ trống!'),
-  code: yup.string().required('Mã công việc không được bỏ trống!'),
+  code: yup.string().required('Mã công việc không được bỏ trống!')
 });
 
 export const DepartmentValidation = yup.object({
@@ -58,12 +58,53 @@ export const NewValidation = yup.object({
 export const DeviceValidation = yup.object({
   name: yup.string().required('Tên thiết bị không được bỏ trống!'),
   code: yup.string().required('Mã thiết bị không được bỏ trống!'),
-  type: yup.string().required('Loại thiết bị không được bỏ trống!'),
+  type: yup.string().required('Loại thiết bị không được bỏ trống!')
 });
 
 export const ShiftValidation = yup.object({
   name: yup.string().required('Tên ca làm việc không được bỏ trống!'),
   code: yup.string().required('Mã ca làm việc không được bỏ trống!'),
   dateStart: yup.string().required('Ngày áp dụng không được bỏ trống!'),
-  dateEnd: yup.string(),
+  dateEnd: yup.string()
+});
+
+export const ApplicationValidation = yup.object({
+  department: yup.string().required('Phòng ban không được bỏ trống!'),
+  account: yup.string().required('Nhân viên không được bỏ trống!'),
+  shift: yup.string().required('Ca làm việc không được bỏ trống!'),
+  type: yup.string().required('Loại đơn không được bỏ trống!'),
+  reason: yup.string().required('Lý do không được bỏ trống!')
+});
+
+export const BonusValidation = yup.object({
+  name: yup.string().required('Tiêu đề không được bỏ trống!'),
+  month: yup.string().required('Tháng không được bỏ trống!'),
+  departments: yup.array().required('Phòng ban áp dụng không được bỏ trống!'),
+  accounts: yup.array().required('Nhân viên áp dụng không được bỏ trống!'),
+  value: yup.string().required('Giá trị áp dụng thưởng không được bỏ trống!'),
+  type: yup.string().required('Loại thưởng không được bỏ trống!')
+});
+
+export const SalarySetupValidation = yup.object({
+  salaryCoefficient: yup.string().required('Hệ số không được bỏ trống!'),
+  bhxh: yup.string().required('Bảo hiểm xã hội không được bỏ trống!'),
+  bhyt: yup.string().required('Bảo hiểm y tế không được bỏ trống!'),
+  bhtn: yup.string().required('Bảo hiểm thất nghiệp không được bỏ trống!'),
+  unionDues: yup.string().required('Phí công đoàn không được bỏ trống!'),
+  day: yup.string().required('Ngày thường không được bỏ trống!'),
+  sunday: yup.string().required('Chủ nhật không được bỏ trống!'),
+  holiday: yup.string().required('Ngày lễ không được bỏ trống!')
+});
+
+export const TaxSetupValidation = yup.object({
+  self: yup.string().required('Giảm trừ bản thân không được bỏ trống!'),
+  dependent: yup.string().required('Giảm trừ phụ thuộc không được bỏ trống!'),
+  rate: yup.array().required('Hệ số không được bỏ trống!'),
+});
+
+export const SalaryCalculationValidation = yup.object({
+  month: yup.string().required('Tháng không được bỏ trống!'),
+  dates: yup.array().required('Khoảng thời gian tính không được bỏ trống!'),
+  departments: yup.array().required('Phòng ban không được bỏ trống!'),
+  accounts: yup.array().required('Nhân viên không được bỏ trống!'),
 });

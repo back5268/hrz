@@ -7,12 +7,14 @@ import React, { useEffect, useState } from 'react';
 import { DetailApplication } from './Detail';
 import { useDataState, useItemState } from '@store';
 import { applicationStatus, applicationTypes } from '@constant';
+import { CreateApplication } from './Create';
 
 export const Application = () => {
   const initParams = useGetParams();
   const [params, setParams] = useState(initParams);
   const [filter, setFilter] = useState({});
   const [open, setOpen] = useState(false);
+  const [openz, setOpenz] = useState(false);
   const { isLoading, data } = useGetApi(getListApplicationApi, params, 'application');
   const { data: shifts } = useGetApi(getListShiftInfoApi, {}, 'shifts');
   const { departments, accounts } = useDataState();
@@ -27,7 +29,23 @@ export const Application = () => {
 
   return (
     <FormList title="Danh sách đơn từ">
-      <DetailApplication open={open} setOpen={setOpen} setParams={setParams} data={data?.documents} shifts={shifts} departments={departments} accounts={accounts} />
+      <DetailApplication
+        open={open}
+        setOpen={setOpen}
+        setParams={setParams}
+        data={data?.documents}
+        shifts={shifts}
+        departments={departments}
+        accounts={accounts}
+      />
+      <CreateApplication
+        open={openz}
+        setOpen={setOpenz}
+        setParams={setParams}
+        shifts={shifts}
+        departments={departments}
+        accounts={accounts}
+      />
       <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-full">
         <Dropdownzz
           value={filter.department}
@@ -67,11 +85,12 @@ export const Application = () => {
         total={data?.total}
         params={params}
         setParams={setParams}
-        baseActions={['detail']}
+        baseActions={['detail', 'create']}
         setShow={setOpen}
         actionsInfo={{
           onViewDetail: (item) => setOpen(item._id)
         }}
+        headerInfo={{ onCreate: () => setOpenz(true) }}
       >
         <Columnz header="Phòng ban" body={(e) => Body(departments, e.department)} />
         <Columnz header="Nhân viên" body={(e) => <span className="text-nowrap">{Body(accounts, e.account, '_id', 'fullName')}</span>} />

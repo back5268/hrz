@@ -1,4 +1,6 @@
+import { uploadFileToFirebase } from '@lib/firebase';
 import {
+  createApplicationAdminValid,
   createApplicationValid,
   detailApplicationValid,
   listApplicationAppValid,
@@ -9,7 +11,6 @@ import {
   countApplicationMd,
   createApplicationMd,
   createNotifyMd,
-  createTimekeepingMd,
   detailApplicationMd,
   detailShiftMd,
   detailTimekeepingMd,
@@ -18,9 +19,9 @@ import {
   listPermissionMd,
   listTimekeepingMd,
   updateApplicationMd,
-  updateTimekeepingMd
 } from '@models';
-import { addTimes, calTime, subtractTimes, validateData } from '@utils';
+import { approveApplication } from '@repository';
+import { validateData } from '@utils';
 import { ioSk } from 'src';
 
 export const getListApplication = async (req, res) => {
@@ -90,53 +91,7 @@ export const updateApplication = async (req, res) => {
     const dataz = await detailApplicationMd({ _id });
     if (!dataz) return res.json({ status: 0, mess: 'Đơn không tồn tại!' });
     const data = await updateApplicationMd({ _id }, { updatedBy: req.account._id, ...value });
-    if (status === 2) {
-      const type = dataz.type;
-      if (type === 1) {
-        const timekeeping = await detailTimekeepingMd({ account: dataz.account, date: dataz.dates?.[0], shift: dataz.shift });
-        await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, summary: timekeeping.totalWork });
-      } else if (type === 2)
-        await updateTimekeepingMd(
-          { account: dataz.account, date: dataz.dates?.[0], shift: dataz.shift },
-          { $addToSet: { applications: dataz._id } }
-        );
-      else if (type === 3) {
-        const dates = dataz.dates;
-        for (const date of dates) {
-          const timekeeping = await detailTimekeepingMd({ account: dataz.account, date, shift: dataz.shift });
-          await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, summary: timekeeping.totalWork });
-        }
-      } else if (type === 4) {
-        const timekeeping = await detailTimekeepingMd({ account: dataz.account, date: dataz.dates?.[0], shift: dataz.shift });
-        await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, summary: timekeeping.totalWork });
-      } else if (type === 5) {
-        const timekeeping = await detailTimekeepingMd({ account: dataz.account, date: dataz.dates?.[0], shift: dataz.shift });
-        const timeStart = addTimes(timekeeping.timeStart, dataz.late);
-        const timeEnd = subtractTimes(timekeeping.timeEnd, dataz.soon);
-        await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, timeStart, timeEnd });
-      } else if (type === 6) {
-        const timekeeping = await detailTimekeepingMd({ account: dataz.account, shift: dataz.shift });
-        const totalTime = calTime(`2024-11-01 ${dataz.fromTime}:00`, `2024-11-01 ${dataz.toTime}:00`);
-        const totalWork = (timekeeping.totalWork / timekeeping.totalTime) * totalTime;
-        await createTimekeepingMd({
-          department: dataz.department,
-          account: dataz.account,
-          shift: dataz.shift,
-          date: dataz.dates?.[0],
-          timeStart: dataz.fromTime,
-          timeEnd: dataz.toTime,
-          totalTime,
-          totalWork,
-          type: 2
-        });
-      } else if (type === 7) {
-        const dates = dataz.dates;
-        for (const date of dates) {
-          const timekeeping = await detailTimekeepingMd({ account: dataz.account, date, shift: dataz.shift });
-          await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, summary: timekeeping.totalWork });
-        }
-      }
-    }
+    if (status === 2) await approveApplication(dataz)
     const application = await createNotifyMd({
       account: dataz.account,
       content: status === 2 ? 'Đơn bạn tạo đã được duyệt!' : 'Đơn bạn tạo không được duyệt!',
@@ -187,6 +142,12 @@ export const createApplication = async (req, res) => {
       });
       if (checkOt) return res.json({ status: 0, mess: 'Đã có lịch làm việc không thể tạo đơn OT!' });
     }
+    value.files = []
+    if (req.files?.['files']?.length > 0) {
+      for (const file of req.files['files']) {
+        value.files.push(await uploadFileToFirebase(file));
+      }
+    }
     const data = await createApplicationMd({ account: req.account?._id, department: req.account?.department?._id, ...value });
     const permissions = await listPermissionMd({ 'tools.route': 'application' });
     const accounts = await listAccountMd({ role: 'admin' });
@@ -203,6 +164,41 @@ export const createApplication = async (req, res) => {
       });
       ioSk.emit(`notify_${account._id}`, notify);
     }
+    res.status(201).json({ status: 1, data });
+  } catch (error) {
+    res.status(500).json({ status: 0, mess: error.toString() });
+  }
+};
+
+export const createApplicationAdmin = async (req, res) => {
+  try {
+    const { error, value } = validateData(createApplicationAdminValid, req.body);
+    if (error) return res.json({ status: 0, mess: error });
+    const { account, shift, type, dates, fromTime, toTime } = value;
+    const shiftz = await detailShiftMd({ _id: shift });
+    if (!shiftz) return res.json({ status: 0, mess: 'Ca làm việc không tồn tại!' });
+    const timekeepings = await listTimekeepingMd({ date: { $in: dates }, account });
+    if (timekeepings.length === 0 && type !== 6) return res.json({ status: 0, mess: 'Không có lịch làm việc trong thời gian đã chọn!' });
+    if (type === 6) {
+      if (fromTime > toTime) return res.json({ status: 0, mess: 'Thời gian bắt đầu OT không thể lớn hơn thời gian kết thúc!' });
+      const checkOt = await detailTimekeepingMd({
+        date: dates[0],
+        $or: [
+          { timeStart: { $gt: fromTime, $lt: toTime } },
+          { timeEnd: { $gt: fromTime, $lt: toTime } },
+          { timeStart: { $lt: fromTime }, timeEnd: { $gt: toTime } }
+        ]
+      });
+      if (checkOt) return res.json({ status: 0, mess: 'Đã có lịch làm việc không thể tạo đơn OT!' });
+    }
+    value.files = []
+    if (req.files?.['files']?.length > 0) {
+      for (const file of req.files['files']) {
+        value.files.push(await uploadFileToFirebase(file));
+      }
+    }
+    const data = await createApplicationMd({ ...value, status: 2 });
+    await approveApplication(data)
     res.status(201).json({ status: 1, data });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

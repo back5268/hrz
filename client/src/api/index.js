@@ -1,5 +1,7 @@
 export * from './application';
 export * from './auth';
+export * from './bonus';
+export * from './config';
 export * from './department';
 export * from './device';
 export * from './employee';
@@ -10,6 +12,7 @@ export * from './new';
 export * from './notify';
 export * from './permission';
 export * from './position';
+export * from './salary-calculation';
 export * from './schedule';
 export * from './shift';
 export * from './template';

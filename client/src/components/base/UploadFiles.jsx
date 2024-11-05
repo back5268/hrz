@@ -14,20 +14,23 @@ export const UploadFiles = (props) => {
     setFiles(files.filter((f) => f !== item));
   };
 
-  const onDrop = useCallback((acceptedFiles) => {
-    let newFiles = [...acceptedFiles];
-    if (type === 'image') {
-      let error = false;
-      newFiles = newFiles.filter((file) => {
-        if (!IMAGE_TYPE.includes(file.type)) error = true;
-        return IMAGE_TYPE.includes(file.type);
-      });
-      if (error) return showToast({ title: 'Vui lòng chỉ chọn hình ảnh!', severity: 'warning' });
-    }
-    newFiles = [...newFiles, ...files]
-    if (max) newFiles = newFiles.splice(0, max);
-    setFiles(newFiles);
-  }, [JSON.stringify(files)]);
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      let newFiles = [...acceptedFiles];
+      if (type === 'image') {
+        let error = false;
+        newFiles = newFiles.filter((file) => {
+          if (!IMAGE_TYPE.includes(file.type)) error = true;
+          return IMAGE_TYPE.includes(file.type);
+        });
+        if (error) return showToast({ title: 'Vui lòng chỉ chọn hình ảnh!', severity: 'warning' });
+      }
+      newFiles = [...newFiles, ...files];
+      if (max) newFiles = newFiles.splice(0, max);
+      setFiles(newFiles);
+    },
+    [JSON.stringify(files)]
+  );
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
@@ -37,10 +40,14 @@ export const UploadFiles = (props) => {
         <div className={'flex justify-between items-center mb-2'}>
           {label && <label className="inline-block font-medium text-left">{label}</label>}
           {!isView && (
-            <div className="flex gap-2">
-              <Buttonz severity="danger" outlined className="p-2" onClick={() => setFiles([])}>
-                <TrashIcon className="w-6" />
-              </Buttonz>
+            <div className="flex gap-4">
+              <Buttonz
+                onClick={() => setFiles([])}
+                severity="danger"
+                outlined
+                className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                icon={<TrashIcon className="w-5" />}
+              />
               <div {...getRootProps()}>
                 <Buttonz label="Chọn files" />
               </div>
@@ -57,9 +64,13 @@ export const UploadFiles = (props) => {
                   {f?.name || f}
                 </Link>
                 {!isView && (
-                  <Buttonz severity="danger" outlined className="p-2" onClick={() => removeFile(f)}>
-                    <TrashIcon className="w-6" />
-                  </Buttonz>
+                  <Buttonz
+                    onClick={() => removeFile(f)}
+                    severity="danger"
+                    outlined
+                    className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                    icon={<TrashIcon className="w-5" />}
+                  />
                 )}
               </div>
             ))}

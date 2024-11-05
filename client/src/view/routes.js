@@ -2,6 +2,7 @@ import { Application } from './admin/approval';
 import { DetailNewz, DetailPermission, New, Permission, Template } from './admin/config';
 import { DashBoard } from './admin/dashboard';
 import { Department, DetailJobPosition, DetailEmployee, DetailPosition, JobPosition, Employee, Position } from './admin/human-resource';
+import { Bonus, SalaryCalculation } from './admin/payroll';
 import { DetailShift, Device, ImportLog, Schedule, Shift, Timekeeping } from './admin/timekeeping';
 import { ForgotPassword, SignIn } from './auth';
 
@@ -29,6 +30,9 @@ export const routes = [
   { path: '/schedule', element: Schedule, layout: true },
   { path: '/timekeeping', element: Timekeeping, layout: true },
   { path: '/import-log', element: ImportLog, layout: true },
+
+  { path: '/bonus', element: Bonus, layout: true },
+  { path: '/salary-calculation', element: SalaryCalculation, layout: true },
 
   { path: '/application', element: Application, layout: true },
 

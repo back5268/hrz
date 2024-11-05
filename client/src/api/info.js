@@ -6,3 +6,4 @@ export const getListPositionInfoApi = (params) => getData('/info/getListPosition
 export const getListJobPositionInfoApi = (params) => getData('/info/getListJobPositionInfo', params);
 export const getListDepartmentInfoApi = (params) => getData('/info/getListDepartmentInfo', params);
 export const getListShiftInfoApi = (params) => getData('/info/getListShiftInfo', params);
+export const getListMonthInfoApi = (params) => getData('/info/getListMonthInfo', params);

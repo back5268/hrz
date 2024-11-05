@@ -137,6 +137,17 @@ export const importLogStatus = [
   { name: 'Thất bại', _id: 0, severity: 'danger' }
 ];
 
-// Vị trí chấm công []
-// Thời gian cảnh báo chấm công
+export const salaryLogStatus = [
+  { name: 'Đang xử lý', _id: 1 },
+  { name: 'Đã xử lý', _id: 2 }
+];
 
+export const bonusTypes = [
+  { name: 'Thưởng cố định (VNĐ)', _id: 1 },
+  { name: 'Thưởng theo % lương cơ bản', _id: 2 }
+];
+
+export const soonLateTypes = [
+  { name: 'Trừ trực tiếp (VNĐ)', _id: 1 },
+  { name: 'Trừ theo % công', _id: 2 }
+];

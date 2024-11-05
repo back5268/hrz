@@ -33,9 +33,9 @@ const Dropdownz = (props) => {
   );
 };
 
-export const Dropdownzz = ({ ...prop }) => {
+export const Dropdownzz = ({ className = "", ...prop }) => {
   return (
-    <div className="p-2 w-full md:w-6/12 lg:w-3/12">
+    <div className={`p-2 w-full md:w-6/12 lg:w-3/12 ${className}`}>
       <Dropdownz {...prop} />
     </div>
   );

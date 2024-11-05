@@ -6,8 +6,8 @@ export const FormList = (props) => {
 
   return (
     <Cardz>
-      <h2 className="font-semibold uppercase leading-normal mb-2 p-2 text-primary">{title}</h2>
-      <hr />
+      <h2 className="font-bold uppercase leading-normal mb-2 p-2 text-primary">{title}</h2>
+      <hr className='mx-2' />
       {children}
     </Cardz>
   );

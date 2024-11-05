@@ -1,5 +1,5 @@
 @layer tailwind-base, primereact, tailwind-utilities;
-@import 'primereact/resources/themes/mdc-light-indigo/theme.css';
+@import './theme.css';
 
 @layer tailwind-base {
   @tailwind base;
@@ -12,15 +12,15 @@
 
 @layer components {
   .card {
-    @apply border-border rounded-md p-4 border-[1px];
+    @apply rounded-md p-4 border-[1px] border-border;
   }
 }
 
 :root {
-  --primary-color: #673AB7;
-  --border-color: #b9bfcb;
-  --background-color: rgba(0, 0, 0, 0.04);
-  --secondary-color: #8d95a8;
+  --primary-color: rgb(0, 98, 158);
+  --border-color: rgba(0, 0, 0, 0.3);
+  --background-color: rgb(222, 227, 235);
+  --secondary-color: rgb(82, 96, 112);
 }
 
 ::-webkit-scrollbar {

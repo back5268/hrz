@@ -16,6 +16,9 @@ import { timekeepingRouter } from './timekeeping';
 import { applicationRouter } from './application';
 import { importLogRouter } from './importLog';
 import { notifyRouter } from './notify';
+import { configRouter } from './config';
+import { salaryCalculationRouter } from './salaryCalculation';
+import { bonusRouter } from './bonus';
 
 export const webRouter = express.Router();
 
@@ -36,3 +39,6 @@ webRouter.use('/timekeeping', timekeepingRouter);
 webRouter.use('/application', applicationRouter);
 webRouter.use('/import-log', importLogRouter);
 webRouter.use('/notify', notifyRouter);
+webRouter.use('/config', configRouter);
+webRouter.use('/salary-calculation', salaryCalculationRouter);
+webRouter.use('/bonus', bonusRouter);

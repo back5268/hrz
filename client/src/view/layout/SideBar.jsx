@@ -52,7 +52,7 @@ export const SideBar = (props) => {
   return (
     <div
       className={`fixed left-0 inset-y-0 h-screen z-40 w-full lg:max-w-[18rem] flex flex-col justify-between border-r
-      transition-all duration-500 ease-in-out shadow-custom bg-white ${showSidebar ? '' : '-translate-x-full'}`}
+      transition-all duration-500 ease-in-out shadow-custom bg-surfaceVariant ${showSidebar ? '' : '-translate-x-full'}`}
     >
       <div>
         <div className="p-4">
@@ -69,8 +69,7 @@ export const SideBar = (props) => {
           })}
         </nav>
       </div>
-      <div className="p-4">
-        <hr className="my-3" />
+      <div className="p-4 border-t border-border">
         <Buttonz onClick={onSignOut} className="w-full">
           Đăng xuất
         </Buttonz>

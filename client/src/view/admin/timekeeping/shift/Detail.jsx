@@ -66,7 +66,7 @@ export const DetailShift = () => {
         setValue(key, dataz[key]);
       }
     }
-  }, [item]);
+  }, [item, itemz]);
 
   const handleData = (data) => {
     const newData = {

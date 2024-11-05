@@ -240,14 +240,14 @@ export const tools = [
     sort: 4,
     items: [
       {
-        name: 'Tính toán công lương',
-        route: '/salary-calcultation',
-        actions: ['create', 'update', 'read']
+        name: 'Quản lý các khoản thưởng',
+        route: '/bonus',
+        actions: ['delete', 'create', 'update', 'read']
       },
       {
-        name: 'Các khoản thưởng',
-        route: '/bonuses',
-        actions: ['delete', 'create', 'update', 'read']
+        name: 'Tính toán công lương',
+        route: '/salary-calculation',
+        actions: ['create', 'update', 'read']
       },
       {
         name: 'Phiếu lương chờ duyệt',
@@ -283,6 +283,11 @@ export const tools = [
     icon: 'Cog6ToothIcon',
     sort: 6,
     items: [
+      {
+        name: 'Cấu hình chung',
+        route: '/config',
+        actions: ['update', 'read']
+      },
       {
         name: 'Phân quyền',
         route: '/permission',
