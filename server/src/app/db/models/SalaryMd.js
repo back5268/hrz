@@ -7,7 +7,8 @@ class SalaryMd extends ModelBase {}
 
 SalaryMd.init('Salary', {
   by: { type: ObjectId, ref: 'Account', required: true },
-  account: { type: ObjectId, ref: 'Account', required: true },
+  department: { type: String, required: true },
+  account: { type: String, required: true },
   month: { type: Number, min: 0, required: true },
   from: { type: Date, required: true },
   to: { type: Date, required: true },
@@ -30,6 +31,7 @@ SalaryMd.init('Salary', {
     bhtn: { value: Number, summary: Number },
     unionDues: { value: Number, summary: Number }
   },
+  mandatoryAmount: { type: Number, min: 0, required: true },
   soonLates: [
     {
       date: { type: String, min: 0 },
@@ -45,7 +47,7 @@ SalaryMd.init('Salary', {
   ],
   tax: { self: Number, dependent: { value: Number, quantity: Number }, rate: Number, total: Number },
   summary: { type: Number, min: 0, required: true },
-  status: { type: Number, enum: [0, 1, 2, 3], default: 0, description: '0: Chờ duyệt, 1: Đã duyệt, 2: Hủy, 3: Đã gửi' },
+  status: { type: Number, enum: [1, 2], default: 1, description: '1: Chờ duyệt, 2: Đã duyệt' },
   deletedAt: { type: Date }
 });
 

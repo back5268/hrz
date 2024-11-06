@@ -146,7 +146,7 @@ export const createContract = async (req, res) => {
   }
 };
 
-export const renderContract = async (req, res) => {
+export const previewContract = async (req, res) => {
   try {
     const { error, value } = validateData(detailContractValid, req.query);
     if (error) return res.json({ status: 0, mess: error });

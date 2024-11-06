@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SalaryCalculationz } from './SalaryCalculation';
 import { SalarySetup } from './SalarySetup';
 import { TaxSetup } from './TaxSetup';
@@ -6,9 +6,10 @@ import { Buttonz, Calendarzz, Cardz, Columnz, Dropdownzz, ProgressSpinnerz } fro
 import { useGetParams } from '@hooks';
 import { getListSalaryLogApi } from '@api';
 import { useGetApi } from '@lib/react-query';
-import { DataFilter, DataTable, TimeBody } from '@components/base';
+import { DataFilter, DataTable, TimeBody, UserBody } from '@components/base';
 import { salaryLogStatus } from '@constant';
 import { Detail } from './Detail';
+import { socket } from '@lib/socket-io';
 
 const handleParams = (params) => {
   if (Array.isArray(params.dates) && params.dates.length > 0) {
@@ -27,20 +28,35 @@ export const SalaryCalculation = () => {
   const [filter, setFilter] = useState({});
   const { isLoading, data } = useGetApi(getListSalaryLogApi, handleParams(params), 'salary-log');
 
+  useEffect(() => {
+    const key = 'calculateSalary';
+    const onConnect = () => console.log('Connecting...');
+    const onDisconnect = (reason) => console.log('Disconnecting...', reason);
+    const onEvent = (event) => setParams((pre) => ({ ...pre, render: !pre.render }));
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on(key, onEvent);
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      socket.off(key, onEvent);
+    };
+  }, []);
+
   return (
     <Cardz>
-      <Detail open={open} setOpen={setOpen} />
+      <Detail open={open} setOpen={setOpen} data={data?.documents} />
       <SalarySetup open={salaryOpen} setOpen={setSalaryOpen} />
       <TaxSetup open={taxOpen} setOpen={setTaxOpen} />
-      <SalaryCalculationz open={calculationOpen} setOpen={setCalculationOpen} />
+      <SalaryCalculationz open={calculationOpen} setOpen={setCalculationOpen} setParams={setParams} />
 
       <div className="w-full flex gap-4 p-2 mb-2">
         <Buttonz label="Thiết lập công thức tính lương" onClick={() => setSalaryOpen(true)} />
         <Buttonz label="Thiết lập công thức tính thuế" onClick={() => setTaxOpen(true)} />
         <Buttonz label="Tính toán công lương" onClick={() => setCalculationOpen(true)} />
       </div>
-      <hr className='mx-2' />
-      <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-1/4">
+      <hr className="mx-2" />
+      <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-2/4">
         <Calendarzz
           selectionMode="range"
           readOnlyInput
@@ -48,7 +64,6 @@ export const SalaryCalculation = () => {
           label="Khoảng thời gian (*)"
           value={filter.dates}
           onChange={(e) => setFilter({ ...filter, dates: e.value })}
-          className="lg:w-6/12"
         />
         <Dropdownzz
           value={filter.status}
@@ -72,21 +87,25 @@ export const SalaryCalculation = () => {
           onViewDetail: (item) => setOpen(item._id)
         }}
       >
-        <Columnz header="Tiêu đề" field="name" />
+        <Columnz header="Tiêu đề" field="title" />
         <Columnz header="Tháng" field="month" />
         <Columnz header="Ngày bắt đầu" body={(e) => TimeBody(e.from, 'date')} />
         <Columnz header="Ngày kết thúc" body={(e) => TimeBody(e.to, 'date')} />
+        <Columnz header="Thành công" field="success" />
+        <Columnz header="Thất bại" field="error" />
         <Columnz header="Thời gian tính" body={(e) => (e.by ? UserBody(e.createdAt, e.by) : '')} />
         <Columnz
           header="Trạng thái"
           body={(e) =>
-            e.status === 0 ? (
-              <div className="flex items-center justify-center gap-4 font-medium bg-amber-300 p-2 rounded-lg text-white uppercase text-xs">
-                <ProgressSpinnerz style={{ width: '50px', height: '50px' }} strokeWidth="4" animationDuration="1s" />
-                <span>Đang xử lý</span>
+            e.status === 1 ? (
+              <div className="w-full flex items-center justify-center bg-amber-600 px-2 py-1 rounded-md text-white uppercase text-xs font-bold">
+                <div className='flex items-center justify-center gap-2'>
+                  <ProgressSpinnerz style={{ width: '20px', height: '20px' }} strokeWidth="4" animationDuration="1s" />
+                  <span>Đang xử lý</span>
+                </div>
               </div>
             ) : (
-              <div className="flex items-center justify-center gap-4 font-medium bg-green-300 p-2 rounded-lg text-white uppercase text-xs">
+              <div className="flex items-center justify-center bg-green-600 px-2 py-1 rounded-md text-white uppercase text-xs font-bold">
                 Đã xử lý
               </div>
             )

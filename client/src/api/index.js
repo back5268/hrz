@@ -17,3 +17,5 @@ export * from './schedule';
 export * from './shift';
 export * from './template';
 export * from './timekeeping';
+export * from './approved-payslip';
+export * from './pending-payslip';

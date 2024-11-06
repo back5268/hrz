@@ -5,7 +5,6 @@ import {
   deleteBonusMd,
   detailBonusMd,
   detailSalaryMd,
-  listAccountMd,
   listBonusMd,
   updateBonusMd
 } from '@models';

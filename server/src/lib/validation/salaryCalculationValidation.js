@@ -8,10 +8,8 @@ export const listSalaryLogValid = {
 };
 
 export const calculateSalaryValid = {
-  page: 'number',
-  limit: 'number',
-  status: { type: 'number', allowNull: true },
-  fromDate: { type: 'string', allowNull: true },
-  toDate: { type: 'string', allowNull: true },
-  month: { type: 'string', allowNull: true }
+  month: 'string',
+  from: 'string',
+  to: 'string',
+  accounts: 'json'
 };

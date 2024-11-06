@@ -1,4 +1,4 @@
-import { cancelContractApi, deleteContractApi, getListContractApi, renderContractApi } from '@api';
+import { cancelContractApi, deleteContractApi, getListContractApi, previewContractApi } from '@api';
 import { Body, DataFilter, TimeBody, UserBody } from '@components/base';
 import { Buttonz, Columnz, Dropdownzz, Tablez } from '@components/core';
 import { useGetApi } from '@lib/react-query';
@@ -56,7 +56,7 @@ export const Contracts = () => {
   };
 
   const onViewPrint = async (item) => {
-    const response = await renderContractApi({ account: _id, _id: item._id });
+    const response = await previewContractApi({ account: _id, _id: item._id });
     if (response) setOpenPrint({ _id: item._id, template: response });
   };
 

@@ -192,7 +192,7 @@ export const Infos = () => {
                   />
                   <DropdownFormz
                     id="department"
-                    label="Phòng ban"
+                    label="Phòng ban (*)"
                     options={departments}
                     value={watch('department')}
                     errors={errors}

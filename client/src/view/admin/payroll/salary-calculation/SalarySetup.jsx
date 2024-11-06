@@ -14,6 +14,7 @@ const defaultValues = {
   bhxh: '',
   bhyt: '',
   bhtn: '',
+  unionDues: '',
   day: '',
   sunday: '',
   holiday: ''
@@ -47,6 +48,9 @@ export const SalarySetup = (props) => {
     }
   }, [item]);
 
+  console.log(item);
+  
+
   const setOpenz = () => {
     reset();
     setData([]);
@@ -62,7 +66,8 @@ export const SalarySetup = (props) => {
         mandatory: {
           bhxh: value.bhxh,
           bhyt: value.bhyt,
-          bhtn: value.bhtn
+          bhtn: value.bhtn,
+          unionDues: value.unionDues
         },
         ot: {
           day: value.day,

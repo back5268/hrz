@@ -26,6 +26,7 @@ export const EmployeeValidation = yup.object({
   dateOfIssue: yup.string().required('Ngày cấp không được bỏ trống!'),
   placeOfIssue: yup.string().required('Nơi cấp không được bỏ trống!'),
   address: yup.string().required('Địa chỉ thường trú không được bỏ trống!'),
+  department: yup.string().required('Phòng ban không được bỏ trống!'),
   position: yup.string().required('Chức vụ không được bỏ trống!'),
   jobPosition: yup.string().required('Vị trí công việc không được bỏ trống!'),
   bankAccount: yup.string().required('Số tài khoản không được bỏ trống!'),

@@ -133,7 +133,7 @@ export const DataTable = (props) => {
           Export
         </Buttonz>
       )}
-      {items?.length > 0 && <SplitButtonz items={items.map((item) => ({ ...item, onClick: () => handleSelect(item.onClick) }))} />}
+      {items?.length > 0 && <SplitButtonz model={items.map((item) => ({ ...item, onClick: () => handleSelect(item.onClick) }))}  label="Tác vụ" raised />}
       {moreHeader?.length > 0 &&
         moreHeader.map((header, index) => {
           const color = header.color || 'cyan';

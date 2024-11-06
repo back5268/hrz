@@ -1,8 +1,9 @@
+import { ArrayRedis } from '@lib/ioredis';
 import { updateSalaryLogMd } from '@models';
 import { Salary } from '@repository/SalaryCalculationRp';
 import { ioSk } from 'src';
 
-export const salaryQueue = []
+export const salaryQueue = new ArrayRedis("salaryQueue")
 salaryQueue.callbackCron = async (data) => {
   const { salaryLogId, month, accounts, config, salarySetup, taxSetup, by, from, to, bonuses } = data;
   let error = 0,

@@ -5,8 +5,8 @@ export class Salary {
   constructor({ month, accountId, from, to, note, config, salarySetup, taxSetup, by, bonuses }) {
     this.month = month;
     this.accountId = accountId;
-    this.from = moment(from);
-    this.to = moment(to);
+    this.from = from;
+    this.to = to;
     this.note = note;
     this.config = config;
     this.salarySetup = salarySetup;
@@ -16,6 +16,9 @@ export class Salary {
   }
 
   async setUp() {
+    console.log(this.from, this.to);
+    console.log({ account: this.accountId, date: { $gte: this.from, $lte: this.to } });
+
     this.account = await detailAccountMd({ _id: this.accountId }, [{ path: 'position', select: 'allowances' }]);
     this.baseSalary = this.account?.salary;
     this.allowances = this.account?.position?.allowances;
@@ -66,7 +69,7 @@ export class Salary {
         summary
       });
     });
-    const monneyOfDay = ((this.baseSalary + allowanceAmount) / 26) * numberDay;
+    const monneyOfDay = (this.baseSalary + allowanceAmount) / 26;
     const numberNomalWork = timekeepingNomal.reduce((a, b) => a + Number(b.summary) || 0, 0);
     const numberOtWork = timekeepingOt.reduce((a, b) => a + Number(b.summary) || 0, 0);
     const summaryNomalWork = numberNomalWork * monneyOfDay;
@@ -92,8 +95,7 @@ export class Salary {
     this.bonuses.forEach((b) => {
       bonuses.push({ name: b.name, summary: b.type === 1 ? b.value : (b.value * this.baseSalary) / 100 });
     });
-
-    const soonLateConfigs = this.salarySetup.soonLate;
+    const soonLateConfigs = this.salarySetup.soonLate || [];
     if (soonLateConfigs?.length > 0) {
       soonLates.forEach((s) => {
         const soonLateConfig = soonLateConfigs.find((sc) => s.value >= sc.from && s.value <= sc.to);
@@ -103,10 +105,10 @@ export class Salary {
         }
       });
     } else soonLates = soonLates.map((s) => ({ ...s, summary: 0 }));
-
     const params = {
       by: this.by,
       account: this.accountId,
+      department: this.account?.department?._id,
       month: this.month,
       from: this.from,
       to: this.to,
@@ -122,12 +124,10 @@ export class Salary {
         bhtn: { value: mandatoryz.bhtn, summary: bhtn },
         unionDues: { value: mandatoryz.unionDues, summary: unionDues }
       },
+      mandatoryAmount: bhxh + bhyt + bhtn + unionDues,
       bonuses,
       summary:
-        summaryNomalWork +
-        numberOtWork +
-        bonuses.reduce((a, b) => a + Number(b.summary) || 0, 0) -
-        soonLateConfigs.reduce((a, b) => a + Number(b.summary) || 0, 0)
+        summaryWork + bonuses.reduce((a, b) => a + Number(b.summary) || 0, 0) - soonLates.reduce((a, b) => a + Number(b.summary) || 0, 0)
     };
     await createSalaryMd(params);
     return { status: true };

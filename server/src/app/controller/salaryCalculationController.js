@@ -2,6 +2,7 @@ import { salaryQueue } from '@lib/node-cron/salaryCr';
 import { calculateSalaryValid, listSalaryLogValid } from '@lib/validation';
 import { countSalaryLogMd, createSalaryLogMd, detailConfigMd, listBonusMd, listSalaryLogMd } from '@models';
 import { validateData } from '@utils';
+import moment from 'moment';
 
 export const getListSalaryLog = async (req, res) => {
   try {
@@ -32,18 +33,35 @@ export const calculateSalary = async (req, res) => {
     const config = (await detailConfigMd({ type: 1 }))?.detail;
     const salarySetup = (await detailConfigMd({ type: 2 }))?.salary;
     const taxSetup = (await detailConfigMd({ type: 3 }))?.tax;
-    const bonuses = await listBonusMd({ month })
+    const bonuses = await listBonusMd({ month });
     const debtLog = await createSalaryLogMd({
-      by: req.userInfo?._id,
+      by: req.account?._id,
       title: `Tính toán công lương ${moment().format('DD/MM/YYYY HH:mm:ss')}`,
       month,
       salarySetup,
       taxSetup,
-      status: 1
+      status: 1,
+      from,
+      to
     });
-    salaryQueue.push({ salaryLogId: debtLog._id, month, accounts, config, salarySetup, taxSetup, by: req.account?._id, from, to, bonuses }, true);
+    salaryQueue.push(
+      {
+        salaryLogId: debtLog._id,
+        month,
+        accounts,
+        config,
+        salarySetup,
+        taxSetup,
+        by: req.account?._id,
+        from,
+        to,
+        bonuses
+      },
+      true
+    );
     res.json({ status: true, data: 1 });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ status: false, mess: error.toString() });
   }
 };

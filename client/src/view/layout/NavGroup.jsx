@@ -9,7 +9,7 @@ export const NavGroup = (props) => {
   const isOpen = open?.includes(value);
 
   return (
-    <>
+    <div className='border-b border-border'>
       <button
         onClick={() =>
           setOpen((pre) => {
@@ -32,6 +32,6 @@ export const NavGroup = (props) => {
           ))}
         </ul>
       </CSSTransition>
-    </>
+    </div>
   );
 };

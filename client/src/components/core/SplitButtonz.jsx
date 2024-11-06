@@ -1,5 +1,5 @@
-export const SplitButtonz = () => {
-  return (
-    <div>SplitButton</div>
-  )
-}
+import { SplitButton } from 'primereact/splitbutton';
+
+export const SplitButtonz = ({ ...prop }) => {
+  return <SplitButton {...prop} />;
+};

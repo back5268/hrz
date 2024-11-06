@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import moment from 'moment';
 import { Accounts } from './Component';
+import { databaseDate } from '@lib/helper';
 
 const defaultValues = {
   month: String(moment().format('YYYYMM')),
@@ -15,7 +16,7 @@ const defaultValues = {
   accounts: []
 };
 export const SalaryCalculationz = (props) => {
-  const { open, setOpen } = props;
+  const { open, setOpen, setParams } = props;
   const { showToast } = useToastState();
   const [loading, setLoading] = useState(false);
   const { data: months } = useGetApi(getListMonthInfoApi, {}, 'months');
@@ -36,19 +37,22 @@ export const SalaryCalculationz = (props) => {
   const onSubmit = async (value) => {
     const params = { ...value };
     setLoading(true);
-    const res = await calculateSalaryApi(params);
+    params.from = databaseDate(value.dates?.[0], 'date');
+    params.to = databaseDate(value.dates?.[1] || value.dates?.[0], 'date');
+    const res = await calculateSalaryApi({ ...params, departments: undefined, dates: undefined });
     setLoading(false);
     if (res) {
       showToast({ title: 'Đã thêm vào tính toán công lương, chờ xử lý!', severity: 'success' });
+      setParams(pre => ({ ...pre, render: !pre.render }))
       setOpen(false);
       reset();
     }
   };
 
   const setOpenz = () => {
-    setOpen(false)
-    reset()
-  }
+    setOpen(false);
+    reset();
+  };
 
   return (
     <Dialogz className="w-[1200px]" header="Tính toáng công lương" open={open} setOpen={setOpenz}>
@@ -78,7 +82,7 @@ export const SalaryCalculationz = (props) => {
                 register={register}
               />
               <MultiSelectFormz
-                label="Phòng ban áp dụng (*)"
+                label="Phòng ban (*)"
                 options={departments}
                 value={watch('departments')}
                 errors={errors}
@@ -89,7 +93,7 @@ export const SalaryCalculationz = (props) => {
                 filter
               />
               <MultiSelectFormz
-                label="Nhân viên áp dụng (*)"
+                label="Nhân viên (*)"
                 options={watch('departments') ? accounts?.filter((a) => watch('departments')?.includes(a.department)) : []}
                 value={watch('accounts')}
                 optionLabel="fullName"
