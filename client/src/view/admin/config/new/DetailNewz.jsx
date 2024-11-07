@@ -38,7 +38,7 @@ export const DetailNewz = () => {
 
   useEffect(() => {
     if (isUpdate && item) {
-      if (item.avatar) setAvatar(item.avatar);
+      setAvatar(item.avatar);
       if (item.files) setFiles(item.files);
       for (const key in defaultValues) {
         setValue(key, item[key]);

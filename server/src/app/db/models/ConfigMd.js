@@ -29,12 +29,13 @@ ConfigMd.init('Config', {
         value: Number,
         type: { type: Number, enum: [1, 2], description: '1: Trừ trực tiếp (VNĐ), 2: Trừ theo % công' }
       }
-    ]
+    ],
+    holidays: [{ type: String }],
   },
   tax: {
     self: { type: Number, min: 0 },
     dependent: { type: Number, min: 0 },
-    rates: [{ from: Number, to: Number, value: Number, note: String }]
+    taxs: [{ from: Number, to: Number, value: Number, note: String }]
   },
   note: { type: String },
   files: [{ type: String }],

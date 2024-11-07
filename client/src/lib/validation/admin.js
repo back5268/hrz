@@ -100,7 +100,6 @@ export const SalarySetupValidation = yup.object({
 export const TaxSetupValidation = yup.object({
   self: yup.string().required('Giảm trừ bản thân không được bỏ trống!'),
   dependent: yup.string().required('Giảm trừ phụ thuộc không được bỏ trống!'),
-  rate: yup.array().required('Hệ số không được bỏ trống!'),
 });
 
 export const SalaryCalculationValidation = yup.object({

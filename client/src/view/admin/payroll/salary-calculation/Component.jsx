@@ -1,5 +1,5 @@
 import { NumberBody, TimeBody } from '@components/base';
-import { Buttonz, Columnz, Dropdownzz, Inputzz, Tablez } from '@components/core';
+import { Buttonz, Calendarzz, Columnz, Dropdownzz, Inputzz, Tablez } from '@components/core';
 import { soonLateTypes } from '@constant';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import React from 'react';
@@ -20,7 +20,7 @@ export const SoonLate = ({ data = {}, setData = () => {} }) => {
         <div className="flex justify-between items-center">
           <label className="inline-block font-medium text-left mb-2">Quy định phạt đi trễ/ về sớm</label>
           <Buttonz
-            onClick={() => setData((pre) => [...pre, { idz: (pre[pre.length - 1]?.idz || 1) + 1 }])}
+            onClick={() => setData((pre) => [...pre, { idz: (pre[pre.length - 1]?.idz || 1) + 1, type: 1 }])}
             variant="outlined"
             label="Thêm mới"
             className="mb-2"
@@ -30,6 +30,15 @@ export const SoonLate = ({ data = {}, setData = () => {} }) => {
       </div>
       {data.map((datum, index) => (
         <div key={index} className="w-full flex flex-wrap items-center">
+          <div className="w-full md:w-6/12 lg:w-[10%] p-2 flex justify-center">
+            <Buttonz
+              onClick={() => setData((pre) => pre.filter((p) => p.idz !== datum.idz))}
+              severity="danger"
+              outlined
+              className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+              icon={<TrashIcon className="w-5" />}
+            />
+          </div>
           <Inputzz
             min="0"
             type="number"
@@ -49,7 +58,7 @@ export const SoonLate = ({ data = {}, setData = () => {} }) => {
           <Inputzz
             min="1"
             type="number"
-            label="Giá trị (*)"
+            label="Giá trị phạt (*)"
             value={datum.value}
             onChange={(e) => onChange('value', e.target.value, datum.idz)}
             className="w-full md:w-6/12 lg:w-[20%]"
@@ -59,24 +68,15 @@ export const SoonLate = ({ data = {}, setData = () => {} }) => {
             onChange={(e) => onChange('type', e.target.value, datum.idz)}
             options={soonLateTypes}
             label="Loại phạt"
-            className="w-full md:w-6/12 lg:w-[20%]"
+            className="w-full md:w-6/12 lg:w-[30%]"
           />
-          <div className="w-full md:w-6/12 lg:w-[20%] p-2 flex justify-center">
-            <Buttonz
-              onClick={() => setPrices((pre) => pre.filter((p) => p.idz !== datum.idz))}
-              severity="danger"
-              outlined
-              className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
-              icon={<TrashIcon className="w-5" />}
-            />
-          </div>
         </div>
       ))}
     </div>
   );
 };
 
-export const Rates = ({ data = {}, setData = () => {} }) => {
+export const Taxs = ({ data = {}, setData = () => {} }) => {
   const onChange = (field, value, idz) => {
     setData((pre) =>
       pre.map((p) => {
@@ -90,7 +90,7 @@ export const Rates = ({ data = {}, setData = () => {} }) => {
     <div className="w-full my-4">
       <div className="p-2">
         <div className="flex justify-between items-center">
-          <label className="inline-block font-medium text-left mb-2">Hệ số tính thuế</label>
+          <label className="inline-block font-medium text-left mb-2">Thuế suất</label>
           <Buttonz
             onClick={() => setData((pre) => [...pre, { idz: (pre[pre.length - 1]?.idz || 1) + 1 }])}
             variant="outlined"
@@ -102,10 +102,19 @@ export const Rates = ({ data = {}, setData = () => {} }) => {
       </div>
       {data.map((datum, index) => (
         <div key={index} className="w-full flex flex-wrap items-center">
+          <div className="w-full md:w-6/12 lg:w-[10%] p-2 flex justify-center">
+            <Buttonz
+              onClick={() => setData((pre) => pre.filter((p) => p.idz !== datum.idz))}
+              severity="danger"
+              outlined
+              className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+              icon={<TrashIcon className="w-5" />}
+            />
+          </div>
           <Inputzz
             min="0"
             type="number"
-            label="Từ (VNĐ) (*)"
+            label="Từ (triệu VNĐ) (*)"
             value={datum.from}
             onChange={(e) => onChange('from', e.target.value, datum.idz)}
             className="w-full md:w-6/12 lg:w-[20%]"
@@ -113,7 +122,7 @@ export const Rates = ({ data = {}, setData = () => {} }) => {
           <Inputzz
             min="1"
             type="number"
-            label="Đến (VNĐ) (*)"
+            label="Đến (triệu VNĐ) (*)"
             value={datum.to}
             onChange={(e) => onChange('to', e.target.value, datum.idz)}
             className="w-full md:w-6/12 lg:w-[20%]"
@@ -121,26 +130,17 @@ export const Rates = ({ data = {}, setData = () => {} }) => {
           <Inputzz
             min="1"
             type="number"
-            label="Giá trị (*)"
+            label="Thuế suất (*)"
             value={datum.value}
             onChange={(e) => onChange('value', e.target.value, datum.idz)}
             className="w-full md:w-6/12 lg:w-[20%]"
           />
           <Inputzz
-            label="Ghi chú (*)"
+            label="Ghi chú"
             value={datum.note}
             onChange={(e) => onChange('note', e.target.value, datum.idz)}
-            className="w-full md:w-6/12 lg:w-[20%]"
+            className="w-full md:w-6/12 lg:w-[30%]"
           />
-          <div className="w-full md:w-6/12 lg:w-[20%] p-2 flex justify-center">
-            <Buttonz
-              onClick={() => setPrices((pre) => pre.filter((p) => p.idz !== datum.idz))}
-              severity="danger"
-              outlined
-              className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
-              icon={<TrashIcon className="w-5" />}
-            />
-          </div>
         </div>
       ))}
     </div>
@@ -180,6 +180,54 @@ export const Accounts = ({ data = {}, setData = () => {} }) => {
           )}
         />
       </Tablez>
+    </div>
+  );
+};
+
+export const Holidays = ({ data = {}, setData = () => {} }) => {
+  const onChange = (field, value, idz) => {
+    setData((pre) =>
+      pre.map((p) => {
+        if (p.idz === idz) p[field] = value;
+        return p;
+      })
+    );
+  };
+
+  return (
+    <div className="w-full my-4">
+      <div className="p-2">
+        <div className="flex justify-between items-center">
+          <label className="inline-block font-medium text-left mb-2">Danh sách ngày lễ</label>
+          <Buttonz
+            onClick={() => setData((pre) => [...pre, { idz: (pre[pre.length - 1]?.idz || 1) + 1 }])}
+            variant="outlined"
+            label="Thêm mới"
+            className="mb-2"
+          />
+        </div>
+        <hr />
+      </div>
+      {data.map((datum, index) => (
+        <div key={index} className="w-full flex flex-wrap items-center">
+          <div className="!w-2/12 p-2 flex justify-center">
+            <Buttonz
+              onClick={() => setData((pre) => pre.filter((p) => p.idz !== datum.idz))}
+              severity="danger"
+              outlined
+              className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+              icon={<TrashIcon className="w-5" />}
+            />
+          </div>
+          <Calendarzz
+            hideOnRangeSelection
+            label="Ngày (*)"
+            value={datum.date}
+            onChange={(e) => onChange('date', e.target.value, datum.idz)}
+            className="!w-10/12"
+          />
+        </div>
+      ))}
     </div>
   );
 };

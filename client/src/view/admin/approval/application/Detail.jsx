@@ -18,7 +18,7 @@ export const DetailApplication = (props) => {
     const res = await updateApplicationApi({ status, note, _id: open });
     if (res) {
       showToast({ title: status === 2 ? 'Duyệt đơn thành công!' : 'Từ chối đơn thành công!', severity: 'success' });
-      setParams(pre => ({ ...pre, render: !pre.render }))
+      setParams((pre) => ({ ...pre, render: !pre.render }));
       setOpen(false);
     }
   };
@@ -29,8 +29,8 @@ export const DetailApplication = (props) => {
         <div className="w-full max-h-[1200px] overflow-scroll">
           <div className="relative w-full mt-4">
             <div className="flex flex-wrap w-full">
-            <InputFormz label="Phòng ban (*)" value={Body(departments, item.department)} disabled />
-            <InputFormz label="Nhân viên (*)" value={Body(accounts, item.account, '_id', 'fullName')} disabled />
+              <InputFormz label="Phòng ban (*)" value={Body(departments, item.department)} disabled />
+              <InputFormz label="Nhân viên (*)" value={Body(accounts, item.account, '_id', 'fullName')} disabled />
               <DropdownFormz label="Ca làm việc (*)" options={shifts} value={item.shift} disabled />
               <DropdownFormz label="Loại đơn (*)" options={applicationTypes} value={item.type} disabled />
               {[1, 2].includes(type) ? (

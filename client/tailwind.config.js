@@ -11,7 +11,8 @@ export default {
     },
     extend: {
       height: {
-        sidebar: 'calc(100vh - 14rem)'
+        sidebar: 'calc(100vh - 14rem)',
+        bodyModal: 'calc(100vh - 16rem)',
       },
       colors: {
         primary: 'rgb(0, 98, 158)',

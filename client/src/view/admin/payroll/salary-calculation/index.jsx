@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { SalaryCalculationz } from './SalaryCalculation';
 import { SalarySetup } from './SalarySetup';
 import { TaxSetup } from './TaxSetup';
-import { Buttonz, Calendarzz, Cardz, Columnz, Dropdownzz, ProgressSpinnerz } from '@components/core';
+import { Buttonz, Calendarzz, Cardz, Columnz, Dropdownzz, ProgressSpinnerz, Tagz } from '@components/core';
 import { useGetParams } from '@hooks';
 import { getListSalaryLogApi } from '@api';
 import { useGetApi } from '@lib/react-query';
@@ -56,7 +56,7 @@ export const SalaryCalculation = () => {
         <Buttonz label="Tính toán công lương" onClick={() => setCalculationOpen(true)} />
       </div>
       <hr className="mx-2" />
-      <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-2/4">
+      <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-6/12">
         <Calendarzz
           selectionMode="range"
           readOnlyInput
@@ -96,20 +96,18 @@ export const SalaryCalculation = () => {
         <Columnz header="Thời gian tính" body={(e) => (e.by ? UserBody(e.createdAt, e.by) : '')} />
         <Columnz
           header="Trạng thái"
-          body={(e) =>
-            e.status === 1 ? (
-              <div className="w-full flex items-center justify-center bg-amber-600 px-2 py-1 rounded-md text-white uppercase text-xs font-bold">
-                <div className='flex items-center justify-center gap-2'>
-                  <ProgressSpinnerz style={{ width: '20px', height: '20px' }} strokeWidth="4" animationDuration="1s" />
-                  <span>Đang xử lý</span>
+          body={(e) => {
+            const title = e.status === 1 ? 'Đang xử lý' : 'Đã xử lý';
+            const severity = e.status === 1 ? 'warning' : 'success';
+            return (
+              <Tagz severity={severity} className="text-center w-full">
+                <div className="flex justify-center items-center gap-2">
+                  {e.status === 1 && <ProgressSpinnerz style={{ width: '20px', height: '20px' }} strokeWidth="4" />}
+                  <span className='my-[2px]'>{title}</span>
                 </div>
-              </div>
-            ) : (
-              <div className="flex items-center justify-center bg-green-600 px-2 py-1 rounded-md text-white uppercase text-xs font-bold">
-                Đã xử lý
-              </div>
-            )
-          }
+              </Tagz>
+            );
+          }}
         />
       </DataTable>
     </Cardz>

@@ -1,5 +1,5 @@
 import { Body } from '@components/base';
-import { Buttonz, Columnz, Dialogz, Tablez } from '@components/core';
+import { Buttonz, Columnz, Dialogz, Tablez, Tagz } from '@components/core';
 import { formatDate, formatNumber } from '@lib/helper';
 import { useDataState } from '@store';
 import React from 'react';
@@ -32,17 +32,11 @@ export const Detail = (props) => {
               <Columnz header="Lương cơ bản" body={(e) => formatNumber(Body(accounts, e.account, '_id', 'salary'))} />
               <Columnz
                 header="Trạng thái"
-                body={(e) =>
-                  e.status === 0 ? (
-                    <div className="flex items-center justify-center gap-4 font-medium bg-red-600 px-2 py-1 rounded-md text-white uppercase text-xs">
-                      Có lỗi
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center gap-4 font-medium bg-green-600 px-2 py-1 rounded-md text-white uppercase text-xs">
-                      Thành công
-                    </div>
-                  )
-                }
+                body={(e) => {
+                  const title = e.status === 0 ? 'Có lỗi' : 'Thành công';
+                  const severity = e.status === 0 ? 'danger' : 'success';
+                  return <Tagz severity={severity} value={title} className="text-center w-full" />;
+                }}
               />
               <Columnz header="Thông báo" field="mess" />
             </Tablez>

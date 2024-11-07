@@ -17,7 +17,9 @@
       "@styles": ["src/styles"],
       "@styles/*": ["src/styles/*"],
       "@view": ["src/view"],
-      "@view/*": ["src/view/*"]
+      "@view/*": ["src/view/*"],
+      "@theme": ["src/theme"],
+      "@theme/*": ["src/theme/*"]
     }
   }
 }

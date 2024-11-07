@@ -1,3 +1,7 @@
+import { createTimekeepingMd, detailConfigMd, detailTimekeepingMd, updateTimekeepingMd } from "@models";
+import { calTime } from "@utils";
+import moment from "moment";
+
 export const approveApplication = async (dataz) => {
   const type = dataz.type;
   if (type === 1) {
@@ -23,14 +27,21 @@ export const approveApplication = async (dataz) => {
     const timeEnd = subtractTimes(timekeeping.timeEnd, dataz.soon);
     await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, timeStart, timeEnd });
   } else if (type === 6) {
+    const salarySetup = (await detailConfigMd({ type: 2 }))?.salary
+    const ot = salarySetup.ot
+    const holidays = salarySetup.holidays
+    const date = dataz.dates?.[0]
+    const isHoliday = holidays.includes(date)
+    const isSunday = moment(date).day() === 0
+    const coefficient = isHoliday ? ot.holiday : isSunday ? ot.sunday : ot.day
     const timekeeping = await detailTimekeepingMd({ account: dataz.account, shift: dataz.shift });
     const totalTime = calTime(`2024-11-01 ${dataz.fromTime}:00`, `2024-11-01 ${dataz.toTime}:00`);
-    const totalWork = (timekeeping.totalWork / timekeeping.totalTime) * totalTime;
+    const totalWork = (timekeeping.totalWork / timekeeping.totalTime) * totalTime * coefficient / 100
     await createTimekeepingMd({
       department: dataz.department,
       account: dataz.account,
       shift: dataz.shift,
-      date: dataz.dates?.[0],
+      date,
       timeStart: dataz.fromTime,
       timeEnd: dataz.toTime,
       totalTime,

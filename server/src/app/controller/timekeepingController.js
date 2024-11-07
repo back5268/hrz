@@ -24,7 +24,7 @@ import {
   createImportLogMd
 } from '@models';
 import { calTimekeeping, syntheticTimekeeping } from '@repository';
-import { checkValidTime, convertDateToString, convertNumberToTime, databaseDate, getDates, validateData } from '@utils';
+import { checkValidTime, formatDate, convertNumberToTime, databaseDate, getDates, validateData } from '@utils';
 import moment from 'moment';
 
 const handleParams = (value) => {
@@ -75,7 +75,7 @@ export const exportTimekeepingLog = async (req, res) => {
           datum.account?.fullName,
           datum.account?.staffCode,
           datum.shift?.name,
-          convertDateToString(datum.date, 'date'),
+          formatDate(datum.date, 'date'),
           days[new Date(datum.date).getDay()]?.name,
           datum.time,
           datum.deviceName || ''
@@ -142,7 +142,7 @@ export const exportTimekeeping = async (req, res) => {
           datum.account?.fullName,
           datum.account?.staffCode,
           datum.shift?.name,
-          convertDateToString(datum.date, 'date'),
+          formatDate(datum.date, 'date'),
           days[new Date(datum.date).getDay()]?.name,
           datum.checkInTime || '-',
           datum.checkOutTime || '-',
@@ -204,7 +204,7 @@ export const exportSyntheticTimekeeping = async (req, res) => {
       for (const datum of documents) {
         const arr = [index, datum.account?.fullName, datum.account?.staffCode, datum.shift?.name, datum.totalOt, datum.total, datum.reality];
         dates.forEach((date) => {
-          const datez = datum.data?.find((d) => convertDateToString(d.date, 'date') === convertDateToString(date, 'date'));
+          const datez = datum.data?.find((d) => formatDate(d.date, 'date') === formatDate(date, 'date'));
           arr.push(datez ? datez.summary || '-' : '');
         });
         dataz.push(arr);
@@ -259,11 +259,7 @@ export const importTimekeeping = async (req, res) => {
             datum.mess = 'Ngày chấm công không được bỏ trống';
             continue;
           }
-          datum.date = excelDateToJSDate(datum.date);
-          if (!datum.date) {
-            datum.mess = 'Ngày chấm công không đúng định dạng';
-            continue;
-          }
+          datum.date = moment(datum.date).format("YYYY-MM-DD")
           if (!checkInTime) {
             datum.mess = 'Thời gian vào không được bỏ trống';
             continue;
@@ -295,9 +291,11 @@ export const importTimekeeping = async (req, res) => {
             datum.mess = `Nhân sự không được chấm công tại máy có mã ${deviceCode}`;
             continue;
           }
-          const timekeeping = await detailTimekeepingMd({ account: account._id, date: datum.date, shift: String(shift._id) });
+          console.log({ account: account._id, date: datum.date, shift: shift._id });
+          
+          const timekeeping = await detailTimekeepingMd({ account: account._id, date: datum.date, shift: shift._id });
           if (!timekeeping) {
-            datum.mess = `Nhân sự không có ca làm việc trong ngày ${convertDateToString(datum.date, 'date')}`;
+            datum.mess = `Nhân sự không có ca làm việc trong ngày ${formatDate(datum.date, 'date')}`;
             continue;
           }
           await updateTimekeepingMd({ _id: timekeeping._id }, { ...calTimekeeping(timekeeping, checkInTime, checkOutTime) });
@@ -322,7 +320,7 @@ export const importTimekeeping = async (req, res) => {
             datum.deviceCode,
             datum.staffCode,
             datum.shiftCode,
-            convertDateToString(datum.date, 'date'),
+            formatDate(datum.date, 'date'),
             datum.checkInTime,
             datum.checkOutTime,
             datum.mess ? 'Thất bại' : 'Thành công',

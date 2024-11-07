@@ -4,6 +4,7 @@ import { Dropdownzz } from '@components/core';
 import { sheduleTypes, days } from '@constant';
 import { useGetApi } from '@lib/react-query';
 import { useDataState } from '@store';
+import { themeColor } from '@theme';
 import moment from 'moment';
 import { Column } from 'primereact/column';
 import { ColumnGroup } from 'primereact/columngroup';
@@ -110,21 +111,25 @@ export const Schedule = () => {
         if (index >= 0) newData[index].data.push(datum);
         else newData.push({ account: datum.account, shift: datum.shift, data: [datum] });
       });
-      console.log(newData);
-      
       newData.forEach((n) => {
         const object = {};
         const data = n.data;
         const shift = shifts.find((s) => s._id === n.shift);
-
-
+        let totalTime = 0, totalTimeOt = 0, totalWork = 0, totalWorkOt = 0; 
         data.forEach((datum) => {
-          const title = `${datum.timeStart} - ${datum.timeEnd}`
-          const day = days[moment(datum.date).day()]
-          if (object[day._id]) object[day._id].push(title);
-          else object[day._id] = [title];
+          if (datum.type === 2) {
+            totalTimeOt += datum.totalTime
+            totalWorkOt += datum.totalWork
+          } else {
+            totalTime += datum.totalTime
+            totalWork += datum.totalWork
+          }
+          const title = `${datum.timeStart} - ${datum.timeEnd}`;
+          const day = days[moment(datum.date).day()];
+          if (object[day._id]) object[day._id].push({ type: datum.type, title, totalWork: datum.totalWork, totalTime: datum.totalTime });
+          else object[day._id] = [{ type: datum.type, title, totalWork: datum.totalWork, totalTime: datum.totalTime }];
         });
-        dataz.push({ ...n, ...object, shift });
+        dataz.push({ ...n, ...object, shift, totalTime, totalTimeOt, totalWork, totalWorkOt });
       });
       setSchedule(dataz);
     }
@@ -140,19 +145,21 @@ export const Schedule = () => {
       <Row>
         <Column header="Nhân viên" rowSpan={2} />
         <Column header="Ca làm việc" rowSpan={2} />
+        <Column header="Chính thức" />
+        <Column header="OT" />
         {getDaysByWeek(params.week).map((w, index) => (
           <Column key={index} header={w.name} />
         ))}
       </Row>
       <Row>
+      <Column header="Số giờ / Số Công" />
+      <Column header="Số giờ / Số Công" />
         {getDatesByWeek(params.week).map((w, index) => (
           <Column key={index} header={w} />
         ))}
       </Row>
     </ColumnGroup>
   );
-
-  console.log(schedule);
 
   return (
     <FormList title="Lịch làm việc">
@@ -214,13 +221,19 @@ export const Schedule = () => {
         >
           <Column
             field="account"
-            className="min-w-40"
+            className="min-w-52"
             body={(e) => {
               const account = accounts.find((a) => a._id === e.account);
               return (
-                <div className="flex justify-center items-center gap-4">
-                  <img alt={account.fullName} src={account.avatar || '/images/avatar.jpg'} width="46" className="rounded-md" />
-                  <div className="flex flex-col gap-1 text-primary">
+                <div className="flex justify-start items-center gap-4">
+                  <div className="h-12 w-12">
+                    <img
+                      alt={account.fullName}
+                      src={account.avatar || '/images/avatar.jpg'}
+                      className="rounded-md h-12 w-12 object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col text-left gap-1 text-primary">
                     <span className="font-semibold">{account.fullName}</span>
                     <span className="font-semibold">{account.staffCode}</span>
                   </div>
@@ -237,12 +250,31 @@ export const Schedule = () => {
             )}
             className="min-w-28"
           ></Column>
+          <Column body={(e) => <span className="font-medium">
+            {e.totalTime} / {e.totalWork}
+          </span>} className="min-w-28"></Column>
+          <Column body={(e) => <span className="font-medium">
+            {e.totalTimeOt} / {e.totalWorkOt}
+          </span>} className="min-w-28"></Column>
           {getDaysByWeek(params.week).map((work, index) => (
             <Column
               key={index}
               field={work._id}
-              body={(e) => e[work._id]?.map((w, index) => <p key={index}>{w}</p>)}
-              className="min-w-28"
+              body={(e) =>
+                e[work._id]?.map((w, index) => (
+                  <div
+                    key={index}
+                    className="h-8 flex justify-center items-center"
+                    style={{
+                      backgroundColor: w.type === 2 ? themeColor.primaryContainer : '',
+                      color: w.type === 2 ? themeColor.primary : ''
+                    }}
+                  >
+                    {w.title}
+                  </div>
+                ))
+              }
+              className="min-w-28 !p-0"
             ></Column>
           ))}
         </DataTable>

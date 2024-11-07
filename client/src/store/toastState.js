@@ -4,7 +4,7 @@ const initState = {
   severity: '',
   title: '',
   subTitle: '',
-  duration: 4000
+  duration: 3000
 };
 
 const useToastState = create((set, get) => ({

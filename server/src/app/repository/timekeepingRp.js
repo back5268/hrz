@@ -54,15 +54,16 @@ export const syntheticTimekeeping = (data = []) => {
   data.forEach((datum) => {
     const index = dataz.findIndex((n) => String(n.account?._id) === String(datum.account?._id) && String(n.shift?._id) === String(datum.shift?._id));
     if (index >= 0) {
-      dataz[index].total += datum.totalWork;
+      if (datum.type === 1) dataz[index].total += datum.totalWork
+      else if (datum.type ===  2) dataz[index].totalOt += datum.totalWork
       dataz[index].reality += Number(datum.summary) || 0;
       dataz[index].data.push(datum);
     } else
       dataz.push({
         account: datum.account,
         shift: datum.shift,
-        total: datum.totalWork,
-        totalOt: 0,
+        total: datum.type === 1 ? datum.totalWork : 0,
+        totalOt: datum.type === 2 ? datum.totalWork : 0,
         reality: Number(datum.summary) || 0,
         data: [datum]
       });

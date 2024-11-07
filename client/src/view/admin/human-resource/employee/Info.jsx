@@ -94,7 +94,7 @@ export const Infos = () => {
 
   useEffect(() => {
     if (isUpdate && item) {
-      if (item.avatar) setAvatar(item.avatar);
+      setAvatar(item.avatar);
       if (item.birthday) setValue('birthday', new Date(item.birthday));
       if (item.dateOfIssue) setValue('dateOfIssue', new Date(item.dateOfIssue));
       if (item.dateIn) setValue('dateIn', new Date(item.dateIn));

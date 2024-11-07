@@ -9,8 +9,8 @@ export const Inputz = (props) => {
         <InputText type={type} id={id} value={value} invalid={Boolean(errors[id])} {...register(id)} className="w-full" {...prop} />
         <label htmlFor={id}>{label}</label>
       </span>
-      {helper && <i className="w-full text-xs">{helper}</i>}
-      {errors[id] && <small className="w-full text-red-600">{errors[id].message}</small>}
+      {helper && <i className="w-full text-xs ml-2">{helper}</i>}
+      {errors[id] && <small className="w-full text-red-600 ml-2">{errors[id].message}</small>}
     </div>
   );
 };

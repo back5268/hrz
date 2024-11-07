@@ -41,7 +41,7 @@ export const TimekeepingLog = () => {
           setParams((pre) => ({ ...INITPARAMS, page: pre.page, limit: pre.limit }));
           setFilter(INITPARAMS);
         }}
-        className="lg:w-9/12"
+        className="lg:w-full"
       >
         <Calendarzz
           selectionMode="range"
@@ -50,7 +50,6 @@ export const TimekeepingLog = () => {
           label="Khoảng thời gian (*)"
           value={filter.dates}
           onChange={(e) => setFilter({ ...filter, dates: e.value })}
-          className="lg:w-6/12"
         />
         <Dropdownzz
           value={filter.department}

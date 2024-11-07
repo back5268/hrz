@@ -167,24 +167,28 @@ export const updateEmployee = async (req, res) => {
         value.avatar = await uploadFileToFirebase(file);
       }
     }
+    if (value.cmtFiles) value.cmtFiles = Array.isArray(value.cmtFiles) ? value.cmtFiles : [];
     if (req.files?.['cmtFiles']?.length > 0) {
       value.cmtFiles = Array.isArray(value.cmtFiles) ? value.cmtFiles : [];
       for (const file of req.files['cmtFiles']) {
         value.cmtFiles.push(await uploadFileToFirebase(file));
       }
     }
+    if (value.taxFiles) value.taxFiles = Array.isArray(value.taxFiles) ? value.taxFiles : [];
     if (req.files?.['taxFiles']?.length > 0) {
       value.taxFiles = Array.isArray(value.taxFiles) ? value.taxFiles : [];
       for (const file of req.files['taxFiles']) {
         value.taxFiles.push(await uploadFileToFirebase(file));
       }
     }
+    if (value.educationFiles) value.educationFiles = Array.isArray(value.educationFiles) ? value.educationFiles : [];
     if (req.files?.['educationFiles']?.length > 0) {
       value.educationFiles = Array.isArray(value.educationFiles) ? value.educationFiles : [];
       for (const file of req.files['educationFiles']) {
         value.educationFiles.push(await uploadFileToFirebase(file));
       }
     }
+    if (value.healthFiles) value.healthFiles = Array.isArray(value.healthFiles) ? value.healthFiles : [];
     if (req.files?.['healthFiles']?.length > 0) {
       value.healthFiles = Array.isArray(value.healthFiles) ? value.healthFiles : [];
       for (const file of req.files['healthFiles']) {

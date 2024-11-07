@@ -7,12 +7,13 @@ import { TaxSetupValidation } from '@lib/validation';
 import { useToastState } from '@store';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Rates } from './Component';
+import { Taxs } from './Component';
+import { convertNumberToString, handleFiles } from '@lib/helper';
 
 const defaultValues = {
   self: '',
   dependent: '',
-  rates: []
+  note: ''
 };
 export const TaxSetup = (props) => {
   const { open, setOpen } = props;
@@ -50,16 +51,16 @@ export const TaxSetup = (props) => {
   };
 
   const onSubmit = async (value) => {
-    const params = {
+    let params = {
       type: 3,
       detail: {
         self: value.self,
         dependent: value.dependent,
-        rate: value.rate
+        taxs: data
       },
       note: value.note
     };
-    if (files?.length > 0) params.formData = { files: files };
+    params = handleFiles(item, params, files, 'files');
     setLoading(true);
     const res = await updateConfigApi(params);
     setLoading(false);
@@ -71,9 +72,9 @@ export const TaxSetup = (props) => {
   };
 
   return (
-    <Dialogz className="w-[1200px]" header="Thiết lập công thức tính lương" open={open} setOpen={setOpenz}>
+    <Dialogz className="w-[1200px]" header="Thiết lập công thức tính thuế" open={open} setOpen={setOpenz}>
       <form onSubmit={handleSubmit(onSubmit)} className="border-t border-border">
-        <div className="w-full max-h-[1000px] overflow-scroll">
+        <div className="w-full h-bodyModal overflow-scroll">
           <div className="relative w-full mt-4">
             {loading && (
               <div className="absolute w-full h-full bg-black opacity-30 z-10 flex justify-center items-center">
@@ -81,7 +82,15 @@ export const TaxSetup = (props) => {
               </div>
             )}
             <div className="flex flex-wrap w-full">
-              <InputFormz type="number" id="self" label="Giảm trừ bản thân (*)" value={watch('self')} errors={errors} register={register} />
+              <InputFormz
+                type="number"
+                id="self"
+                label="Giảm trừ bản thân (*)"
+                value={watch('self')}
+                errors={errors}
+                register={register}
+                helper={watch('self') ? convertNumberToString(watch('self')) : ''}
+              />
               <InputFormz
                 type="number"
                 id="dependent"
@@ -89,8 +98,9 @@ export const TaxSetup = (props) => {
                 value={watch('dependent')}
                 errors={errors}
                 register={register}
+                helper={watch('dependent') ? convertNumberToString(watch('dependent')) : ''}
               />
-              <Rates data={data} setData={setData} />
+              <Taxs data={data} setData={setData} />
               <TextAreaz id="note" label="Mô tả" value={watch('note')} errors={errors} register={register} />
               <UploadFiles label="File đính kèm" files={files} setFiles={setFiles} />
             </div>

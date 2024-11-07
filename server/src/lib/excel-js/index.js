@@ -99,7 +99,6 @@ export const convertToExcel = (data, options = {}) => {
       worksheet.getRow(o).outlineLevel = 1;
     });
   }
-
   return workbook.xlsx.writeBuffer();
 };
 

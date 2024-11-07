@@ -269,12 +269,12 @@ export const tools = [
       {
         name: 'Quản lý đơn từ',
         route: '/application',
-        actions: ['update', 'read']
+        actions: ['create', 'update', 'read']
       },
       {
         name: 'Yêu cầu phê duyệt',
         route: '/request',
-        actions: ['update', 'read']
+        actions: ['create', 'update', 'read']
       }
     ]
   },
@@ -283,11 +283,11 @@ export const tools = [
     icon: 'Cog6ToothIcon',
     sort: 6,
     items: [
-      {
-        name: 'Cấu hình chung',
-        route: '/config',
-        actions: ['update', 'read']
-      },
+      // {
+      //   name: 'Cấu hình chung',
+      //   route: '/config',
+      //   actions: ['update', 'read']
+      // },
       {
         name: 'Phân quyền',
         route: '/permission',

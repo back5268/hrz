@@ -1,7 +1,7 @@
 import { uploadFileToFirebase } from '@lib/firebase';
 import { getConfigValid, updateConfigValid } from '@lib/validation';
 import { detailConfigMd, updateConfigMd } from '@models';
-import { validateData } from '@utils';
+import { checkJson, validateData } from '@utils';
 
 export const getConfig = async (req, res) => {
   try {
@@ -27,15 +27,18 @@ export const updateConfig = async (req, res) => {
     if (type === 1) params.detail = detail;
     if (type === 2) params.salary = detail;
     if (type === 3) params.tax = detail;
+    if (value.files) params.files = Array.isArray(value.files) ? value.files : [];
     if (req.files?.['files']?.length > 0) {
-      value.files = Array.isArray(value.files) ? value.files : [];
+      params.files = Array.isArray(params.files) ? params.files : [];
       for (const file of req.files['files']) {
-        value.files.push(await uploadFileToFirebase(file));
+        params.files.push(await uploadFileToFirebase(file));
       }
     }
     const data = await updateConfigMd({ type }, params);
     res.status(201).json({ status: 1, data });
   } catch (error) {
+    console.log(error);
+    
     res.status(500).json({ status: 0, mess: error.toString() });
   }
 };

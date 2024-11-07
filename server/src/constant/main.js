@@ -4,6 +4,7 @@ export const VALIDATE_TYPE = {
   NUMBER: 'number',
   PHONE: 'phone',
   JSON: 'json',
+  ARRAY: 'array',
   BOOLEAN: 'boolean',
   DATE: 'date',
   DATETIME: 'datetime'

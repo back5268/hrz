@@ -69,6 +69,7 @@ export const updateNew = async (req, res) => {
         value.avatar = await uploadFileToFirebase(file);
       }
     }
+    if (value.files) value.files = Array.isArray(value.files) ? value.files : [];
     if (req.files?.['files']?.length > 0) {
       value.files = Array.isArray(value.files) ? value.files : [];
       for (const file of req.files['files']) {

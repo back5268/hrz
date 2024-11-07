@@ -61,7 +61,7 @@ export const FormDetail = (props) => {
   return (
     <Wrapper title={newTitle} isModal={isModal} open={open} setOpen={setOpen}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={`w-full ${isModal ? 'max-h-[1200px] overflow-scroll' : ''}`}>
+        <div className={`w-full ${isModal ? 'h-bodyModal overflow-scroll' : ''}`}>
           <div className="relative w-full mt-4">
             {isPending && (
               <div className="absolute w-full h-full bg-black opacity-30 z-10 flex justify-center items-center">

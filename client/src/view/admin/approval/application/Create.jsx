@@ -27,22 +27,22 @@ export const CreateApplication = (props) => {
 
   const type = watch('type');
   const onSubmit = async (value) => {
-    const params = { shift: value.shift, type: value.type, reason: value.reason };
+    const params = { shift: value.shift, type: value.type, reason: value.reason, department: value.department, account: value.account };
     if ([1, 2].includes(type)) {
-      if (!value.date) return showToast({ tite: 'Ngày nghỉ không được bỏ trống!', severity: 'error' });
+      if (!value.date) return showToast({ title: 'Ngày nghỉ không được bỏ trống!', severity: 'error' });
       else if (new Date(value.date) < new Date())
-        return showToast({ tite: 'Ngày nghỉ không được nhỏ hơn ngày hiện tại!', severity: 'error' });
+        return showToast({ title: 'Ngày nghỉ không được nhỏ hơn ngày hiện tại!', severity: 'error' });
       else params.dates = [databaseDate(value.date, 'date')];
     }
     if ([3, 7].includes(type)) {
-      if (!value.fromDate) return showToast({ tite: 'Ngày bắt đầu không được bỏ trống!', severity: 'error' });
-      else if (!value.toDate) return showToast({ tite: 'Ngày kết thúc không được bỏ trống!', severity: 'error' });
+      if (!value.fromDate) return showToast({ title: 'Ngày bắt đầu không được bỏ trống!', severity: 'error' });
+      else if (!value.toDate) return showToast({ title: 'Ngày kết thúc không được bỏ trống!', severity: 'error' });
       else if (new Date(value.fromDate) < new Date())
-        return showToast({ tite: 'Ngày bắt đầu không được nhỏ hơn ngày hiện tại!', severity: 'error' });
+        return showToast({ title: 'Ngày bắt đầu không được nhỏ hơn ngày hiện tại!', severity: 'error' });
       else if (new Date(value.toDate) < new Date())
-        return showToast({ tite: 'Ngày kết thúc không được nhỏ hơn ngày hiện tại!', severity: 'error' });
+        return showToast({ title: 'Ngày kết thúc không được nhỏ hơn ngày hiện tại!', severity: 'error' });
       else if (new Date(value.fromDate) > new Date(value.toDate))
-        return showToast({ tite: 'Ngày bắt đầu không được lớn hơn ngày kết thúc!', severity: 'error' });
+        return showToast({ title: 'Ngày bắt đầu không được lớn hơn ngày kết thúc!', severity: 'error' });
       const startDate = moment(value.fromDate);
       const endDate = moment(value.toDate);
       const duration = moment.duration(endDate.diff(startDate));
@@ -55,16 +55,16 @@ export const CreateApplication = (props) => {
       });
     }
     if ([4].includes(type)) {
-      if (!value.date) return showToast({ tite: 'Ngày xác nhận công không được bỏ trống!', severity: 'error' });
+      if (!value.date) return showToast({ title: 'Ngày xác nhận công không được bỏ trống!', severity: 'error' });
       else if (new Date(value.date) > new Date())
-        return showToast({ tite: 'Ngày xác nhận công không được lớn hơn ngày hiện tại!', severity: 'error' });
+        return showToast({ title: 'Ngày xác nhận công không được lớn hơn ngày hiện tại!', severity: 'error' });
       else params.dates = [databaseDate(value.date, 'date')];
     }
     if ([5].includes(type)) {
-      if (!value.date) return showToast({ tite: 'Ngày không được bỏ trống!', severity: 'error' });
-      else if (new Date(value.date) < new Date()) return showToast({ tite: 'Ngày không được nhỏ hơn ngày hiện tại!', severity: 'error' });
+      if (!value.date) return showToast({ title: 'Ngày không được bỏ trống!', severity: 'error' });
+      else if (new Date(value.date) < new Date()) return showToast({ title: 'Ngày không được nhỏ hơn ngày hiện tại!', severity: 'error' });
       else if (!value.soon && !value.late)
-        return showToast({ tite: 'Vui lòng chọn thời gian đi trễ hoặc thời gian về sớm!', severity: 'error' });
+        return showToast({ title: 'Vui lòng chọn thời gian đi trễ hoặc thời gian về sớm!', severity: 'error' });
       else {
         params.dates = [databaseDate(value.date, 'date')];
         params.soon = databaseDate(value.soon, 'timez');
@@ -72,10 +72,13 @@ export const CreateApplication = (props) => {
       }
     }
     if ([6].includes(type)) {
-      if (!value.date) return showToast({ tite: 'Ngày không được bỏ trống!', severity: 'error' });
-      else if (new Date(value.date) < new Date()) return showToast({ tite: 'Ngày không được nhỏ hơn ngày hiện tại!', severity: 'error' });
-      else if (!value.fromTime) return showToast({ tite: 'Thời gian bắt đầu không được bỏ trống!', severity: 'error' });
-      else if (!value.toTime) return showToast({ tite: 'Thời gian kết thúc không được bỏ trống!', severity: 'error' });
+      if (!value.date) return showToast({ title: 'Ngày không được bỏ trống!', severity: 'error' });
+      else if (new Date(value.date) < new Date()) {
+        console.log(1);
+        return showToast({ title: 'Ngày không được nhỏ hơn ngày hiện tại!', severity: 'error' });
+      }
+      else if (!value.fromTime) return showToast({ title: 'Thời gian bắt đầu không được bỏ trống!', severity: 'error' });
+      else if (!value.toTime) return showToast({ title: 'Thời gian kết thúc không được bỏ trống!', severity: 'error' });
       else {
         params.dates = [databaseDate(value.date, 'date')];
         params.fromTime = databaseDate(value.fromTime, 'timez');
@@ -83,6 +86,8 @@ export const CreateApplication = (props) => {
       }
     }
 
+    console.log(params);
+    
     if (files?.length > 0) params.formData = { files: files };
     setLoading(true);
     const res = await createApplicationApi(params);
@@ -106,23 +111,28 @@ export const CreateApplication = (props) => {
             )}
             <div className="flex flex-wrap w-full">
               <DropdownFormz
+                id="department"
                 label="Phòng ban (*)"
                 options={departments}
                 value={watch('department')}
                 errors={errors}
+                register={register}
                 onChange={(e) => {
                   setValue('department', e.target.value);
                   setValue('account', undefined);
                 }}
               />
               <DropdownFormz
+                id="account"
                 label="Nhân viên (*)"
                 options={watch('department') ? accounts.filter((a) => a.department === watch('department')) : accounts}
                 value={watch('account')}
+                optionLabel="fullName"
                 errors={errors}
-                onChange={(e) => setValue('department', e.target.value)}
+                onChange={(e) => setValue('account', e.target.value)}
               />
               <DropdownFormz
+                id="shift"
                 label="Ca làm việc (*)"
                 options={shifts}
                 value={watch('shift')}
@@ -130,6 +140,7 @@ export const CreateApplication = (props) => {
                 onChange={(e) => setValue('shift', e.target.value)}
               />
               <DropdownFormz
+                id="type"
                 label="Loại đơn (*)"
                 options={applicationTypes}
                 value={watch('type')}
@@ -206,7 +217,7 @@ export const CreateApplication = (props) => {
               )}
               <InputFormz
                 id="reason"
-                label="Lý do xin nghỉ (*)"
+                label="Lý do (*)"
                 value={watch('reason')}
                 errors={errors}
                 register={register}

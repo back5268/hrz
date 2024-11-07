@@ -57,7 +57,7 @@ export const SalaryCalculationz = (props) => {
   return (
     <Dialogz className="w-[1200px]" header="Tính toáng công lương" open={open} setOpen={setOpenz}>
       <form onSubmit={handleSubmit(onSubmit)} className="border-t border-border">
-        <div className="w-full max-h-[1000px] overflow-scroll">
+        <div className="w-full h-bodyModal overflow-scroll">
           <div className="relative w-full mt-4">
             {loading && (
               <div className="absolute w-full h-full bg-black opacity-30 z-10 flex justify-center items-center">

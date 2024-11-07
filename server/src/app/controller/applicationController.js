@@ -101,8 +101,6 @@ export const updateApplication = async (req, res) => {
     ioSk.emit(`notify_${dataz.account}`, { data: application });
     res.status(201).json({ status: 1, data });
   } catch (error) {
-    console.log(error);
-
     res.status(500).json({ status: 0, mess: error.toString() });
   }
 };

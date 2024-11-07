@@ -78,11 +78,6 @@ export const formatNumber = (value, noRound) => {
   } else return ' ';
 };
 
-export const convertDateToString = (date, type) => {
-  let format = type === 'time' ? 'HH:mm:ss' : type === 'date' ? 'DD/MM/YYYY' : 'DD/MM/YYYY HH:mm:ss';
-  return moment(date).format(format);
-};
-
 export const convertNumberToTime = (number) => {
   if (number === 0) return '00:00';
   if (!number) return '-';

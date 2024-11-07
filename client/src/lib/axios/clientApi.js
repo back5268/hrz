@@ -20,8 +20,11 @@ clientApi.interceptors.request.use(
 
 clientApi.interceptors.response.use(
   async function (res) {
-    if (res.data?.status) return res.data.data;
-    else showToast({ title: res.data?.mess, severity: 'error' });
+    if (res.data?.status || res.data?.status === 0) {
+      if (res.data.status) return res.data.data;
+      else showToast({ title: res.data?.mess, severity: 'error' });
+    }
+    else return res.data
   },
   async function (error) {
     if (error) {

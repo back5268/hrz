@@ -38,7 +38,7 @@ export const ImportLog = () => {
           setParams((pre) => ({ ...INITPARAMS, page: pre.page, limit: pre.limit }));
           setFilter(INITPARAMS);
         }}
-        className="lg:w-full"
+        className="lg:w-3/12"
       >
         <Inputzz
           value={filter.keySearch}
@@ -58,7 +58,6 @@ export const ImportLog = () => {
           label="Khoảng thời gian import (*)"
           value={filter.dates}
           onChange={(e) => setFilter({ ...filter, dates: e.value })}
-          className="lg:w-6/12"
         />
       </DataFilter>
       <DataTable

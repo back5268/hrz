@@ -88,7 +88,7 @@ export const SyntheticTimekeeping = () => {
           setFilter(INITPARAMS);
         }}
         handleFilter={() => setParams(filter)}
-        className="lg:w-9/12"
+        className="lg:w-full"
       >
         <Calendarzz
           selectionMode="range"
@@ -97,7 +97,6 @@ export const SyntheticTimekeeping = () => {
           label="Khoảng thời gian (*)"
           value={filter.dates}
           onChange={(e) => setFilter({ ...filter, dates: e.value })}
-          className="lg:w-6/12"
         />
         <Dropdownzz
           value={filter.department}
@@ -161,13 +160,19 @@ export const SyntheticTimekeeping = () => {
         >
           <Column
             field="account"
-            className="min-w-40"
+            className="min-w-52"
             body={(e) => {
               const account = accounts.find((a) => a._id === e.account);
               return (
-                <div className="flex justify-center items-center gap-4">
-                  <img alt={account.fullName} src={account.avatar || '/images/avatar.jpg'} width="46" className="rounded-md" />
-                  <div className="flex flex-col gap-1 text-primary">
+                <div className="flex justify-start items-center gap-4">
+                  <div className="h-12 w-12">
+                    <img
+                      alt={account.fullName}
+                      src={account.avatar || '/images/avatar.jpg'}
+                      className="rounded-md h-12 w-12 object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col text-left gap-1 text-primary">
                     <span className="font-semibold">{account.fullName}</span>
                     <span className="font-semibold">{account.staffCode}</span>
                   </div>
@@ -187,9 +192,9 @@ export const SyntheticTimekeeping = () => {
             }}
             className="min-w-28"
           ></Column>
-          <Column field="totalOt" body={(e) => <b className="text-lg">{e.totalOt}</b>} className="min-w-24"></Column>
-          <Column field="total" body={(e) => <b className="text-lg">{e.total}</b>} className="min-w-24"></Column>
-          <Column field="reality" body={(e) => <b className="text-lg">{e.reality}</b>} className="min-w-24"></Column>
+          <Column field="totalOt" body={(e) => <span className="font-medium text-lg">{e.totalOt}</span>} className="min-w-24"></Column>
+          <Column field="total" body={(e) => <span className="font-medium text-lg">{e.total}</span>} className="min-w-24"></Column>
+          <Column field="reality" body={(e) => <span className="font-medium text-lg">{e.reality}</span>} className="min-w-24"></Column>
 
           {dates.map((date, index) => (
             <Column
