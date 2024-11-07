@@ -1,6 +1,8 @@
 import { dateData } from '@constant';
-import { createScheduleMd, listAccountMd, listTimekeepingMd } from '@models';
+import { sendMailWarningTimekeeping } from '@lib/node-mailer';
+import { createNotifyMd, createScheduleMd, detailAccountMd, detailTimekeepingLogMd, listAccountMd, listTimekeepingMd } from '@models';
 import moment from 'moment';
+import { ioSk } from 'src';
 
 export const addTimekeepingByShift = async (shift) => {
   const departments = shift.departments;
@@ -39,5 +41,27 @@ export const addTimekeepingByShift = async (shift) => {
 };
 
 export const warningTimekeeping = async () => {
-  const timekeepings = await listTimekeepingMd({});
+  const date = moment().format('YYYY-MM-DD');
+  const timekeepings = await listTimekeepingMd({ date });
+  const accounts = [];
+  for (const timekeeping of timekeepings) {
+    const log = await detailTimekeepingLogMd({ date, account: timekeeping.account, shift: timekeeping.shift });
+    if (!log) {
+      const index = accounts.findIndex((a) => String(a) === String(timekeeping.account));
+      if (index < 0) accounts.push(timekeeping.account);
+    }
+  }
+  for (const account of accounts) {
+    const accountz = await detailAccountMd({ status: 1, _id: account });
+    if (accountz) {
+      await sendMailWarningTimekeeping({ to: accountz.email });
+      const notify = await createNotifyMd({
+        account,
+        content: `Hôm nay bạn chưa chấm công!`,
+        type: 1,
+        data: {}
+      });
+      ioSk.emit(`notify_${account._id}`, notify);
+    }
+  }
 };

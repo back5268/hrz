@@ -16,9 +16,6 @@ export class Salary {
   }
 
   async setUp() {
-    console.log(this.from, this.to);
-    console.log({ account: this.accountId, date: { $gte: this.from, $lte: this.to } });
-
     this.account = await detailAccountMd({ _id: this.accountId }, [{ path: 'position', select: 'allowances' }]);
     this.baseSalary = this.account?.salary;
     this.allowances = this.account?.position?.allowances;

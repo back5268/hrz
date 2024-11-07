@@ -15,14 +15,18 @@ export const convertParams = (params, html) => {
 };
 
 export const sendMailUse = async ({ type, params, to }) => {
-  const template = await detailTemplateMd({ type, status: 1 })
+  const template = await detailTemplateMd({ type, status: 1 });
   if (template) {
     const subject = convertParams(params, template.subject);
     const html = convertParams(params, template.content);
     return await sendMail({ to, subject, html, type });
-  } else return { status: 0, mess: "Chưa có mẫu gửi thông báo!" }
+  } else return { status: 0, mess: 'Chưa có mẫu gửi thông báo!' };
 };
 
 export const sendMailForgotPassword = ({ to, username, otp }) => {
   return sendMailUse({ to, type: 6, params: { $username: username, $otp: otp } });
+};
+
+export const sendMailWarningTimekeeping = ({ to }) => {
+  return sendMailUse({ to, type: 7 });
 };

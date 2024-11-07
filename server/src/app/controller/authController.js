@@ -5,7 +5,6 @@ import { generateNumber, validateData } from '@utils';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { sendMailForgotPassword } from '@lib/node-mailer';
-import moment from 'moment';
 dotenv.config();
 
 export const getInfo = async (req, res) => {

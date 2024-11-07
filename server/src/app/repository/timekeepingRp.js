@@ -1,3 +1,4 @@
+import { ArrayRedis } from '@lib/ioredis';
 import { detailTimekeepingMd, updateTimekeepingMd } from '@models';
 import { convertTimeToDate } from '@utils';
 

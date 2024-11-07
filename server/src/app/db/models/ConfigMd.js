@@ -8,7 +8,7 @@ class ConfigMd extends ModelBase {}
 ConfigMd.init('Config', {
   updateBy: { type: ObjectId, ref: 'Account' },
   type: { type: Number, enum: [1, 2, 3], description: '1: Cấu hình chung, 2: Cấu hình tính lương, 3: Cấu hình thuế' },
-  detail: { timekeepingWarning: String, holidays: [{ type: String }], location: [{ type: String }] },
+  timekeeping: { timekeepingWarning: String, locations: [{ type: String }] },
   salary: {
     salaryCoefficient: { type: Number, min: 0 },
     mandatory: {

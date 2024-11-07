@@ -1,6 +1,5 @@
 import cron from 'node-cron';
 
-cron.schedule('50 6 * * *', async () => {
+cron.schedule('4 16 * * *', async () => {
     console.log(1);
-    
 });

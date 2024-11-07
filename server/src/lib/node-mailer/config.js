@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import { createLogMd } from '@models';
 dotenv.config();
 
 let transporter = nodemailer.createTransport({
@@ -17,7 +18,7 @@ export const connectNodemailer = () => {
   });
 };
 
-export const sendMail = async ({ to, subject, text, html, attachments = [], project, type }) => {
+export const sendMail = async ({ to, subject, text, html, attachments = [], type }) => {
   let mailOptions = {
     from: process.env.NODEMAILER_USERNAME,
     to,
@@ -42,11 +43,16 @@ export const sendMail = async ({ to, subject, text, html, attachments = [], proj
       : undefined,
     attachments
   };
-
+  const params = { to, subject, content: html, type };
   try {
     await transporter.sendMail(mailOptions);
+    params.status = 2;
+    await createLogMd(params);
     return { status: 1 };
   } catch (error) {
+    params.status = 1;
+    params.mess = error.toString();
+    await createLogMd(params);
     return { status: 0, mess: error.toString() };
   }
 };

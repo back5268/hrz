@@ -24,7 +24,7 @@ export const updateConfig = async (req, res) => {
     const { type, detail } = value;
     const params = { type, note: value.note, updatedBy: req.account._id };
     if (typeof detail !== 'object') return res.json({ status: 0, mess: 'Dữ liệu không đúng định dạng!' });
-    if (type === 1) params.detail = detail;
+    if (type === 1) params.timekeeping = detail;
     if (type === 2) params.salary = detail;
     if (type === 3) params.tax = detail;
     if (value.files) params.files = Array.isArray(value.files) ? value.files : [];

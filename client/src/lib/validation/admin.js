@@ -99,12 +99,12 @@ export const SalarySetupValidation = yup.object({
 
 export const TaxSetupValidation = yup.object({
   self: yup.string().required('Giảm trừ bản thân không được bỏ trống!'),
-  dependent: yup.string().required('Giảm trừ phụ thuộc không được bỏ trống!'),
+  dependent: yup.string().required('Giảm trừ phụ thuộc không được bỏ trống!')
 });
 
 export const SalaryCalculationValidation = yup.object({
   month: yup.string().required('Tháng không được bỏ trống!'),
   dates: yup.array().required('Khoảng thời gian tính không được bỏ trống!'),
   departments: yup.array().required('Phòng ban không được bỏ trống!'),
-  accounts: yup.array().required('Nhân viên không được bỏ trống!'),
+  accounts: yup.array().required('Nhân viên không được bỏ trống!')
 });
