@@ -1,4 +1,4 @@
-import { exportTimekeepingLogApi, getListShiftInfoApi, getListTimekeepingLogApi } from '@api';
+import { exportTimekeepingLogApi, getListTimekeepingLogApi } from '@api';
 import { DataTable, DataFilter, Body, TimeBody } from '@components/base';
 import { Calendarzz, Columnz, Dropdownzz } from '@components/core';
 import { days } from '@constant';
@@ -9,8 +9,8 @@ import React, { useState } from 'react';
 
 const handleParams = (params) => {
   if (Array.isArray(params.dates) && params.dates.length > 0) {
-    params.fromDate = databaseDate(params.dates[0]);
-    params.toDate = params.dates[1] ? databaseDate(params.dates[1], undefined, true) : databaseDate(params.dates[0], undefined, true);
+    params.fromDate = databaseDate(params.dates[0], 'date');
+    params.toDate = params.dates[1] ? databaseDate(params.dates[1], 'date', true) : databaseDate(params.dates[0], 'date', true);
   }
   return { ...params, dates: undefined };
 };
@@ -29,7 +29,6 @@ export const TimekeepingLog = () => {
   const [filter, setFilter] = useState(INITPARAMS);
   const { departments, accounts } = useDataState();
   const { isLoading, data } = useGetApi(getListTimekeepingLogApi, handleParams(params), 'timekeepingLog');
-  const { data: shifts } = useGetApi(getListShiftInfoApi, {}, 'shifts');
 
   return (
     <>
@@ -41,7 +40,7 @@ export const TimekeepingLog = () => {
           setParams((pre) => ({ ...INITPARAMS, page: pre.page, limit: pre.limit }));
           setFilter(INITPARAMS);
         }}
-        className="lg:w-full"
+        className="lg:w-1/4"
       >
         <Calendarzz
           selectionMode="range"
@@ -67,14 +66,6 @@ export const TimekeepingLog = () => {
           label="Nhân viên"
           showClear
         />
-        <Dropdownzz
-          value={filter.shift}
-          onChange={(e) => setFilter({ ...filter, shift: e.target.value, account: undefined })}
-          options={shifts}
-          label="Ca làm việc"
-          showClear
-          filter
-        />
       </DataFilter>
       <DataTable
         title="Lịch sử chấm công"
@@ -90,7 +81,6 @@ export const TimekeepingLog = () => {
         <Columnz header="Phòng ban" body={(e) => Body(departments, e.department)} />
         <Columnz header="Nhân viên" body={(e) => Body(accounts, e.account, '_id', 'fullName')} />
         <Columnz header="Mã NV" body={(e) => Body(accounts, e.account, '_id', 'staffCode')} />
-        <Columnz header="Ca làm việc" body={(e) => Body(shifts, e.shift)} />
         <Columnz header="Ngày" body={(e) => TimeBody(e.date, 'date')} />
         <Columnz header="Ngày trong tuần" body={(e) => days[new Date(e.date).getDay()]?.name} />
         <Columnz header="Thời gian" field="time" />

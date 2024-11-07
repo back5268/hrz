@@ -51,7 +51,7 @@ export const Import = (props) => {
 
   return (
     <Dialogz open={open} setOpen={setOpen} header={'Import ' + title}>
-      <div className="justify-content-center text-center py-6">
+      <div className="justify-content-center text-center py-6 border-t border-border">
         <input {...getInputProps()} className="cursor-pointer" />
         <div className="w-full flex justify-center">
           <div className="flex justify-center w-64 cursor-pointer" {...getRootProps()}>
@@ -81,7 +81,7 @@ export const Import = (props) => {
         <Link to={import.meta.env.VITE_API_URL + '/import' + template}>
           <Buttonz severity="warning" label="Tải file mẫu" />
         </Link>
-        <Buttonz onClick={async () => await onSubmit()} disabled={loading}>
+        <Buttonz onClick={async () => await onSubmit()} loading={loading}>
           Xác nhận
         </Buttonz>
       </div>

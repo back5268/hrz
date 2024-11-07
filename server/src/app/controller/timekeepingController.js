@@ -1,5 +1,5 @@
 import { days } from '@constant';
-import { convertToExcel, excelDateToJSDate, handleFileExcel } from '@lib/excel-js';
+import { convertToExcel, handleFileExcel } from '@lib/excel-js';
 import { checkFace } from '@lib/face-id';
 import {
   listTimekeepingLogValid,
@@ -23,7 +23,7 @@ import {
   updateTimekeepingMd,
   createImportLogMd
 } from '@models';
-import { calTimekeeping, syntheticTimekeeping, timekeepingQueue } from '@repository';
+import { calTimekeeping, checkTimekeepingRp, syntheticTimekeeping, timekeepingQueue } from '@repository';
 import { checkValidTime, formatDate, convertNumberToTime, databaseDate, getDates, validateData } from '@utils';
 import moment from 'moment';
 
@@ -62,10 +62,9 @@ export const exportTimekeepingLog = async (req, res) => {
     const data = await listTimekeepingLogMd(where, false, false, [
       { path: 'account', select: 'fullName staffCode' },
       { path: 'department', select: 'name' },
-      { path: 'shift', select: 'name' }
     ]);
     const dataz = [];
-    dataz.push(['STT', 'Phòng ban', 'Nhân viên', 'Mã NV', 'Ca làm việc', 'Ngày', 'Ngày trong tuần', 'Thời gian', 'Thiết bị chấm công']);
+    dataz.push(['STT', 'Phòng ban', 'Nhân viên', 'Mã NV', 'Ngày', 'Ngày trong tuần', 'Thời gian', 'Thiết bị chấm công']);
     if (data?.length > 0) {
       let index = 1;
       for (const datum of data) {
@@ -74,7 +73,6 @@ export const exportTimekeepingLog = async (req, res) => {
           datum.department?.name,
           datum.account?.fullName,
           datum.account?.staffCode,
-          datum.shift?.name,
           formatDate(datum.date, 'date'),
           days[new Date(datum.date).getDay()]?.name,
           datum.time,
@@ -347,7 +345,6 @@ export const importTimekeeping = async (req, res) => {
         .send(await convertToExcel(dataz));
     } else res.json({ status: 0, mess: 'Vui lòng truyền file excel!' });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ status: 0, mess: error.toString() });
   }
 };
@@ -358,10 +355,10 @@ export const checkTimekeepingApp = async (req, res) => {
     const { error, value } = validateData(checkTimekeepingAppValid, req.body);
     if (error) return res.json({ status: 0, mess: error });
     if (!req.file) return res.json({ status: 0, mess: 'Vui lòng truyền hình ảnh!' });
-    const { status, mess, data, shift } = await checkFace(req.file);
+    const { status, mess, data } = await checkFace(req.file);
     if (status && String(data) === String(req.account?._id)) {
       const date = databaseDate(value.date, 'date');
-      timekeepingQueue.push({ account: req.account?._id, date, shift, time });
+      await checkTimekeepingRp({ account: req.account?._id, date, time: value.time });
       res.json({
         status: 1,
         data: await createTimekeepingLogMd({
@@ -381,8 +378,8 @@ export const getListTimekeepingLogApp = async (req, res) => {
   try {
     const { error, value } = validateData(listTimekeepingLogAppValid, req.query);
     if (error) return res.json({ status: 0, mess: error });
-    const { date, shift } = value;
-    const where = { account: req.account?._id, date, shift };
+    const { date } = value;
+    const where = { account: req.account?._id, date };
     res.json({ status: 1, data: await listTimekeepingLogMd(where) });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

@@ -173,7 +173,7 @@ export const templates = [
             <p>------------------------------------------------------------</p>
             <p>PHẦN MỀM QUẢN LÝ NHÂN SỰ HRZ</p>
             <p>Trân trọng thông báo!</p>`,
-    description: 'Quên mật khẩu'
+    description: 'Cảnh báo chấm công'
   }
 ];
 

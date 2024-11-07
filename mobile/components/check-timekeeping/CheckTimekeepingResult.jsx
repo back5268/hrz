@@ -14,18 +14,18 @@ export const CheckTimekeepingResult = ({ result = {} }) => {
       <View className="flex flex-col justify-center items-center mt-4">
         {result.status ? (
           <>
-            <Iconz name="check-circle" size={32} color='#673AB7' />
+            <Iconz name="check-circle" size={32} />
             <Text className="my-2 text-lg text-primary uppercase font-bold">Chấm công thành công</Text>
             <Text>Thời gian: {moment(result.createdAt).format('DD/MM/YYYY HH:mm:ss')}</Text>
             <Text>Vị trí: {result.address}</Text>
           </>
         ) : (
           <>
-            <Iconz name="info" size={32} color='#673AB7' />
+            <Iconz name="alert-circle" size={32} />
             <Text className="my-2 text-lg text-primary uppercase font-bold">Chấm công thất bại</Text>
           </>
         )}
-        <View className="w-6/12 mt-2">
+        <View className="w-6/12 my-2">
           <Buttonz label="Xác nhận" onPress={() => setVisible(false)} />
         </View>
       </View>

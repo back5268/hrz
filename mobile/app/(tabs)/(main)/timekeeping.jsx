@@ -23,15 +23,30 @@ const Calendar = ({ days = [] }) => {
 
   const renderItem = ({ item }) => {
     if (!item) return null;
+    const isFuture = new Date(item.date) > new Date();
+    const isSelected = selectedDate?.date === item.date;
     const status = !item.summary ? 0 : item.summary === item.totalWork ? 1 : item.summary < item.totalWork ? 2 : -1;
 
     return (
       <TouchableOpacity
-        className={`flex items-center justify-center w-10 h-10 m-1 rounded-md ${status === 0 ? 'bg-red-300' : status === 1 ? 'bg-green-300' : status === 2 ? 'bg-orange-300' : 'bg-gray-300'} 
-        ${item.value ? '' : 'opacity-0'} ${!item.totalWork ? 'bg-gray-300' : ''}`}
+        className="flex items-center justify-center w-10 h-10 m-1 rounded-md"
+        style={{
+          opacity: !item.value ? 0 : 100,
+          backgroundColor: isSelected
+            ? themeColor.primary
+            : !item.totalWork
+              ? "rgb(186.63, 199.1, 205.12)"
+              : isFuture
+                ? themeColor.surfaceVariant
+                : status === 0
+                  ? "rgb(248.18, 138.44, 130.38)"
+                  : status === 1
+                    ? 'rgb(161.38, 195.48, 131.62)'
+                    : 'rgb(255, 191.14, 96.9)'
+        }}
         onPress={() => item && handleDayPress(item)}
       >
-        <Text className={`${status >= 0 && item.totalWork ? 'text-white' : 'text-black'}`}>{item.value}</Text>
+        <Text className="text-white">{item.value}</Text>
       </TouchableOpacity>
     );
   };
@@ -58,10 +73,10 @@ const Calendar = ({ days = [] }) => {
               { name: 'Thời gian bắt đầu vào làm', value: selectedDate?.timeStart },
               { name: 'Thời gian kết thúc', value: selectedDate?.timeEnd },
               { name: 'Tổng thời gian', value: selectedDate?.totalTime },
-              { name: 'Check in', value: selectedDate?.checkIn || '-' },
-              { name: 'Check out', value: selectedDate?.checkOut || '-' },
-              { name: 'Đi muộn', value: selectedDate?.soon || '-' },
-              { name: 'Về sớm', value: selectedDate?.late || '-' },
+              { name: 'Check in', value: selectedDate?.checkInTime || '-' },
+              { name: 'Check out', value: selectedDate?.checkOutTime || '-' },
+              { name: 'Đi muộn', value: selectedDate?.late || '-' },
+              { name: 'Về sớm', value: selectedDate?.soon || '-' },
               { name: 'Tổng công tính', value: selectedDate?.summary }
             ].map((item, index) => (
               <DataTable.Row key={index}>
@@ -85,7 +100,7 @@ const Calendar = ({ days = [] }) => {
               </TouchableOpacity>
             );
           })}
-          <Buttonz label="Tạo đơn" onPress={() => router.push("/application/create")} className="mt-4" />
+          <Buttonz label="Tạo đơn" onPress={() => router.push('/application/create')} className="mt-4" />
         </View>
       </View>
     </Card>
@@ -111,9 +126,8 @@ const INITPARAMS = {
 const Timekeeping = () => {
   const [params, setParams] = useState(INITPARAMS);
   const [days, setDays] = useState([]);
-  const { data, isLoading } = useGetApi(getListSyntheticTimekeepingApi, handleParams(params), 'syntheticTimekeeping');
+  const { data } = useGetApi(getListSyntheticTimekeepingApi, handleParams(params), 'syntheticTimekeeping');
   const { data: shifts } = useGetApi(getListShiftInfoApi, {}, 'shifts');
-  if (isLoading) return <Loadingz />;
 
   useEffect(() => {
     const timekeeping = data?.[0]?.data || [];
@@ -166,7 +180,7 @@ const Timekeeping = () => {
               ))}
             </View>
 
-            {/* <View className="w-full mt-4">
+            <View className="w-full mt-4">
               <Selectz label="Ca làm việc" value={params.shift} options={shifts} setValue={(e) => setParams({ ...params, shift: e })} />
             </View>
             <View className="flex flex-row">
@@ -176,7 +190,7 @@ const Timekeeping = () => {
               <View className="w-6/12">
                 <Selectz label="Tháng" value={params.month} options={getMonths()} setValue={(e) => setParams({ ...params, month: e })} />
               </View>
-            </View> */}
+            </View>
           </>
         }
         data={[{ days }]}

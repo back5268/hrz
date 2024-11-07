@@ -1,5 +1,4 @@
-import { ArrayRedis } from '@lib/ioredis';
-import { detailTimekeepingMd, updateTimekeepingMd } from '@models';
+import { detailTimekeepingLogMd, listTimekeepingLogMd, listTimekeepingMd, updateTimekeepingMd } from '@models';
 import { convertTimeToDate } from '@utils';
 
 export const calTimekeeping = (schedule = {}, checkInTime, checkOutTime) => {
@@ -92,12 +91,15 @@ export const syntheticTimekeeping = (data = []) => {
   return dataz;
 };
 
-export const timekeepingQueue = new ArrayRedis('timekeepingQueue');
-timekeepingQueue.callbackCron = async (data) => {
-  const { account, date, shift, time } = data;
-  const timekeeping = await detailTimekeepingMd({ account, date, shift });
-  if (!timekeeping) return;
-  const checkInTime = timekeeping.checkIn;
-  const checkOutTime = time;
-  await updateTimekeepingMd({ _id: timekeeping._id }, { ...calTimekeeping(timekeeping, checkInTime, checkOutTime) });
+export const checkTimekeepingRp = async (data) => {
+  const { account, date, time } = data;
+  const timekeepings = await listTimekeepingMd({ account, date });
+  const logs = await listTimekeepingLogMd({ account, date });
+  const log = logs[logs.length - 1];
+  for (const timekeeping of timekeepings) {
+    if (!timekeeping) continue;
+    const checkInTime = timekeeping.checkIn || log.time || time;
+    const checkOutTime = time;
+    await updateTimekeepingMd({ _id: timekeeping._id }, { ...calTimekeeping(timekeeping, checkInTime, checkOutTime) });
+  }
 };

@@ -85,7 +85,8 @@ export const templateTypes = [
   { name: 'Hợp dồng thử việc', _id: 3 },
   { name: 'Hợp đồng theo dự án', _id: 4 },
   { name: 'Phiếu lương', _id: 5 },
-  { name: 'Quên mật khẩu', _id: 6 }
+  { name: 'Quên mật khẩu', _id: 6 },
+  { name: 'Cảnh báo chấm công', _id: 7 },
 ];
 
 export const logStatus = [

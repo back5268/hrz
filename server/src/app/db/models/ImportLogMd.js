@@ -2,7 +2,7 @@ import { ModelBase } from '@config';
 
 class ImportLogMd extends ModelBase {}
 
-ImportLogMd.init('ImportLogMd', {
+ImportLogMd.init('ImportLog', {
   by: { type: String, required: true },
   deviceCode: { type: String, required: true },
   staffCode: { type: String, required: true },

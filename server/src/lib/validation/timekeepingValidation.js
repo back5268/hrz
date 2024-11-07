@@ -3,7 +3,6 @@ import { REGEX } from '@constant';
 export const listTimekeepingLogValid = {
   page: 'number',
   limit: 'number',
-  shift: { type: 'string', allowNull: true },
   department: { type: 'string', allowNull: true },
   account: { type: 'string', allowNull: true },
   fromDate: 'string',
@@ -37,7 +36,6 @@ export const listSyntheticTimekeepingValid = {
 };
 
 export const checkTimekeepingAppValid = {
-  shift: 'string',
   date: 'string',
   time: { type: 'string', pattern: REGEX.TIME },
   deviceName: 'string',
