@@ -37,7 +37,7 @@ export const listSyntheticTimekeepingValid = {
 };
 
 export const checkTimekeepingAppValid = {
-  // shift: 'string',
+  shift: 'string',
   date: 'string',
   time: { type: 'string', pattern: REGEX.TIME },
   deviceName: 'string',

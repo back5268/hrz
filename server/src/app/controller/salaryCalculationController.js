@@ -44,21 +44,18 @@ export const calculateSalary = async (req, res) => {
       from,
       to
     });
-    salaryQueue.push(
-      {
-        salaryLogId: debtLog._id,
-        month,
-        accounts,
-        config,
-        salarySetup,
-        taxSetup,
-        by: req.account?._id,
-        from,
-        to,
-        bonuses
-      },
-      true
-    );
+    salaryQueue.push({
+      salaryLogId: debtLog._id,
+      month,
+      accounts,
+      config,
+      salarySetup,
+      taxSetup,
+      by: req.account?._id,
+      from,
+      to,
+      bonuses
+    });
     res.json({ status: true, data: 1 });
   } catch (error) {
     console.log(error);

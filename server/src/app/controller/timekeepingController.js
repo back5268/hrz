@@ -23,7 +23,7 @@ import {
   updateTimekeepingMd,
   createImportLogMd
 } from '@models';
-import { calTimekeeping, syntheticTimekeeping } from '@repository';
+import { calTimekeeping, syntheticTimekeeping, timekeepingQueue } from '@repository';
 import { checkValidTime, formatDate, convertNumberToTime, databaseDate, getDates, validateData } from '@utils';
 import moment from 'moment';
 
@@ -202,7 +202,15 @@ export const exportSyntheticTimekeeping = async (req, res) => {
     if (documents?.length > 0) {
       let index = 1;
       for (const datum of documents) {
-        const arr = [index, datum.account?.fullName, datum.account?.staffCode, datum.shift?.name, datum.totalOt, datum.total, datum.reality];
+        const arr = [
+          index,
+          datum.account?.fullName,
+          datum.account?.staffCode,
+          datum.shift?.name,
+          datum.totalOt,
+          datum.total,
+          datum.reality
+        ];
         dates.forEach((date) => {
           const datez = datum.data?.find((d) => formatDate(d.date, 'date') === formatDate(date, 'date'));
           arr.push(datez ? datez.summary || '-' : '');
@@ -259,7 +267,7 @@ export const importTimekeeping = async (req, res) => {
             datum.mess = 'Ngày chấm công không được bỏ trống';
             continue;
           }
-          datum.date = moment(datum.date).format("YYYY-MM-DD")
+          datum.date = moment(datum.date).format('YYYY-MM-DD');
           if (!checkInTime) {
             datum.mess = 'Thời gian vào không được bỏ trống';
             continue;
@@ -291,14 +299,12 @@ export const importTimekeeping = async (req, res) => {
             datum.mess = `Nhân sự không được chấm công tại máy có mã ${deviceCode}`;
             continue;
           }
-          console.log({ account: account._id, date: datum.date, shift: shift._id });
-          
           const timekeeping = await detailTimekeepingMd({ account: account._id, date: datum.date, shift: shift._id });
           if (!timekeeping) {
             datum.mess = `Nhân sự không có ca làm việc trong ngày ${formatDate(datum.date, 'date')}`;
             continue;
           }
-          await updateTimekeepingMd({ _id: timekeeping._id }, { ...calTimekeeping(timekeeping, checkInTime, checkOutTime) });
+          await updateTimekeepingMd({ _id: timekeeping._id }, { ...calTimekeeping(timekeeping, checkInTime, checkOutTime || checkInTime) });
         }
       }
       const dataz = [];
@@ -352,11 +358,18 @@ export const checkTimekeepingApp = async (req, res) => {
     const { error, value } = validateData(checkTimekeepingAppValid, req.body);
     if (error) return res.json({ status: 0, mess: error });
     if (!req.file) return res.json({ status: 0, mess: 'Vui lòng truyền hình ảnh!' });
-    const { status, mess, data } = await checkFace(req.file);
+    const { status, mess, data, shift } = await checkFace(req.file);
     if (status && String(data) === String(req.account?._id)) {
+      const date = databaseDate(value.date, 'date');
+      timekeepingQueue.push({ account: req.account?._id, date, shift, time });
       res.json({
         status: 1,
-        data: await createTimekeepingLogMd({ ...value, account: req.account?._id, department: req.account?.department?._id, date: databaseDate(value.date, 'date') })
+        data: await createTimekeepingLogMd({
+          ...value,
+          account: req.account?._id,
+          department: req.account?.department?._id,
+          date
+        })
       });
     } else res.json({ status: 0, mess: mess || 'Không tìm thấy nhân viên!' });
   } catch (error) {
@@ -405,9 +418,9 @@ export const getListSyntheticTimekeepingApp = async (req, res) => {
       date: {
         $gte: fromDate,
         $lte: toDate
-      },
+      }
     };
-    if (shift) where.shift = shift
+    if (shift) where.shift = shift;
     const data = await listTimekeepingMd(where);
     res.json({ status: 1, data: syntheticTimekeeping(data) });
   } catch (error) {

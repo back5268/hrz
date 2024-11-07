@@ -39,5 +39,5 @@ export const addTimekeepingByShift = async (shift) => {
 };
 
 export const warningTimekeeping = async () => {
-  const timekeepings = await listTimekeepingMd({  })
+  const timekeepings = await listTimekeepingMd({});
 };
