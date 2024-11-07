@@ -1,5 +1,13 @@
-import { accounts, departments, jobPositions, positions, templates, tools } from '@data';
-import { createAccountMd, createDepartmentMd, createJobPositionMd, createPositionMd, createTemplateMd, createToolMd } from '@models';
+import { accounts, configs, departments, jobPositions, positions, templates, tools } from '@data';
+import {
+  createAccountMd,
+  createConfigMd,
+  createDepartmentMd,
+  createJobPositionMd,
+  createPositionMd,
+  createTemplateMd,
+  createToolMd
+} from '@models';
 
 export const setup = async () => {
   for (const account of accounts) {
@@ -16,6 +24,9 @@ export const setup = async () => {
   }
   for (const template of templates) {
     await createTemplateMd(template);
+  }
+  for (const config of configs) {
+    await createConfigMd(config);
   }
   for (const tool of tools) {
     await createToolMd(tool);

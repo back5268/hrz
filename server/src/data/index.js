@@ -164,7 +164,44 @@ export const templates = [
             <p>PHẦN MỀM QUẢN LÝ NHÂN SỰ HRZ</p>
             <p>Trân trọng thông báo!</p>`,
     description: 'Quên mật khẩu'
+  },
+  {
+    type: 7,
+    subject: '[HRZ] - Cảnh báo chấm công!',
+    content: `<p>Hôm nay bạn chưa chấm công vui lòng kiểm tra lại.</p>
+            <p>Trân trọng cảm ơn,</p> <br />
+            <p>------------------------------------------------------------</p>
+            <p>PHẦN MỀM QUẢN LÝ NHÂN SỰ HRZ</p>
+            <p>Trân trọng thông báo!</p>`,
+    description: 'Quên mật khẩu'
   }
+];
+
+export const configs = [
+  { type: 1, timekeeping: {} },
+  {
+    type: 2,
+    salary: {
+      salaryCoefficient: 26,
+      mandatory: {
+        bhxh: 8,
+        bhyt: 1.5,
+        bhtn: 1,
+        unionDues: 0
+      }
+    },
+    ot: {
+      day: 125,
+      sunday: 150,
+      holiday: 200
+    },
+    soonLate: [
+      { from: 1, to: 10, value: 10000, type: 1 },
+      { from: 10, to: 20, value: 20000, type: 1 }
+    ],
+    holidays: []
+  },
+  { type: 3, tax: { self: 11000000, dependent: 4400000 } }
 ];
 
 export const tools = [
@@ -283,11 +320,6 @@ export const tools = [
     icon: 'Cog6ToothIcon',
     sort: 6,
     items: [
-      // {
-      //   name: 'Cấu hình chung',
-      //   route: '/config',
-      //   actions: ['update', 'read']
-      // },
       {
         name: 'Phân quyền',
         route: '/permission',
