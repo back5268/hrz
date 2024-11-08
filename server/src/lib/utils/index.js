@@ -44,6 +44,11 @@ export const generateRandomString = (length = 6) => {
   return result;
 };
 
+export const roundNumber = (value) => {
+  if (!Number(value)) return 0
+  return Math.round(value * 100) / 100;
+};
+
 export const replaceFistText = (inputString, prefix = '\\$') => {
   const regex = new RegExp(`${prefix}\\w+\\s?`, 'g');
   return inputString.replace(regex, '');

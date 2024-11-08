@@ -1,5 +1,5 @@
-import { detailTimekeepingLogMd, listTimekeepingLogMd, listTimekeepingMd, updateTimekeepingMd } from '@models';
-import { convertTimeToDate } from '@utils';
+import { listTimekeepingLogMd, listTimekeepingMd, updateTimekeepingMd } from '@models';
+import { convertTimeToDate, roundNumber } from '@utils';
 
 export const calTimekeeping = (schedule = {}, checkInTime, checkOutTime) => {
   const { timeStart, timeEnd, timeBreakStart, timeBreakEnd, totalTime, totalWork } = schedule;
@@ -27,12 +27,12 @@ export const calTimekeeping = (schedule = {}, checkInTime, checkOutTime) => {
       else soonz = end - checkout;
     }
     if (latez > 0) {
-      let late = latez / (1000 * 60 * 60);
+      let late = roundNumber(latez / (1000 * 60 * 60));
       object.late = late;
       miss += late;
     } else object.late = 0;
     if (soonz > 0) {
-      let soon = soonz / (1000 * 60 * 60);
+      let soon = roundNumber(soonz / (1000 * 60 * 60));
       object.soon = soon;
       miss += soon;
     } else object.soon = 0;
@@ -40,8 +40,8 @@ export const calTimekeeping = (schedule = {}, checkInTime, checkOutTime) => {
     const totalTimeReality = totalTime - miss > 0 ? totalTime - miss : 0;
     const totalWorkReality = (totalTimeReality / totalTime) * totalWork;
     object.totalTimeReality = totalTimeReality;
-    object.totalWorkReality = totalWorkReality;
-    object.summary = totalWorkReality;
+    object.totalWorkReality = roundNumber(totalWorkReality);
+    object.summary = roundNumber(totalWorkReality);
   } else {
     if (checkInTime) {
       const start = convertTimeToDate(timeStart);
@@ -56,7 +56,7 @@ export const calTimekeeping = (schedule = {}, checkInTime, checkOutTime) => {
         else latez = checkIn - start;
         if (latez > 0) {
           let late = latez / (1000 * 60 * 60);
-          object.late = late;
+          object.late = roundNumber(late);
         }
       }
     }
@@ -73,18 +73,41 @@ export const syntheticTimekeeping = (data = []) => {
     const index = dataz.findIndex(
       (n) => String(n.account?._id) === String(datum.account?._id) && String(n.shift?._id) === String(datum.shift?._id)
     );
+    datum.summary = roundNumber(datum.summary || 0);
+    datum.totalWork = roundNumber(datum.totalWork || 0);
+    if (datum.type === 2) {
+      datum.timeStartOt = datum.timeStart;
+      datum.timeEndOt = datum.timeEnd;
+      datum.timeStart = undefined;
+      datum.timeEnd = undefined;
+    }
     if (index >= 0) {
-      if (datum.type === 1) dataz[index].total += datum.totalWork;
-      else if (datum.type === 2) dataz[index].totalOt += datum.totalWork;
-      dataz[index].reality += Number(datum.summary) || 0;
-      dataz[index].data.push(datum);
+      if (datum.type === 1) {
+        dataz[index].reality += datum.summary;
+        dataz[index].total += datum.totalWork;
+      } else if (datum.type === 2) {
+        dataz[index].realityOt += datum.summary;
+        dataz[index].totalOt += datum.totalWork;
+      }
+      const checkDate = dataz[index].data?.findIndex((d) => d.date === datum.date);
+      if (checkDate >= 0) {
+        const datumz = dataz[index].data[checkDate];
+        dataz[index].data[checkDate] = {
+          ...datumz,
+          ...datum,
+          summary: roundNumber(datumz.summary) + roundNumber(datum.summary),
+          applications: [...datumz.applications, ...datum.applications],
+          type: 2
+        };
+      } else dataz[index].data.push(datum);
     } else
       dataz.push({
         account: datum.account,
         shift: datum.shift,
         total: datum.type === 1 ? datum.totalWork : 0,
         totalOt: datum.type === 2 ? datum.totalWork : 0,
-        reality: Number(datum.summary) || 0,
+        reality: datum.type === 1 ? datum.summary : 0,
+        realityOt: datum.type === 2 ? datum.summary : 0,
         data: [datum]
       });
   });

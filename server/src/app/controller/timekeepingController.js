@@ -23,7 +23,7 @@ import {
   updateTimekeepingMd,
   createImportLogMd
 } from '@models';
-import { calTimekeeping, checkTimekeepingRp, syntheticTimekeeping, timekeepingQueue } from '@repository';
+import { calTimekeeping, checkTimekeepingRp, syntheticTimekeeping } from '@repository';
 import { checkValidTime, formatDate, convertNumberToTime, databaseDate, getDates, validateData } from '@utils';
 import moment from 'moment';
 
@@ -61,7 +61,7 @@ export const exportTimekeepingLog = async (req, res) => {
     const where = handleParams(value);
     const data = await listTimekeepingLogMd(where, false, false, [
       { path: 'account', select: 'fullName staffCode' },
-      { path: 'department', select: 'name' },
+      { path: 'department', select: 'name' }
     ]);
     const dataz = [];
     dataz.push(['STT', 'Phòng ban', 'Nhân viên', 'Mã NV', 'Ngày', 'Ngày trong tuần', 'Thời gian', 'Thiết bị chấm công']);
@@ -297,12 +297,17 @@ export const importTimekeeping = async (req, res) => {
             datum.mess = `Nhân sự không được chấm công tại máy có mã ${deviceCode}`;
             continue;
           }
-          const timekeeping = await detailTimekeepingMd({ account: account._id, date: datum.date, shift: shift._id });
-          if (!timekeeping) {
+          const timekeepings = await listTimekeepingMd({ account: account._id, date: datum.date, shift: shift._id });
+          if (!(timekeepings?.length > 0)) {
             datum.mess = `Nhân sự không có ca làm việc trong ngày ${formatDate(datum.date, 'date')}`;
             continue;
           }
-          await updateTimekeepingMd({ _id: timekeeping._id }, { ...calTimekeeping(timekeeping, checkInTime, checkOutTime || checkInTime) });
+          for (const timekeeping of timekeepings) {
+            await updateTimekeepingMd(
+              { _id: timekeeping._id },
+              { ...calTimekeeping(timekeeping, checkInTime, checkOutTime || checkInTime) }
+            );
+          }
         }
       }
       const dataz = [];

@@ -20,6 +20,8 @@ clientApi.interceptors.request.use(
 
 clientApi.interceptors.response.use(
   async function (res) {
+    console.log(res.data);
+    
     if (res.data?.status || res.data?.status === 0) {
       if (res.data.status) return res.data.data;
       else showToast({ title: res.data?.mess, severity: 'error' });

@@ -19,12 +19,18 @@ export const DetailApplication = (props) => {
     if (res) {
       showToast({ title: status === 2 ? 'Duyệt đơn thành công!' : 'Từ chối đơn thành công!', severity: 'success' });
       setParams((pre) => ({ ...pre, render: !pre.render }));
+      setNote('')
       setOpen(false);
     }
   };
 
+  const setOpenz = () => {
+    setNote('')
+    setOpen(false)
+  }
+
   return (
-    <Dialogz className="w-[1200px]" header="Chi tiết đơn từ" open={open} setOpen={setOpen}>
+    <Dialogz className="w-[1200px]" header="Chi tiết đơn từ" open={open} setOpen={() => setOpenz()}>
       <div className="border-t border-border">
         <div className="w-full max-h-[1200px] overflow-scroll">
           <div className="relative w-full mt-4">
@@ -65,7 +71,7 @@ export const DetailApplication = (props) => {
         </div>
         <hr className="my-4" />
         <div className="flex gap-4 justify-end">
-          <Buttonz outlined color="red" label="Trờ lại" onClick={() => setOpen(false)} />
+          <Buttonz outlined color="red" label="Trờ lại" onClick={() => setOpenz()} />
           {item.status === 1 && (
             <>
               <Buttonz label="Từ chối" onClick={() => onSubmit(3)} severity="danger" />

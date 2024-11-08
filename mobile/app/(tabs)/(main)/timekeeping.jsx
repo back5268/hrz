@@ -25,6 +25,7 @@ const Calendar = ({ days = [] }) => {
     if (!item) return null;
     const isFuture = new Date(item.date) > new Date();
     const isSelected = selectedDate?.date === item.date;
+    const isOt = item.type === 2
     const status = !item.summary ? 0 : item.summary === item.totalWork ? 1 : item.summary < item.totalWork ? 2 : -1;
 
     return (
@@ -35,13 +36,13 @@ const Calendar = ({ days = [] }) => {
           backgroundColor: isSelected
             ? themeColor.primary
             : !item.totalWork
-              ? "rgb(186.63, 199.1, 205.12)"
-              : isFuture
+              ? 'rgb(186.63, 199.1, 205.12)'
+              : isOt ? "rgb(193.62, 121.08, 206.02)" : isFuture
                 ? themeColor.surfaceVariant
                 : status === 0
-                  ? "rgb(248.18, 138.44, 130.38)"
+                  ? 'rgb(248.18, 138.44, 130.38)'
                   : status === 1
-                    ? 'rgb(161.38, 195.48, 131.62)'
+                    ? 'rgb(96.9, 189.9, 181.22)'
                     : 'rgb(255, 191.14, 96.9)'
         }}
         onPress={() => item && handleDayPress(item)}
@@ -72,6 +73,8 @@ const Calendar = ({ days = [] }) => {
             {[
               { name: 'Thời gian bắt đầu vào làm', value: selectedDate?.timeStart },
               { name: 'Thời gian kết thúc', value: selectedDate?.timeEnd },
+              { name: 'Thời gian bắt đầu OT', value: selectedDate?.timeStartOt },
+              { name: 'Thời gian kết thúc OT', value: selectedDate?.timeEndOt },
               { name: 'Tổng thời gian', value: selectedDate?.totalTime },
               { name: 'Check in', value: selectedDate?.checkInTime || '-' },
               { name: 'Check out', value: selectedDate?.checkOutTime || '-' },
@@ -124,10 +127,11 @@ const INITPARAMS = {
 };
 
 const Timekeeping = () => {
+  const [render, setRender] = useState(false);
   const [params, setParams] = useState(INITPARAMS);
-  const [days, setDays] = useState([]);
-  const { data } = useGetApi(getListSyntheticTimekeepingApi, handleParams(params), 'syntheticTimekeeping');
+  const [days, setDays] = useState([]);;
   const { data: shifts } = useGetApi(getListShiftInfoApi, {}, 'shifts');
+  const { data } = useGetApi(getListSyntheticTimekeepingApi, handleParams({ shift: shifts?.[0]?._id, ...params, render }), 'syntheticTimekeeping');
 
   useEffect(() => {
     const timekeeping = data?.[0]?.data || [];
@@ -140,7 +144,10 @@ const Timekeeping = () => {
     const newDays = [];
     for (let i = 0; i < firstDay + lastDate.getDate() + (7 - lastDay) - 1; i++) {
       if (i < firstDay) newDays.push({});
-      else if (i < firstDay + lastDate.getDate()) newDays.push({ value: i - firstDay + 1 });
+      else if (i < firstDay + lastDate.getDate()) {
+        const date = moment([year, month - 1, i - firstDay + 1]).format("YYYY-MM-DD");
+        newDays.push({ value: i - firstDay + 1, date });
+      }
       else newDays.push({});
     }
 
@@ -158,16 +165,19 @@ const Timekeeping = () => {
     <SafeAreaView className="flex-1">
       <FlatList
         className="flex-1 px-2"
+        showsVerticalScrollIndicator={true}
+        onEndReached={() => console.log('Load more data')}
+        onRefresh={() => setRender((pre) => !pre)}
+        refreshing={false}
         ListHeaderComponent={
           <>
             <View className="flex-row items-center justify-between rounded-lg">
               {[
-                { name: 'Công chính thức', value: data?.[0]?.total },
-                { name: 'Công OT', value: data?.[0]?.totalOt },
-                { name: 'Công thực tế', value: data?.[0]?.reality }
+                { name: 'Công chính thức', value: `${data?.[0]?.reality || 0} / ${data?.[0]?.total || 0}` },
+                { name: 'Công OT', value: `${data?.[0]?.realityOt || 0} / ${data?.[0]?.totalOt || 0}` },
               ].map((item, index) => (
                 <Card key={index} className="flex-1 py-4 rounded-md mx-2">
-                  <Text className="text-md font-medium mb-1 text-center mx-2" style={{ minHeight: 40, color: themeColor.primary }}>
+                  <Text className="text-md font-bold mb-1 text-center mx-2 pb-2" style={{ color: themeColor.primary }}>
                     {item.name}
                   </Text>
                   <View className="px-2">
@@ -181,7 +191,7 @@ const Timekeeping = () => {
             </View>
 
             <View className="w-full mt-4">
-              <Selectz label="Ca làm việc" value={params.shift} options={shifts} setValue={(e) => setParams({ ...params, shift: e })} />
+              <Selectz label="Ca làm việc" value={params.shift || shifts?.[0]?._id} options={shifts} setValue={(e) => setParams({ ...params, shift: e })} />
             </View>
             <View className="flex flex-row">
               <View className="w-6/12">

@@ -152,3 +152,8 @@ export const soonLateTypes = [
   { name: 'Trừ trực tiếp (VNĐ)', _id: 1 },
   { name: 'Trừ theo % công', _id: 2 }
 ];
+
+export const salaryStatus = [
+  { name: 'Chờ duyệt', _id: 1, severity: 'warning' },
+  { name: 'Đã duyệt', _id: 2, severity: 'success' }
+];

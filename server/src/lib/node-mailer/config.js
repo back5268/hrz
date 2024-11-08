@@ -29,7 +29,7 @@ export const sendMail = async ({ to, subject, text, html, attachments = [], type
           <html>
           <head>
           <style>
-            body { font-family: Arial, sans-serif; }
+            body { font-family: 'Times New Roman', Times, serif; }
             .container { width: 100%; max-width: 1000px; margin: auto; padding: 20px; 
               border: 1px solid #ddd; border-radius: 4px; }
           </style>

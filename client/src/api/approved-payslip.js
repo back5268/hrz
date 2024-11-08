@@ -5,3 +5,4 @@ export const detailApprovedPayslipApi = (params) => getData('/web/approved-paysl
 export const previewApprovedPayslipApi = (params) => getData('/web/approved-payslip/previewSalary', params);
 export const deleteApprovedPayslipApi = (params) => deleteData('/web/approved-payslip/deleteSalary', params);
 export const updateStatusApprovedPayslipApi = (params) => putData('/web/approved-payslip/updateStatusSalary', params);
+export const sendSalaryApi = (params) => putData('/web/approved-payslip/sendSalary', params);

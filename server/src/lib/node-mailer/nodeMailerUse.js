@@ -23,6 +23,10 @@ export const sendMailUse = async ({ type, params, to }) => {
   } else return { status: 0, mess: 'Chưa có mẫu gửi thông báo!' };
 };
 
+export const sendMailSalary = async ({ to, subject, html }) => {
+  return await sendMail({ to, subject, html, type: 5 });
+};
+
 export const sendMailForgotPassword = ({ to, username, otp }) => {
   return sendMailUse({ to, type: 6, params: { $username: username, $otp: otp } });
 };

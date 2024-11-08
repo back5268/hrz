@@ -58,9 +58,8 @@ export const SyntheticTimekeeping = () => {
       <Row>
         <Column header="Nhân viên" rowSpan={2} />
         <Column header="Ca làm việc" rowSpan={2} />
-        <Column header="Công OT" rowSpan={2} />
         <Column header="Công chính thức" rowSpan={2} />
-        <Column header="Thực tế" rowSpan={2} />
+        <Column header="Công OT" rowSpan={2} />
         {dates?.map((d, index) => {
           const date = new Date(d);
           const dayOfWeek = days[date.getDay()]?.name;
@@ -192,9 +191,8 @@ export const SyntheticTimekeeping = () => {
             }}
             className="min-w-28"
           ></Column>
-          <Column field="totalOt" body={(e) => <span className="font-medium text-lg">{e.totalOt}</span>} className="min-w-24"></Column>
-          <Column field="total" body={(e) => <span className="font-medium text-lg">{e.total}</span>} className="min-w-24"></Column>
-          <Column field="reality" body={(e) => <span className="font-medium text-lg">{e.reality}</span>} className="min-w-24"></Column>
+          <Column field="total" body={(e) => <span className="font-medium text-lg">{e.reality} / {e.total}</span>} className="min-w-24"></Column>
+          <Column field="totalOt" body={(e) => <span className="font-medium text-lg">{e.realityOt} / {e.totalOt}</span>} className="min-w-24"></Column>
 
           {dates.map((date, index) => (
             <Column

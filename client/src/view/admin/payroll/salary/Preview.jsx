@@ -1,11 +1,18 @@
-import { previewApprovedPayslipApi } from '@api';
+import { previewApprovedPayslipApi, previewPendingPayslipApi } from '@api';
 import { useGetApi } from '@lib/react-query';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 export const Preview = () => {
   const { _id } = useParams();
-  const { data } = useGetApi(previewApprovedPayslipApi, { _id }, 'bill', Boolean(_id));
+  const location = useLocation();
+  const pathname = location?.pathname;
+  const { data } = useGetApi(
+    pathname?.includes('/approved-payslip') ? previewApprovedPayslipApi : previewPendingPayslipApi,
+    { _id },
+    'preview',
+    Boolean(_id)
+  );
 
   useEffect(() => {
     const handleKeyPress = (event) => {

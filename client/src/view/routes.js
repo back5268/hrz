@@ -35,8 +35,8 @@ export const routes = [
   { path: '/salary-calculation', element: SalaryCalculation, layout: true },
   { path: '/pending-payslip', element: PendingPayslip, layout: true },
   { path: '/approved-payslip', element: ApprovedPayslip, layout: true },
-  { path: '/pending-payslip/preview/:_id', element: Preview, layout: true },
-  { path: '/approved-payslip/preview/:_id', element: Preview, layout: true },
+  { path: '/pending-payslip/preview/:_id', element: Preview, layout: false },
+  { path: '/approved-payslip/preview/:_id', element: Preview, layout: false },
 
   { path: '/application', element: Application, layout: true },
 

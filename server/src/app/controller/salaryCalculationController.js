@@ -55,7 +55,7 @@ export const calculateSalary = async (req, res) => {
       from,
       to,
       bonuses
-    });
+    }, true);
     res.json({ status: true, data: 1 });
   } catch (error) {
     console.log(error);

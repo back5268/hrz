@@ -25,6 +25,7 @@ SalaryMd.init('Salary', {
   allowanceAmount: { type: Number, min: 0, required: true },
   nomalWork: { total: Number, number: Number, summary: Number },
   otWork: { total: Number, number: Number, summary: Number },
+  bhxhSalary: { type: Number },
   mandatory: {
     bhxh: { value: Number, summary: Number },
     bhyt: { value: Number, summary: Number },

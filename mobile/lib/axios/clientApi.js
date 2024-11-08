@@ -4,7 +4,7 @@ import Toast from 'react-native-toast-message';
 
 export const clientApi = axios.create({
   // baseURL: 'http://api.backz.s-tech.info/',
-  baseURL: 'http://192.168.0.101:5000/',
+  baseURL: 'http://192.168.6.46:5000/',
   timeout: 10000
 });
 

@@ -22,6 +22,7 @@ import {
 } from '@models';
 import { approveApplication } from '@repository';
 import { validateData } from '@utils';
+import { request } from 'express';
 import { ioSk } from 'src';
 
 export const getListApplication = async (req, res) => {
@@ -195,7 +196,7 @@ export const createApplicationAdmin = async (req, res) => {
         value.files.push(await uploadFileToFirebase(file));
       }
     }
-    const data = await createApplicationMd({ ...value, status: 2 });
+    const data = await createApplicationMd({ ...value, status: 2, updatedBy: req.account?._id });
     await approveApplication(data)
     res.status(201).json({ status: 1, data });
   } catch (error) {
