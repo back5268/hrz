@@ -4,7 +4,7 @@ import { Salary } from '@repository/SalaryCalculationRp';
 import moment from 'moment';
 import { ioSk } from 'src';
 
-export const salaryQueue = new ArrayRedis("salaryQueue")
+export const salaryQueue = new ArrayRedis("salaryQueuezz")
 salaryQueue.callbackCron = async (data) => {
   data.from = moment(data.from).format("YYYY-MM-DD")
   data.to = moment(data.to).format("YYYY-MM-DD")

@@ -1,9 +1,4 @@
-import {
-  getListMonthInfoApi,
-  getListApprovedPayslipApi,
-  previewApprovedPayslipApi,
-  sendSalaryApi
-} from '@api';
+import { getListMonthInfoApi, getListApprovedPayslipApi, previewApprovedPayslipApi, sendSalaryApi, updateStatusPendingPayslipApi } from '@api';
 import { DataTable, FormList, DataFilter, Body } from '@components/base';
 import { Columnz, Dropdownzz } from '@components/core';
 import { useGetParams } from '@hooks';
@@ -25,18 +20,28 @@ export const ApprovedPayslip = () => {
   const { data: months } = useGetApi(getListMonthInfoApi, params, 'months');
   const { departments, accounts } = useDataState();
   const [loading, setLoading] = useState(false);
-  const { showToast } = useToastState()
+  const { showToast } = useToastState();
 
   const onSend = async () => {
     if (!(select?.length > 0)) return showToast({ title: 'Vui lòng chọn phiếu lương cần gửi', severity: 'warning' });
     setLoading(true);
-    const response = await sendSalaryApi({ _ids: select?.map(s => s._id) });
+    const response = await sendSalaryApi({ _ids: select?.map((s) => s._id) });
     console.log(response);
     setLoading(false);
     if (response) {
-      console.log(1);
-      
       showToast({ title: 'Gửi phiếu lương thành công', severity: 'success' });
+      setParams((pre) => ({ ...pre, render: !pre.render }));
+      setSelect([]);
+    }
+  };
+
+  const onUpdate = async (status) => {
+    if (!(select?.length > 0)) return showToast({ title: 'Vui lòng chọn phiếu lương cần duyệt', severity: 'warning' });
+    setLoading(true);
+    const response = await updateStatusPendingPayslipApi({ _ids: select?.map(s => s._id), status });
+    setLoading(false);
+    if (response) {
+      showToast({ title: 'Chuyển trạng thái phiếu lương thành công', severity: 'success' });
       setParams((pre) => ({ ...pre, render: !pre.render }));
       setSelect([]);
     }
@@ -89,7 +94,12 @@ export const ApprovedPayslip = () => {
         setSelect={setSelect}
         baseActions={['detail']}
         setShow={setOpen}
-        headerInfo={{ moreHeader: [{ children: () => 'Gửi phiếu lương', onClick: () => onSend() }] }}
+        headerInfo={{
+          moreHeader: [
+            { children: () => 'Chuyển trạng thái chờ duyệt', onClick: () => onUpdate(1) },
+            { children: () => 'Gửi phiếu lương', onClick: () => onSend() },
+          ]
+        }}
         actionsInfo={{
           onViewDetail: (item) => setOpen(item._id),
           moreActions: [

@@ -46,11 +46,11 @@ export const sendMail = async ({ to, subject, text, html, attachments = [], type
   const params = { to, subject, content: html, type };
   try {
     await transporter.sendMail(mailOptions);
-    params.status = 2;
+    params.status = 1;
     await createLogMd(params);
     return { status: 1 };
   } catch (error) {
-    params.status = 1;
+    params.status = 2;
     params.mess = error.toString();
     await createLogMd(params);
     return { status: 0, mess: error.toString() };

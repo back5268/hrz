@@ -9,11 +9,21 @@ SalaryMd.init('Salary', {
   by: { type: ObjectId, ref: 'Account', required: true },
   department: { type: String, required: true },
   account: { type: String, required: true },
+  accountInfo: { type: { type: Number }, salary: Number },
   month: { type: Number, min: 0, required: true },
   from: { type: Date, required: true },
   to: { type: Date, required: true },
-  baseSalary: { type: Number, min: 0, required: true },
-  numberDay: { type: Number, min: 0, required: true },
+  day: {
+    noSalary: Number,
+    day: Number,
+    annualLeave: Number,
+    holiday: Number,
+    regime: Number,
+    compensatoryLeave: Number,
+    nomal: Number,
+    ot: Number
+  },
+  officialSalary: { type: Number },
   allowances: [
     {
       name: String,
@@ -22,17 +32,13 @@ SalaryMd.init('Salary', {
       summary: { type: Number, min: 0 }
     }
   ],
-  allowanceAmount: { type: Number, min: 0, required: true },
-  nomalWork: { total: Number, number: Number, summary: Number },
-  otWork: { total: Number, number: Number, summary: Number },
-  bhxhSalary: { type: Number },
   mandatory: {
     bhxh: { value: Number, summary: Number },
     bhyt: { value: Number, summary: Number },
     bhtn: { value: Number, summary: Number },
     unionDues: { value: Number, summary: Number }
   },
-  mandatoryAmount: { type: Number, min: 0, required: true },
+  mandatoryAmount: { type: Number },
   soonLates: [
     {
       date: { type: String, min: 0 },
@@ -46,7 +52,8 @@ SalaryMd.init('Salary', {
       summary: { type: Number, min: 0 }
     }
   ],
-  tax: { self: Number, dependent: { value: Number, quantity: Number }, rate: Number, total: Number },
+  pretaxIncome: { type: Number },
+  tax: { self: Number, dependent: { value: Number, quantity: Number }, rate: Number, summary: Number },
   summary: { type: Number, min: 0, required: true },
   status: { type: Number, enum: [1, 2], default: 1, description: '1: Chờ duyệt, 2: Đã duyệt' },
   deletedAt: { type: Date }

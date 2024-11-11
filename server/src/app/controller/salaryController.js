@@ -87,6 +87,7 @@ export const previewSalary = async (req, res) => {
     if (mess) res.json({ status: 0, mess });
     else res.json({ status: 1, data: data.html });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ status: 0, mess: error.toString() });
   }
 };

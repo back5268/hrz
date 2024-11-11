@@ -19,8 +19,10 @@ export class Salary {
     this.account = await detailAccountMd({ _id: this.accountId }, [{ path: 'position', select: 'allowances' }]);
     this.baseSalary = this.account?.salary;
     this.allowances = this.account?.position?.allowances;
-    this.dependents = (await detailInsuranceMd({ account: this.accountId }))?.dependents?.length || 0;
-    this.timekeepings = await listTimekeepingMd({ account: this.accountId, date: { $gte: this.from, $lte: this.to } });
+    this.dependent = (await detailInsuranceMd({ account: this.accountId }))?.dependents?.length || 0;
+    this.timekeepings = await listTimekeepingMd({ account: this.accountId, date: { $gte: this.from, $lte: this.to } }, false, false, [
+      { path: 'applications', select: 'type' }
+    ]);
   }
 
   async valid() {
@@ -36,14 +38,28 @@ export class Salary {
     await this.setUp();
     const { status: statusValid, mess: messValid } = await this.valid();
     if (!statusValid) return { status: statusValid, mess: messValid };
-    const timekeepingNomal = this.timekeepings?.filter((t) => t.type === 1);
-    const timekeepingOt = this.timekeepings?.filter((t) => t.type === 2);
-    let dayWorks = [],
+    const holidays = this.salarySetup?.holidays;
+    let day = { noSalary: 0, day: 0, annualLeave: 0, holiday: 0, regime: 0, compensatoryLeave: 0, nomal: 0, ot: 0 },
       soonLates = [];
     this.timekeepings.forEach((t) => {
-      if (t.checkInTime || t.checkOutTime) {
-        const item = dayWorks.find((d) => d === t.date);
-        if (!item) dayWorks.push(t.date);
+      if (t.checkInTime || t.checkOutTime) day.day += 1;
+      else if (holidays.includes(t.date)) day.holiday += 1;
+      else if (t.applications?.length > 0) {
+        let checked = false;
+        t.applications.forEach((application) => {
+          if (!checked) {
+            if (application.type === 1) {
+              day.annualLeave += 1;
+              checked = true;
+            } else if (application.type === 2) {
+              day.noSalary += 1;
+              checked = true;
+            } else if (application.type === 3) {
+              day.regime += 1;
+              checked = true;
+            }
+          }
+        });
       }
       if (t.soon || t.late) {
         const index = soonLates.findIndex((s) => s.date === t.date);
@@ -51,13 +67,22 @@ export class Salary {
         if (index >= 0) soonLates[index].value += value;
         else soonLates.push({ date: t.date, value });
       }
+      if (t.summary && t.summary > 0) {
+        if (t.type === 1) {
+          day.nomal += roundNumber(t.totalWork);
+        } else day.ot += roundNumber(t.summary);
+      }
     });
-    const numberDay = dayWorks.length;
+    const numberDay = day.day;
     const salaryCoefficient = this.salarySetup?.salaryCoefficient;
     let allowanceAmount = 0;
+    const bonuses = [];
+    this.bonuses.forEach((b) => {
+      bonuses.push({ name: b.name, summary: Math.round(b.type === 1 ? b.value : (b.value * this.baseSalary) / 100) });
+    });
     const allowances = [];
     this.allowances.forEach((a) => {
-      const summary = Math.round(a.type === 1 ? a.amount : (a.amount / salaryCoefficient) * numberDay)
+      const summary = Math.round(a.type === 1 ? a.amount : (a.amount / salaryCoefficient) * numberDay);
       allowanceAmount += summary;
       allowances.push({
         name: a.name,
@@ -66,66 +91,63 @@ export class Salary {
         summary
       });
     });
-    const monneyOfDay = (this.baseSalary + allowanceAmount) / 26;
-    const numberNomalWork = timekeepingNomal.reduce((a, b) => a + roundNumber(b.summary) || 0, 0);
-    const numberOtWork = timekeepingOt.reduce((a, b) => a + roundNumber(b.summary) || 0, 0);
-    const summaryNomalWork = Math.round(numberNomalWork * monneyOfDay);
-    const summaryOtWork = Math.round(numberOtWork * monneyOfDay);
-    const nomalWork = {
-      total: timekeepingNomal.reduce((a, b) => a + roundNumber(b.totalWork) || 0, 0),
-      number: numberNomalWork,
-      summary: summaryNomalWork
-    };
-    const otWork = {
-      total: timekeepingOt.reduce((a, b) => a + roundNumber(b.totalWork) || 0, 0),
-      number: numberOtWork,
-      summary: summaryOtWork
-    };
+    const bonusAmount = bonuses.reduce((a, b) => a + roundNumber(b.summary) || 0, 0);
+    if (bonusAmount > 0) allowances.push({ name: 'Thưởng', summary: bonusAmount });
+    const monneyOfDay = this.baseSalary / salaryCoefficient;
     const mandatoryz = this.salarySetup.mandatory;
-    const summaryWork = summaryNomalWork + summaryOtWork;
-    const bhxh = Math.round((summaryWork * mandatoryz.bhxh) / 100);
-    const bhyt = Math.round((summaryWork * mandatoryz.bhyt) / 100);
-    const bhtn = Math.round((summaryWork * mandatoryz.bhtn) / 100);
-    const unionDues = Math.round((summaryWork * mandatoryz.unionDues) / 100);
-
-    const bonuses = [];
-    this.bonuses.forEach((b) => {
-      bonuses.push({ name: b.name, summary: Math.round(b.type === 1 ? b.value : (b.value * this.baseSalary) / 100) });
-    });
+    const bhxh = Math.round((this.baseSalary * mandatoryz.bhxh) / 100);
+    const bhyt = Math.round((this.baseSalary * mandatoryz.bhyt) / 100);
+    const bhtn = Math.round((this.baseSalary * mandatoryz.bhtn) / 100);
+    const unionDues = Math.round((this.baseSalary * mandatoryz.unionDues) / 100);
     const soonLateConfigs = this.salarySetup.soonLate || [];
     if (soonLateConfigs?.length > 0) {
       soonLates.forEach((s) => {
         const soonLateConfig = soonLateConfigs.find((sc) => s.value >= sc.from && s.value <= sc.to);
         if (soonLateConfig) {
-          if (soonLateConfig.type === 1) s.summary = Math.round(soonLateConfig.value);
-          else s.summary = Math.round((soonLateConfig.value * monneyOfDay) / 100);
-        }
+          if (soonLateConfig.type === 1) s.summary = Math.round(soonLateConfig.value) || 0;
+          else s.summary = Math.round((soonLateConfig.value * monneyOfDay) / 100) || 0;
+        } else s.summary = 0;
       });
     } else soonLates = soonLates.map((s) => ({ ...s, summary: 0 }));
+    const officialSalary =
+      Math.round((day.holiday + day.nomal + day.ot) * monneyOfDay) - soonLates.reduce((a, b) => a + roundNumber(b.summary) || 0, 0);
+    const mandatoryAmount = bhxh + bhyt + bhtn + unionDues;
+    const pretaxIncome = officialSalary + allowances.reduce((a, b) => a + roundNumber(b.summary) || 0, 0) - mandatoryAmount;
+    const rates = this.taxSetup.taxs;
+    const tax = {
+      self: this.taxSetup?.self,
+      dependent: { value: this.taxSetup?.dependent, quantity: this.dependent },
+      rate: 0,
+      summary: 0
+    };
+    rates.forEach((r) => {
+      if (r.from <= pretaxIncome && r.to >= pretaxIncome) {
+        tax.rate = r.value;
+        tax.summary = (pretaxIncome * r.value) / 100;
+      }
+    });
     const params = {
       by: this.by,
-      account: this.accountId,
       department: this.account?.department?._id,
+      account: this.accountId,
+      accountInfo: { type: this.account.type, salary: this.baseSalary },
       month: this.month,
       from: this.from,
       to: this.to,
-      baseSalary: this.baseSalary,
-      numberDay,
+      day,
+      officialSalary,
       allowances,
-      allowanceAmount,
-      nomalWork,
-      otWork,
-      bhxhSalary: summaryWork,
       mandatory: {
         bhxh: { value: mandatoryz.bhxh, summary: bhxh },
         bhyt: { value: mandatoryz.bhyt, summary: bhyt },
         bhtn: { value: mandatoryz.bhtn, summary: bhtn },
         unionDues: { value: mandatoryz.unionDues, summary: unionDues }
       },
-      mandatoryAmount: bhxh + bhyt + bhtn + unionDues,
+      soonLates,
       bonuses,
-      summary:
-        summaryWork + bonuses.reduce((a, b) => a + roundNumber(b.summary) || 0, 0) - soonLates.reduce((a, b) => a + roundNumber(b.summary) || 0, 0)
+      pretaxIncome,
+      tax,
+      summary: pretaxIncome - tax.summary
     };
     await createSalaryMd(params);
     return { status: true };

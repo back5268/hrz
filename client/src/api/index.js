@@ -1,7 +1,6 @@
 export * from './application';
 export * from './auth';
 export * from './bonus';
-export * from './config';
 export * from './department';
 export * from './device';
 export * from './employee';

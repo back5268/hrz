@@ -1,4 +1,4 @@
-import { updateConfigApi, getConfigApi } from '@api';
+import { getConfigApi, updateConfigSalaryApi } from '@api';
 import { UploadFiles } from '@components/base';
 import { Buttonz, Dialogz, InputFormz, ProgressSpinnerz, TextAreaz } from '@components/core';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -62,7 +62,7 @@ export const TaxSetup = (props) => {
     };
     params = handleFiles(item, params, files, 'files');
     setLoading(true);
-    const res = await updateConfigApi(params);
+    const res = await updateConfigSalaryApi(params);
     setLoading(false);
     if (res) {
       showToast({ title: 'Cập nhật công thức tính thuế thành công', severity: 'success' });

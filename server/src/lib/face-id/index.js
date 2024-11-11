@@ -40,6 +40,8 @@ export const encodeFormData = (body = {}, media = {}) => {
 };
 
 export const registerFace = async (id, name, buffer) => {
+  const { data } = await checkFace(buffer);
+  if (data) await deleteFace(data);
   const base64String = buffer.buffer.toString('base64');
   const formData = new FormData();
   formData.append('api_key', API_KEY);
@@ -58,7 +60,6 @@ export const registerFace = async (id, name, buffer) => {
       return { status: 0, mess: 'Đăng ký thất bại' };
     }
   } catch (error) {
-    console.log(error.response?.data, 22);
     return { status: 0, mess: 'Đăng ký thất bại' };
   }
 };
@@ -68,7 +69,12 @@ export const deleteFace = async (id) => {
   formData.append('api_key', API_KEY);
   formData.append('id', id);
   try {
-    await axios.delete(`${DOMAIN}/api/faceid-delete/`, formData);
+    await axios.delete(`${DOMAIN}/api/faceid-delete/`, {
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
     return { status: 1 };
   } catch (error) {
     return { status: 0, mess: 'Đăng ký thất bại' };

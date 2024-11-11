@@ -178,14 +178,14 @@ export const templates = [
                 <th style="border: 1px solid black; padding: 4px 8px; text-align: left;">Tổng thu nhập trong tháng
                     (A + B)</th>
                 <th style="border: 1px solid black; padding: 4px 8px; text-align: center;">Đồng</th>
-                <th style="border: 1px solid black; padding: 4px 8px; text-align: right;"></th>
+                <th style="border: 1px solid black; padding: 4px 8px; text-align: right;">$tong_thu_nhap_trong_thang</th>
             </tr>
             <tr>
                 <th style="border: 1px solid black; padding: 4px 8px; text-align: center;">A</th>
                 <th style="border: 1px solid black; padding: 4px 8px; text-align: left;">Tổng lương theo ngày công
                 </th>
                 <th style="border: 1px solid black; padding: 4px 8px; text-align: center;">Đồng</th>
-                <th style="border: 1px solid black; padding: 4px 8px; text-align: center;"></th>
+                <th style="border: 1px solid black; padding: 4px 8px; text-align: right;">$tong_luong_theo_ngay_cong</th>
             </tr>
             <tr>
                 <td style="border: 1px solid black; padding: 4px 8px; text-align: center;">A.1</td>
@@ -320,7 +320,7 @@ export const templates = [
                     sinh (B.1 + B.2 + ... + B.14)
                 </th>
                 <th style="border: 1px solid black; padding: 4px 8px; text-align: center;">Đồng</th>
-                <th style="border: 1px solid black; padding: 4px 8px; text-align: center;"></th>
+                <th style="border: 1px solid black; padding: 4px 8px; text-align: right;">$tong_phu_cap</th>
             </tr>
             <tr>
                 <td style="border: 1px solid black; padding: 4px 8px; text-align: center;">$stt</td>
@@ -399,11 +399,11 @@ export const templates = [
                 <th style="border: 1px solid black; padding: 4px 8px; text-align: right;"></th>
             </tr>
             <tr>
-                <th style="border: 1px solid black; padding: 4px 8px; text-align: center;"></th>
-                <th style="border: 1px solid black; padding: 4px 8px; text-align: left;">Lý do truy thu/truy trả
-                    (nếu có)</th>
-                <th style="border: 1px solid black; padding: 4px 8px; text-align: center;"></th>
-                <th style="border: 1px solid black; padding: 4px 8px; text-align: right;"></th>
+                <td style="border: 1px solid black; padding: 4px 8px; text-align: center;"></td>
+                <td style="border: 1px solid black; padding: 4px 8px; text-align: left;">Lý do truy thu/truy trả
+                    (nếu có)</td>
+                <td style="border: 1px solid black; padding: 4px 8px; text-align: center;"></td>
+                <td style="border: 1px solid black; padding: 4px 8px; text-align: right;"></td>
             </tr>
         </tbody>
         <tbody>
@@ -673,18 +673,13 @@ export const tools = [
     ]
   },
   {
-    name: 'Quản lý phê duyệt',
+    name: 'Quản lý đơn từ',
     sort: 5,
     icon: 'InboxStackIcon',
     items: [
       {
         name: 'Quản lý đơn từ',
         route: '/application',
-        actions: ['create', 'update', 'read']
-      },
-      {
-        name: 'Yêu cầu phê duyệt',
-        route: '/request',
         actions: ['create', 'update', 'read']
       }
     ]
