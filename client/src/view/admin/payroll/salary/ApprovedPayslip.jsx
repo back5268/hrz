@@ -135,11 +135,11 @@ export const ApprovedPayslip = () => {
             </div>
           )}
         />
-        <Columnz header="Lương theo ngày chấm công" body={(e) => formatNumber(e.nomalWork?.summary + e.otWork?.summary)} />
+        <Columnz header="Lương theo ngày công" body={(e) => formatNumber(e.officialSalary)} />
         <Columnz header="Trợ cấp/ Phụ cấp" body={(e) => formatNumber(e.allowances?.reduce((a, b) => a + b.summary, 0))} />
-        <Columnz header="Thưởng" body={(e) => formatNumber(e.bonuses?.reduce((a, b) => a + b.summary, 0))} />
-        <Columnz header="Các khoản trừ" body={(e) => formatNumber(e.soonLates?.reduce((a, b) => a + b.summary, 0) + e.mandatoryAmount)} />
-        <Columnz header="Tổng" body={(e) => formatNumber(e.summary)} />
+        <Columnz header="Các khoản trừ" body={(e) => formatNumber(e.mandatoryAmount)} />
+        <Columnz header="Thuế thu nhập" body={(e) => formatNumber(e.tax.summary)} />
+        <Columnz header="Lương thực nhận" body={(e) => formatNumber(e.summary)} />
         <Columnz header="Trạng thái" body={(e) => Body(salaryStatus, e.status)} />
       </DataTable>
     </FormList>

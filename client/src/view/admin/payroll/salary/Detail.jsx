@@ -36,18 +36,15 @@ export const Detail = (props) => {
               <div className="flex justify-center">
                 <div className="w-7/12 flex flex-col gap-2">
                   <span>
-                    Lương thực nhận: <b className='text-xl text-red-500'>{formatNumber(item?.summary)}</b>
+                    Lương thực nhận: <b className="text-xl text-red-500">{formatNumber(item?.summary)}</b>
                   </span>
-                  <Text label="Lương theo hợp đồng lao động" value={formatNumber(item?.baseSalary) + ' VNĐ'} />
-                  <Text label="Số ngày đi làm chấm công" value={item?.numberDay} />
+                  <Text label="Lương theo hợp đồng lao động" value={formatNumber(item?.accountInfo?.salary) + ' VNĐ'} />
                   <Text
-                    label={`Số công chính thức ${item?.nomalWork?.number}/${item?.nomalWork?.total}`}
-                    value={formatNumber(item?.nomalWork?.summary) + ' VNĐ'}
+                    label="Số ngày được tính lương"
+                    value={item?.day?.nomal + item?.day?.ot + item?.day?.holiday + item?.day?.annualLeave + item?.day?.regime}
                   />
-                  <Text
-                    label={`Số công làm thêm giờ ${item?.otWork?.number}/${item?.otWork?.total}`}
-                    value={formatNumber(item?.otWork?.summary) + ' VNĐ'}
-                  />
+                  <Text label="Số công chính thức" value={formatNumber(item?.day?.nomal)} />
+                  <Text label="Số công làm thêm giờ" value={formatNumber(item?.day?.ot)} />
                   <Text label="Phạt đi muộn / về sớm" value={formatNumber(item?.soonLates?.reduce((a, b) => a + b.summary, 0)) + ' VNĐ'} />
                 </div>
               </div>
@@ -70,9 +67,9 @@ export const Detail = (props) => {
                 <Columnz
                   header="Giá trị"
                   body={(e) => (
-                    <span className="text-nowrap text-start flex justify-start">
-                      <b>{formatNumber(e.value)} VNĐ</b> {e.type === 1 ? '(Theo tháng)' : '(Theo ngày làm việc)'}
-                    </span>
+                    <div className="text-nowrap text-start flex justify-start gap-2">
+                      <b>{formatNumber(e.value)} VNĐ </b> <span>{e.type === 1 ? ' (Theo tháng)' : ' (Theo ngày công thực tế)'}</span>
+                    </div>
                   )}
                 />
                 <Columnz header="Tổng" body={(e) => formatNumber(e.summary) + ' VNĐ'} />

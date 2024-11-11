@@ -30,7 +30,7 @@ clientApi.interceptors.response.use(
     console.log(error);
     
     if (error) {
-      showToast({ title: 'Đường truyền không ổn định vui lòng thử lại sau', severity: 'error' });
+      showToast({ title: error?.response?.data?.mess || 'Đường truyền không ổn định vui lòng thử lại sau', severity: 'error' });
     }
   }
 );

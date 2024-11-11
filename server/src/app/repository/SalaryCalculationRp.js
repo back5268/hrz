@@ -40,22 +40,23 @@ export class Salary {
     if (!statusValid) return { status: statusValid, mess: messValid };
     const holidays = this.salarySetup?.holidays;
     let day = { noSalary: 0, day: 0, annualLeave: 0, holiday: 0, regime: 0, compensatoryLeave: 0, nomal: 0, ot: 0 },
-      soonLates = [];
+      soonLates = [],
+      salaryCoefficient = 0;
     this.timekeepings.forEach((t) => {
-      if (t.checkInTime || t.checkOutTime) day.day += 1;
-      else if (holidays.includes(t.date)) day.holiday += 1;
+      if (t.checkInTime || t.checkOutTime) day.day += roundNumber(t.totalWork);
+      else if (holidays.includes(t.date)) day.holiday += t.totalWork;
       else if (t.applications?.length > 0) {
         let checked = false;
         t.applications.forEach((application) => {
           if (!checked) {
             if (application.type === 1) {
-              day.annualLeave += 1;
+              day.annualLeave += t.totalWork;
               checked = true;
             } else if (application.type === 2) {
-              day.noSalary += 1;
+              day.noSalary += t.totalWork;
               checked = true;
             } else if (application.type === 3) {
-              day.regime += 1;
+              day.regime += t.totalWork;
               checked = true;
             }
           }
@@ -67,14 +68,14 @@ export class Salary {
         if (index >= 0) soonLates[index].value += value;
         else soonLates.push({ date: t.date, value });
       }
+      salaryCoefficient += roundNumber(t.totalWork);
       if (t.summary && t.summary > 0) {
         if (t.type === 1) {
           day.nomal += roundNumber(t.totalWork);
         } else day.ot += roundNumber(t.summary);
       }
     });
-    const numberDay = day.day;
-    const salaryCoefficient = this.salarySetup?.salaryCoefficient;
+    const numberDay = day.nomal;
     let allowanceAmount = 0;
     const bonuses = [];
     this.bonuses.forEach((b) => {
@@ -114,16 +115,18 @@ export class Salary {
     const mandatoryAmount = bhxh + bhyt + bhtn + unionDues;
     const pretaxIncome = officialSalary + allowances.reduce((a, b) => a + roundNumber(b.summary) || 0, 0) - mandatoryAmount;
     const rates = this.taxSetup.taxs;
+    const totalTax = pretaxIncome - this.taxSetup?.self - this.taxSetup?.dependent * this.dependent
     const tax = {
       self: this.taxSetup?.self,
       dependent: { value: this.taxSetup?.dependent, quantity: this.dependent },
+      total: totalTax > 0 ? totalTax : 0,
       rate: 0,
       summary: 0
     };
     rates.forEach((r) => {
-      if (r.from <= pretaxIncome && r.to >= pretaxIncome) {
+      if (totalTax > 0 && r.from * 1000000 <= totalTax && r.to * 1000000 >= totalTax) {
         tax.rate = r.value;
-        tax.summary = (pretaxIncome * r.value) / 100;
+        tax.summary = (totalTax * r.value) / 100;
       }
     });
     const params = {
@@ -143,6 +146,7 @@ export class Salary {
         bhtn: { value: mandatoryz.bhtn, summary: bhtn },
         unionDues: { value: mandatoryz.unionDues, summary: unionDues }
       },
+      mandatoryAmount,
       soonLates,
       bonuses,
       pretaxIncome,

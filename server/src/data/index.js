@@ -354,7 +354,7 @@ export const templates = [
                 <th style="border: 1px solid black; padding: 4px 8px; text-align: left;">Tổng các khoản trừ (2.1 +
                     2.2 + ...)</th>
                 <th style="border: 1px solid black; padding: 4px 8px; text-align: center;">Đồng</th>
-                <th style="border: 1px solid black; padding: 4px 8px; text-align: right;"></th>
+                <th style="border: 1px solid black; padding: 4px 8px; text-align: right;">$tong_cac_khoan_tru</th>
             </tr>
             <tr>
                 <td style="border: 1px solid black; padding: 4px 8px; text-align: center;">2.1</td>

@@ -144,7 +144,7 @@ export const Dependents = (props) => {
         <Columnz
           header="Ngày sinh"
           body={(item) => (
-            <Calendar value={item.birthday} onChange={(e) => onChange(item, 'birthday', e.target.value)} className="w-full" />
+            <Calendar value={new Date(item.birthday)} onChange={(e) => onChange(item, 'birthday', e.target.value)} className="w-full" />
           )}
         />
         <Columnz

@@ -53,7 +53,7 @@ SalaryMd.init('Salary', {
     }
   ],
   pretaxIncome: { type: Number },
-  tax: { self: Number, dependent: { value: Number, quantity: Number }, rate: Number, summary: Number },
+  tax: { self: Number, dependent: { value: Number, quantity: Number }, total: Number, rate: Number, summary: Number },
   summary: { type: Number, min: 0, required: true },
   status: { type: Number, enum: [1, 2], default: 1, description: '1: Chờ duyệt, 2: Đã duyệt' },
   deletedAt: { type: Date }
