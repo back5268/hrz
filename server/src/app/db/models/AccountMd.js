@@ -63,3 +63,7 @@ export const updateManyAccountMd = (where, attr) => {
 export const deleteAccountMd = (where) => {
   return AccountMd.delete({ where });
 };
+
+export const aggregateAccountMd = (aggregate) => {
+  return AccountMd.aggregate({ aggregate });
+};

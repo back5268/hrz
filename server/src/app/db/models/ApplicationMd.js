@@ -53,3 +53,7 @@ export const updateManyApplicationMd = (where, attr) => {
 export const deleteApplicationMd = (where) => {
   return ApplicationMd.delete({ where });
 };
+
+export const aggregateApplicationMd = (aggregate) => {
+  return ApplicationMd.aggregate({ aggregate });
+};

@@ -42,3 +42,7 @@ export const updateManyDepartmentMd = (where, attr) => {
 export const deleteDepartmentMd = (where) => {
   return DepartmentMd.delete({ where });
 };
+
+export const aggregateDepartmentMd = (aggregate) => {
+  return DepartmentMd.aggregate({ aggregate });
+};

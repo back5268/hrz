@@ -6,7 +6,7 @@ export const listApplicationValid = {
   status: { type: 'number', allowNull: true },
   type: { type: 'number', allowNull: true },
   fromDate: { type: 'date', allowNull: true },
-  tpDate: { type: 'date', allowNull: true }
+  toDate: { type: 'date', allowNull: true }
 };
 
 export const detailApplicationValid = {

@@ -1,5 +1,5 @@
-export const Cardz = ({ children }) => {
+export const Cardz = ({ className = "", children }) => {
   return (
-    <div className="p-4 shadow-custom rounded-md pb-12">{children}</div>
+    <div className={`p-4 shadow-custom rounded-md ${className}`}>{children}</div>
   )
 }

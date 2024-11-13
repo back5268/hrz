@@ -55,3 +55,7 @@ export const updateManyTimekeepingMd = (where, attr) => {
 export const deleteTimekeepingMd = (where) => {
   return TimekeepingMd.delete({ where });
 };
+
+export const aggregateTimekeepingMd = (aggregate) => {
+  return TimekeepingMd.aggregate({ aggregate });
+};

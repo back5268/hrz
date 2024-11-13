@@ -51,7 +51,7 @@ export const DetailBonus = (props) => {
 
   return (
     <FormDetail
-      title="phòng ban"
+      title="khoản thưởng"
       open={open}
       setOpen={() => {
         setOpen(false);

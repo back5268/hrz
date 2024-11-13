@@ -63,6 +63,10 @@ class ModelBase {
     if (Object.keys(where).length === 0) return;
     return this.model.updateMany(where, { updatedAt: new Date(), deletedAt: new Date() }, { new: true });
   }
+
+  static aggregate({ aggregate }) {
+    return this.model.aggregate(aggregate);
+  }
 }
 
 export { ModelBase };

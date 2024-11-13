@@ -22,7 +22,6 @@ import {
 } from '@models';
 import { approveApplication } from '@repository';
 import { validateData } from '@utils';
-import { request } from 'express';
 import { ioSk } from 'src';
 
 export const getListApplication = async (req, res) => {

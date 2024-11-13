@@ -21,10 +21,11 @@ import { salaryCalculationRouter } from './salaryCalculation';
 import { bonusRouter } from './bonus';
 import { approvedPayslipRouter } from './approvedPayslip';
 import { pendingPayslipRouter } from './pendingPayslip';
+import { dashboardRouter } from './dashboard';
 
 export const webRouter = express.Router();
 
-webRouter.use(authMiddleware, permissionMiddleware);
+// webRouter.use(authMiddleware, permissionMiddleware);
 webRouter.use('/department', departmentRouter);
 webRouter.use('/job-position', jobPositionRouter);
 webRouter.use('/log', logRouter);
@@ -46,3 +47,4 @@ webRouter.use('/bonus', bonusRouter);
 webRouter.use('/salary-calculation', salaryCalculationRouter);
 webRouter.use('/approved-payslip', approvedPayslipRouter);
 webRouter.use('/pending-payslip', pendingPayslipRouter);
+webRouter.use('/dashboard', dashboardRouter);
