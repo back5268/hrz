@@ -1,9 +1,9 @@
 import { detailAccountMd, detailSalaryMd, detailTemplateMd } from '@models';
-import { formatNumber, ghepGiaTri, replaceFistText } from '@utils';
+import { ghepGiaTri, replaceFistText } from '@utils';
 import { JSDOM } from 'jsdom';
 
-export const previewSalaryRp = async (_id) => {
-  const data = await detailSalaryMd({ _id });
+export const previewSalaryRp = async (_id, dataz) => {
+  const data = dataz ? dataz : await detailSalaryMd({ _id });
   if (!data) return { status: 0, mess: 'Phiếu lương không tồn tại!' };
   const template = await detailTemplateMd({ type: 5 });
   if (!template || !template.content) return { status: 0, mess: 'Không có mẫu phiếu lương!' };
@@ -11,7 +11,6 @@ export const previewSalaryRp = async (_id) => {
   if (!account) return { status: 0, mess: 'Không tìm thấy nhân viên!' };
   const content = template.content
   const subject = template.subject;
-
   let allowanceAmount = 0;
   const templateHtml = new JSDOM(content, { contentType: 'text/html' });
   const table = templateHtml.window.document.querySelector('table');

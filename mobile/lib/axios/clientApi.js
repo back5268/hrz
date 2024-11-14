@@ -4,7 +4,7 @@ import Toast from 'react-native-toast-message';
 
 export const clientApi = axios.create({
   // baseURL: 'http://api.backz.s-tech.info/',
-  baseURL: 'http://192.168.6.46:5000/',
+  baseURL: 'http://192.168.6.54:5000/',
   timeout: 10000
 });
 
@@ -20,14 +20,18 @@ clientApi.interceptors.request.use(
 
 clientApi.interceptors.response.use(
   async function (res) {
-    if (res.data?.status) return res.data.data;
-    else Toast.show({ type: 'error', text2: res.data?.mess });
+    if (res.data?.status || res.data?.status === 0) {
+      if (res.data?.status) return res.data.data;
+      else Toast.show({ type: 'error', text2: res.data?.mess });
+    } else return res.data;
   },
   async function (error) {
+    console.log(error);
+    
     if (error) {
       Toast.show({
         type: 'error',
-        text2: 'Đường truyền không ổn định!'
+        text2: error?.response?.data?.mess || 'Đường truyền không ổn định!'
       });
     }
   }

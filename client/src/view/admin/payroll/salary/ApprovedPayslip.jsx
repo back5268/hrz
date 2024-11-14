@@ -1,4 +1,11 @@
-import { getListMonthInfoApi, getListApprovedPayslipApi, previewApprovedPayslipApi, sendSalaryApi, updateStatusPendingPayslipApi } from '@api';
+import {
+  getListMonthInfoApi,
+  getListApprovedPayslipApi,
+  previewApprovedPayslipApi,
+  sendSalaryApi,
+  updateStatusPendingPayslipApi,
+  downloadSalaryApi
+} from '@api';
 import { DataTable, FormList, DataFilter, Body } from '@components/base';
 import { Columnz, Dropdownzz } from '@components/core';
 import { useGetParams } from '@hooks';
@@ -7,7 +14,7 @@ import React, { useState } from 'react';
 import { Detail } from './Detail';
 import { useDataState, useToastState } from '@store';
 import { formatDate, formatNumber } from '@lib/helper';
-import { PrinterIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon, PrinterIcon } from '@heroicons/react/24/outline';
 import { salaryStatus } from '@constant';
 
 export const ApprovedPayslip = () => {
@@ -38,7 +45,7 @@ export const ApprovedPayslip = () => {
   const onUpdate = async (status) => {
     if (!(select?.length > 0)) return showToast({ title: 'Vui lòng chọn phiếu lương cần duyệt', severity: 'warning' });
     setLoading(true);
-    const response = await updateStatusPendingPayslipApi({ _ids: select?.map(s => s._id), status });
+    const response = await updateStatusPendingPayslipApi({ _ids: select?.map((s) => s._id), status });
     setLoading(false);
     if (response) {
       showToast({ title: 'Chuyển trạng thái phiếu lương thành công', severity: 'success' });
@@ -49,9 +56,12 @@ export const ApprovedPayslip = () => {
 
   const onPreviewPayslip = async (item) => {
     const response = await previewApprovedPayslipApi({ _id: item._id });
-    if (response) {
-      window.open(`/approved-payslip/preview/${item._id}`, '_blank');
-    }
+    if (response) window.open(`/approved-payslip/preview/${item._id}`, '_blank');
+  };
+
+  const downloadPayslip = async (item) => {
+    const response = await downloadSalaryApi({ _id: item._id });
+    if (response) window.open(response, '_blank');
   };
 
   return (
@@ -97,7 +107,7 @@ export const ApprovedPayslip = () => {
         headerInfo={{
           moreHeader: [
             { children: () => 'Chuyển trạng thái chờ duyệt', onClick: () => onUpdate(1) },
-            { children: () => 'Gửi phiếu lương', onClick: () => onSend() },
+            { children: () => 'Gửi phiếu lương', onClick: () => onSend() }
           ]
         }}
         actionsInfo={{
@@ -106,6 +116,10 @@ export const ApprovedPayslip = () => {
             {
               icon: PrinterIcon,
               onClick: (item) => onPreviewPayslip(item)
+            },
+            {
+              icon: ArrowDownTrayIcon,
+              onClick: (item) => downloadPayslip(item)
             }
           ]
         }}

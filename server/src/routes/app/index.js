@@ -6,6 +6,7 @@ import { employeeRouter } from './employee';
 import { newRouter } from './new';
 import { applicationRouter } from './application';
 import { notifyRouter } from './notify';
+import { payrollRouter } from './payroll';
 
 export const appRouter = express.Router();
 
@@ -16,3 +17,4 @@ appRouter.use('/employee', employeeRouter);
 appRouter.use('/new', newRouter);
 appRouter.use('/application', applicationRouter);
 appRouter.use('/notify', notifyRouter);
+appRouter.use('/payroll', payrollRouter);

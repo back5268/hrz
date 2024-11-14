@@ -7,6 +7,7 @@ import moment from 'moment';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { themeColor } from '@/theme';
+import { router } from 'expo-router';
 
 const New = () => {
   const [render, setRender] = useState(false);
@@ -23,7 +24,11 @@ const New = () => {
         onRefresh={() => setRender((pre) => !pre)}
         refreshing={false}
         renderItem={({ item }) => (
-          <Pressable className="rounded-md p-3 mx-4 my-2" style={{ backgroundColor: themeColor.surfaceVariant }}>
+          <Pressable
+            onPress={() => router.push(`/new/${item._id}`)}
+            className="rounded-md p-3 mx-4 my-2"
+            style={{ backgroundColor: themeColor.surfaceVariant }}
+          >
             <View className="flex flex-row justify-between items-center">
               <View className="w-20 h-20 rounded-lg flex justify-center items-center">
                 <Image

@@ -46,6 +46,7 @@ export const signIn = async (req, res) => {
     if (!checkUsername) return res.json({ status: 0, mess: 'Người dùng không tồn tại!' });
     if (checkUsername.status === 0)
       return res.json({ status: 0, mess: 'Tài khoản của bạn đã bị khóa, vui lòng liên hệ quản trị viên!' });
+    if (!checkUsername.password) return res.json({ status: 0, mess: 'Mật khẩu không chính xác!' });
     const passLogin = await bcrypt.compare(password, checkUsername.password);
     if (!passLogin) return res.json({ status: 0, mess: 'Mật khẩu không chính xác!' });
     const token = jwt.sign({ _id: checkUsername._id }, process.env.JWT_SECRET_TOKEN);

@@ -25,7 +25,7 @@ import { dashboardRouter } from './dashboard';
 
 export const webRouter = express.Router();
 
-// webRouter.use(authMiddleware, permissionMiddleware);
+webRouter.use(authMiddleware, permissionMiddleware);
 webRouter.use('/department', departmentRouter);
 webRouter.use('/job-position', jobPositionRouter);
 webRouter.use('/log', logRouter);

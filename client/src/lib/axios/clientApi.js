@@ -27,8 +27,6 @@ clientApi.interceptors.response.use(
     else return res.data
   },
   async function (error) {
-    console.log(error);
-    
     if (error) {
       showToast({ title: error?.response?.data?.mess || 'Đường truyền không ổn định vui lòng thử lại sau', severity: 'error' });
     }

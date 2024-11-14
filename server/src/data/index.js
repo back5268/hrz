@@ -155,7 +155,7 @@ export const templates = [
         hoặc thăm hỏi tiền lương của bất kỳ đồng nghiệp nào)</p>
     <p style="margin: 4px; line-height: 24px">Họ và tên: $ho_va_ten</p>
     <p style="margin: 4px; line-height: 24px">Mã nhân viên: $ma_nhan_vien</p>
-    <table style="border-collapse: collapse; width: 100%; margin: 20px 0; font-size: 14px;">
+    <table style="border-collapse: collapse; margin: 20px 0; font-size: 14px;">
         <thead>
             <tr>
                 <th
@@ -174,18 +174,20 @@ export const templates = [
         </thead>
         <tbody>
             <tr>
-                <th style="border: 1px solid black; padding: 4px 8px; text-align: center;">1</th>
-                <th style="border: 1px solid black; padding: 4px 8px; text-align: left;">Tổng thu nhập trong tháng
+                <th style="border: 1px solid black; padding: 4px 8px; text-align: center; width: 5%;">1</th>
+                <th style="border: 1px solid black; padding: 4px 8px; text-align: left; width: 70%;">Tổng thu nhập trong tháng
                     (A + B)</th>
-                <th style="border: 1px solid black; padding: 4px 8px; text-align: center;">Đồng</th>
-                <th style="border: 1px solid black; padding: 4px 8px; text-align: right;">$tong_thu_nhap_trong_thang</th>
+                <th style="border: 1px solid black; padding: 4px 8px; text-align: center; width: 10%;">Đồng</th>
+                <th style="border: 1px solid black; padding: 4px 8px; text-align: right; width: 15%;">$tong_thu_nhap_trong_thang
+                </th>
             </tr>
             <tr>
                 <th style="border: 1px solid black; padding: 4px 8px; text-align: center;">A</th>
                 <th style="border: 1px solid black; padding: 4px 8px; text-align: left;">Tổng lương theo ngày công
                 </th>
                 <th style="border: 1px solid black; padding: 4px 8px; text-align: center;">Đồng</th>
-                <th style="border: 1px solid black; padding: 4px 8px; text-align: right;">$tong_luong_theo_ngay_cong</th>
+                <th style="border: 1px solid black; padding: 4px 8px; text-align: right;">$tong_luong_theo_ngay_cong
+                </th>
             </tr>
             <tr>
                 <td style="border: 1px solid black; padding: 4px 8px; text-align: center;">A.1</td>

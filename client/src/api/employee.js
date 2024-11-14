@@ -14,3 +14,4 @@ export const createContractApi = (params) => postData('/web/contract/createContr
 export const updateContractApi = (params) => putData('/web/contract/updateContract', params);
 export const cancelContractApi = (params) => putData('/web/contract/cancelContract', params);
 export const previewContractApi = (params) => getData('/web/contract/previewContract', params);
+export const downloadContractApi = (params) => getData('/web/contract/download', params);

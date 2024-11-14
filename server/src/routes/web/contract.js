@@ -1,4 +1,12 @@
-import { cancelContract, createContract, deleteContract, getListContract, previewContract, updateContract } from '@controller';
+import {
+  cancelContract,
+  createContract,
+  deleteContract,
+  downloadContract,
+  getListContract,
+  previewContract,
+  updateContract
+} from '@controller';
 import express from 'express';
 
 export const contractRouter = express.Router();
@@ -9,3 +17,4 @@ contractRouter.post('/createContract', createContract);
 contractRouter.put('/updateContract', updateContract);
 contractRouter.put('/cancelContract', cancelContract);
 contractRouter.get('/previewContract', previewContract);
+contractRouter.get('/download', downloadContract);

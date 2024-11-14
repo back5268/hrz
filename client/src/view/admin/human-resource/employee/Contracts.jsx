@@ -1,4 +1,4 @@
-import { cancelContractApi, deleteContractApi, getListContractApi, previewContractApi } from '@api';
+import { cancelContractApi, deleteContractApi, downloadContractApi, getListContractApi, previewContractApi } from '@api';
 import { Body, DataFilter, TimeBody, UserBody } from '@components/base';
 import { Buttonz, Columnz, Dropdownzz, Tablez } from '@components/core';
 import { useGetApi } from '@lib/react-query';
@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { DetailContract } from './DetailContract';
 import { contractStatus, contractTypes } from '@constant';
 import { useParams } from 'react-router-dom';
-import { DocumentMagnifyingGlassIcon, PrinterIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon, DocumentMagnifyingGlassIcon, PrinterIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { useToastState } from '@store';
 import { Print } from './Print';
@@ -14,6 +14,7 @@ import { Print } from './Print';
 export const Contracts = () => {
   const { _id } = useParams();
   const { showToast } = useToastState();
+  const [loading, setLoading] = useState(false);
   const [params, setParams] = useState({});
   const [filter, setFilter] = useState({});
   const [open, setOpen] = useState(false);
@@ -56,7 +57,9 @@ export const Contracts = () => {
   };
 
   const onViewPrint = async (item) => {
+    setLoading(true)
     const response = await previewContractApi({ account: _id, _id: item._id });
+    setLoading(false)
     if (response) setOpenPrint({ _id: item._id, template: response });
   };
 
@@ -84,7 +87,7 @@ export const Contracts = () => {
             <Buttonz onClick={() => setOpen(true)}>Thêm mới</Buttonz>
           </div>
         }
-        loading={isLoading}
+        loading={isLoading || loading}
         value={data}
         totalRecords={data?.length}
         rows={100}
@@ -119,6 +122,17 @@ export const Contracts = () => {
                 outlined
                 className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
                 icon={<PrinterIcon className="w-5" />}
+              />
+              <Buttonz
+                onClick={async () => {
+                  setLoading(true)
+                  const response = await downloadContractApi({ account: _id, _id: e._id });
+                  setLoading(false)
+                  if (response) window.open(response, '_blank');
+                }}
+                outlined
+                className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                icon={<ArrowDownTrayIcon className="w-5" />}
               />
             </div>
           )}

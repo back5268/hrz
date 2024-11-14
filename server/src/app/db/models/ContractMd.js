@@ -13,6 +13,7 @@ ContractMd.init('Contract', {
   note: { type: String },
   status: { type: Number, required: true, enum: [1, 2, 3, 4] },
   template: { type: String },
+  file: { type: String },
   deletedAt: { type: Date }
 });
 

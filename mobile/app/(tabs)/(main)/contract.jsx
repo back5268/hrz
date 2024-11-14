@@ -1,17 +1,21 @@
-import { getListContractApi } from '@/api';
+import { downloadContractApi, getListContractApi } from '@/api';
 import { useGetApi } from '@/lib/react-query';
-import { FlatList, Pressable, Text, View } from 'react-native';
-import { Loadingz } from '@/components/core';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { Iconz, Loadingz } from '@/components/core';
 import { contractStatus, contractTypes } from '@/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { themeColor } from '@/theme';
 import { formatDate } from '@/lib/helper';
+import * as WebBrowser from 'expo-web-browser';
+import { useUserState } from '@/store';
 
 const Contract = () => {
   const [render, setRender] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { isLoading, data } = useGetApi(getListContractApi, { render }, 'contract');
-  if (isLoading) return <Loadingz />;
+  const { userInfo } = useUserState();
+  if (isLoading || loading) return <Loadingz />;
 
   return (
     <SafeAreaView className="flex-1">
@@ -26,7 +30,7 @@ const Contract = () => {
           const status = contractStatus.find((s) => s._id === item.status);
 
           return (
-            <Pressable
+            <View
               className="rounded-md my-2 p-3 flex flex-row justify-between items-center mx-4"
               style={{ backgroundColor: themeColor.surfaceVariant }}
             >
@@ -36,11 +40,24 @@ const Contract = () => {
                 <Text className="leading-6">
                   {formatDate(item.signedDate, 'date')} - {formatDate(item.expiredDate, 'date')}
                 </Text>
+                <View className="flex justify-center items-center rounded-md p-2 min-w-[100] mt-4" style={{ backgroundColor: status?.color }}>
+                  <Text className="uppercase text-white font-semibold text-xs">{status?.name}</Text>
+                </View>
               </View>
-              <View className="flex justify-center items-center rounded-md p-2 min-w-[100]" style={{ backgroundColor: status?.color }}>
-                <Text className="uppercase text-white font-semibold text-xs">{status?.name}</Text>
-              </View>
-            </Pressable>
+              <TouchableOpacity
+                onPress={async () => {
+                  setLoading(true)
+                  const response = await downloadContractApi({ _id: item._id, account: userInfo._id });
+                  setLoading(false)
+                  if (response) await WebBrowser.openBrowserAsync(response);
+                }}
+                className="flex justify-center items-center rounded-md p-2 min-w-[100]"
+              >
+                <View className="p-2 rounded-full border-2 border-primary">
+                  <Iconz name="file-download-outline" />
+                </View>
+              </TouchableOpacity>
+            </View>
           );
         }}
       />

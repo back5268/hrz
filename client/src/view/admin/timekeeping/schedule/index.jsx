@@ -114,7 +114,7 @@ export const Schedule = () => {
       newData.forEach((n) => {
         const object = {};
         const data = n.data;
-        const shift = shifts.find((s) => s._id === n.shift);
+        const shift = shifts?.find((s) => s._id === n.shift);
         let totalTime = 0, totalTimeOt = 0, totalWork = 0, totalWorkOt = 0; 
         data.forEach((datum) => {
           if (datum.type === 2) {
