@@ -2,7 +2,7 @@ import { exportSyntheticTimekeepingApi, getListShiftInfoApi, getListSyntheticTim
 import { DataFilter } from '@components/base';
 import { Buttonz, Calendarzz, Dropdownzz } from '@components/core';
 import { days } from '@constant';
-import { databaseDate, getDates } from '@lib/helper';
+import { databaseDate, getDates, roundNumber } from '@lib/helper';
 import { useGetApi } from '@lib/react-query';
 import { useDataState, useToastState } from '@store';
 import moment from 'moment';
@@ -191,8 +191,8 @@ export const SyntheticTimekeeping = () => {
             }}
             className="min-w-28"
           ></Column>
-          <Column field="total" body={(e) => <span className="font-medium text-lg">{e.reality} / {e.total}</span>} className="min-w-24"></Column>
-          <Column field="totalOt" body={(e) => <span className="font-medium text-lg">{e.realityOt} / {e.totalOt}</span>} className="min-w-24"></Column>
+          <Column field="total" body={(e) => <span className="font-medium text-lg">{roundNumber(e.reality)} / {e.total}</span>} className="min-w-24"></Column>
+          <Column field="totalOt" body={(e) => <span className="font-medium text-lg">{roundNumber(e.realityOt)} / {e.totalOt}</span>} className="min-w-24"></Column>
 
           {dates.map((date, index) => (
             <Column

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Chart } from 'primereact/chart';
 import { Cardz } from '@components/core';
 import { genders } from '@constant';
+import { themeColor } from '@theme';
 
 export const DoughnutChart = ({ data = [] }) => {
   const [chartData, setChartData] = useState({});
@@ -18,8 +19,16 @@ export const DoughnutChart = ({ data = [] }) => {
             if (datum) return datum.count;
             else return 0;
           }),
-          backgroundColor: [documentStyle.getPropertyValue('--yellow-500'), documentStyle.getPropertyValue('--green-500')],
-          hoverBackgroundColor: [documentStyle.getPropertyValue('--yellow-400'), documentStyle.getPropertyValue('--green-400')]
+          backgroundColor: [
+            themeColor.primary,
+            documentStyle.getPropertyValue('--orange-500'),
+            documentStyle.getPropertyValue('--red-500')
+          ],
+          hoverBackgroundColor: [
+            themeColor.primary,
+            documentStyle.getPropertyValue('--orange-400'),
+            documentStyle.getPropertyValue('--red-400')
+          ]
         }
       ]
     };

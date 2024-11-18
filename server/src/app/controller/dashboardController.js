@@ -145,7 +145,6 @@ export const getDataDashboard = async (req, res) => {
     timekeepingz.forEach((timekeeping) => {
       const index = timekeepings.findIndex((t) => t.date === timekeeping.date);
       const object = timekeepings[index] ? timekeepings[index] : { diLam: 0, nghiKhongPhep: 0, nghiCoPhep: 0, congTac: 0, diMuonVeSom: 0 };
-      if (timekeeping.late || timekeeping.soon) object.diMuonVeSom += 1;
       const application = timekeeping.applications?.[0] || {};
       if ([1, 2, 3].includes(application.type)) object.nghiCoPhep += 1;
       else if ([7].includes(application.type)) object.congTac += 1;

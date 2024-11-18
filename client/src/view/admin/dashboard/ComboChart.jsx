@@ -19,7 +19,7 @@ export const ComboChart = ({ data = [], isLoading }) => {
         {
           type: 'line',
           label: 'Nghỉ có phép',
-          borderColor: documentStyle.getPropertyValue('--blue-500'),
+          borderColor: documentStyle.getPropertyValue('--orange-500'),
           borderWidth: 2,
           fill: false,
           tension: 0.4,
@@ -28,7 +28,7 @@ export const ComboChart = ({ data = [], isLoading }) => {
         {
           type: 'line',
           label: 'Nghỉ không phép',
-          borderColor: documentStyle.getPropertyValue('--blue-500'),
+          borderColor: documentStyle.getPropertyValue('--red-500'),
           borderWidth: 2,
           fill: false,
           tension: 0.4,
@@ -46,7 +46,7 @@ export const ComboChart = ({ data = [], isLoading }) => {
         {
           type: 'line',
           label: 'Công tác',
-          borderColor: documentStyle.getPropertyValue('--blue-500'),
+          borderColor: documentStyle.getPropertyValue('--green-500'),
           borderWidth: 2,
           fill: false,
           tension: 0.4,
@@ -54,7 +54,7 @@ export const ComboChart = ({ data = [], isLoading }) => {
         },
         {
           type: 'bar',
-          label: 'Đi làm',
+          label: 'Đúng giờ',
           backgroundColor: themeColor.primary,
           data: data.map((d) => d.diLam),
           borderColor: 'white',
