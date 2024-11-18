@@ -1,5 +1,10 @@
 import moment from 'moment';
 
+export const roundNumber = (value) => {
+  if (!Number(value)) return 0
+  return Math.round(value * 100) / 100;
+};
+
 export const removeUndefinedProps = (obj) => {
   for (let prop in obj) {
     if (!(obj[prop] || obj[prop] === '' || obj[prop] === 0)) {

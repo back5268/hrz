@@ -581,7 +581,15 @@ export const configs = [
 ];
 
 export const tools = [
-  { name: 'Trang chủ', icon: 'Squares2X2Icon', sort: 1, items: [{ name: 'Dashboard', route: '/', actions: ['read'] }] },
+  {
+    name: 'Trang chủ',
+    icon: 'Squares2X2Icon',
+    sort: 1,
+    items: [
+      { name: 'Dashboard', route: '/', actions: ['read'] },
+      { name: 'Dashboard', route: '/dashboard', actions: ['read'], showSidebar: false }
+    ]
+  },
   {
     name: 'Quản lý nhân sự',
     icon: 'UsersIcon',

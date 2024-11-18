@@ -1,13 +1,13 @@
 import { Body } from '@components/base';
 import { Cardz, Columnz, Tablez } from '@components/core';
-import { formatNumber } from '@lib/helper';
+import { formatNumber, roundNumber } from '@lib/helper';
 import { useDataState } from '@store';
 
 export const Attendance = ({ data = [] }) => {
   const { accounts, departments } = useDataState();
   const summary = [
     { name: 'Số nhân viên đi muộn', value: data?.length },
-    { name: 'Tổng thời gian đi muộn (giờ)', value: data?.reduce((a, b) => a + b.totalLate + b.totalSoon, 0) }
+    { name: 'Tổng thời gian đi muộn (giờ)', value: data?.reduce((a, b) => a + roundNumber(b.totalLate + b.totalSoon), 0) }
   ];
 
   return (

@@ -113,7 +113,7 @@ export class Salary {
     const officialSalary =
       Math.round((day.holiday + day.nomal + day.ot) * monneyOfDay) - soonLates.reduce((a, b) => a + roundNumber(b.summary) || 0, 0);
     const mandatoryAmount = bhxh + bhyt + bhtn + unionDues;
-    const pretaxIncome = officialSalary + allowances.reduce((a, b) => a + roundNumber(b.summary) || 0, 0) - mandatoryAmount;
+    const pretaxIncome = officialSalary - mandatoryAmount;
     const rates = this.taxSetup.taxs;
     const totalTax = pretaxIncome - this.taxSetup?.self - this.taxSetup?.dependent * this.dependent
     const tax = {

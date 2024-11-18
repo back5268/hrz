@@ -20,6 +20,11 @@ export const refreshObject = (object) => {
   return object;
 };
 
+export const roundNumber = (value) => {
+  if (!Number(value)) return 0
+  return Math.round(value * 100) / 100;
+};
+
 export const checkEqualProp = (object1, object2) => {
   const newObject = {};
   for (const key in object1) {
