@@ -10,9 +10,14 @@ ApplicationMd.init('Application', {
   type: {
     type: Number,
     required: true,
-    enum: [1, 2, 3, 4, 5, 6, 7],
+    enum: [1, 2, 3, 4, 5, 6, 7, 8],
     description:
-      '1: Đơn xin nghỉ (phép năm), 2: Đơn xin nghỉ (không phép), 3: Đơn xin nghỉ (phép đặc biệt), 4: Đơn xác nhận công, 5: Đơn xin đi trễ, về sớm, 6: Đơn OT, 7: Đơn công tác'
+      '1: Đơn xin nghỉ (phép năm), 2: Đơn xin nghỉ (không phép), 3: Đơn xin nghỉ (phép đặc biệt), 4: Đơn xác nhận công, 5: Đơn xin đi trễ, về sớm, 6: Đơn OT, 7: Đơn công tác, 8: Đơn xin nghỉ dài hạn'
+  },
+  typez: {
+    type: Number,
+    default: 1,
+    description: '1: Đơn bình thường, 2: Đơn giám đốc duyệt'
   },
   dates: [{ type: String, required: true }],
   reason: { type: String, required: true },

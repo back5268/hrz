@@ -26,5 +26,6 @@ export const applicationTypes = [
   { name: 'Đơn xác nhận công', _id: 4 },
   { name: 'Đơn xin đi trễ, về sớm', _id: 5 },
   { name: 'Đơn xin làm thêm giờ', _id: 6 },
-  { name: 'Đơn công tác', _id: 7 }
+  { name: 'Đơn công tác', _id: 7 },
+  { name: 'Đơn xin nghỉ dài hạn', _id: 8 },
 ];

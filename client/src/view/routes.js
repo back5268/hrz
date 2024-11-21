@@ -1,9 +1,9 @@
-import { Application } from './admin/approval';
+import { Application, Approve } from './admin/approval';
 import { DetailNewz, DetailPermission, New, Permission, Template } from './admin/config';
 import { DashBoard } from './admin/dashboard';
 import { Department, DetailJobPosition, DetailEmployee, DetailPosition, JobPosition, Employee, Position } from './admin/human-resource';
 import { ApprovedPayslip, Bonus, PendingPayslip, Preview, SalaryCalculation } from './admin/payroll';
-import { DetailShift, Device, ImportLog, Schedule, Shift, Timekeeping } from './admin/timekeeping';
+import { DetailShift, Device, ImportLog, Schedule, Shift, Timekeeping, TimekeepingConfig } from './admin/timekeeping';
 import { ForgotPassword, SignIn } from './auth';
 
 export const routes = [
@@ -22,6 +22,7 @@ export const routes = [
   { path: '/employee/create', element: DetailEmployee, layout: true },
   { path: '/employee/detail/:_id', element: DetailEmployee, layout: true },
 
+  { path: '/timekeeping-config', element: TimekeepingConfig, layout: true },
   { path: '/device', element: Device, layout: true },
   { path: '/shift', element: Shift, layout: true },
   { path: '/shift/create', element: DetailShift, layout: true },
@@ -39,6 +40,7 @@ export const routes = [
   { path: '/approved-payslip/preview/:_id', element: Preview, layout: false },
 
   { path: '/application', element: Application, layout: true },
+  { path: '/approve', element: Approve, layout: true },
 
   { path: '/permission', element: Permission, layout: true },
   { path: '/permission/create', element: DetailPermission, layout: true },

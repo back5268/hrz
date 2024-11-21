@@ -629,6 +629,11 @@ export const tools = [
     sort: 3,
     items: [
       {
+        name: 'Cấu hình chấm công',
+        route: '/timekeeping-config',
+        actions: ['update', 'read']
+      },
+      {
         name: 'Quản lý máy chấm công',
         route: '/device',
         actions: ['delete', 'create', 'update', 'read']
@@ -690,6 +695,11 @@ export const tools = [
       {
         name: 'Quản lý đơn từ',
         route: '/application',
+        actions: ['create', 'update', 'read']
+      },
+      {
+        name: 'Quản lý phê duyệt',
+        route: '/approve',
         actions: ['create', 'update', 'read']
       }
     ]

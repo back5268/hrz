@@ -188,7 +188,7 @@ export const DataTable = (props) => {
                   <Buttonz
                     onClick={() => onViewDetail(item)}
                     outlined
-                    className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                    className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
                     icon={<DocumentMagnifyingGlassIcon className="w-6" />}
                   />
                 )}
@@ -197,7 +197,7 @@ export const DataTable = (props) => {
                     severity="danger"
                     outlined
                     onClick={() => (onDelete ? onDelete(item) : onDeletez(item))}
-                    className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                    className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
                     icon={<TrashIcon className="w-5" />}
                   />
                 )}
@@ -214,7 +214,7 @@ export const DataTable = (props) => {
                           severity={severity}
                           outlined
                           onClick={() => action.onClick(item)}
-                          className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                          className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
                           icon={<Icon className="w-6" />}
                         />
                       )

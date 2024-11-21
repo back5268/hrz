@@ -31,7 +31,7 @@ export default {
         onError: 'rgb(255, 255, 255)',
         errorContainer: 'rgb(255, 218, 214)',
         onErrorContainer: 'rgb(65, 0, 2)',
-        background: 'rgb(252, 252, 255)',
+        background: 'rgb(222, 227, 235)',
         onBackground: 'rgb(26, 28, 30)',
         surface: 'rgb(252, 252, 255)',
         onSurface: 'rgb(26, 28, 30)',

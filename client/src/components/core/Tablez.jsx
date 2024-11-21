@@ -11,6 +11,7 @@ export const Tablez = (props) => {
     params = {},
     paginatorTemplate = 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown',
     children,
+    emptyMessage = "Không có dữ liệu",
     ...prop
   } = props;
 
@@ -26,6 +27,7 @@ export const Tablez = (props) => {
       scrollable
       selectionMode="checkbox"
       currentPageReportTemplate="Tổng số: {totalRecords} bản ghi"
+      emptyMessage={emptyMessage}
       {...prop}
     >
       {children}

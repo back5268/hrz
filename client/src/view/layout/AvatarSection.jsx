@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const items = [
-  { label: 'Thông tin cá nhân', icon: UserIcon, route: '/personal' },
+  { label: 'Thông tin cá nhân', icon: UserIcon, route: '' },
   { label: 'Đổi mật khẩu', icon: UserIcon, route: '' }
 ];
 
@@ -39,10 +39,10 @@ export const AvatarSection = () => {
     <div ref={ref} className="relative items-center">
       <Buttonz
         onClick={() => setIsShow(!isShow)}
-        className="!p-0 h-10 w-10 flex justify-center items-center"
+        className="!p-0 h-9 w-11 flex justify-center items-center"
         icon={
           <div
-            className={`relative cursor-pointer h-10 w-10 rounded-sm bg-cover`}
+            className={`relative cursor-pointer h-11 w-11 rounded-sm bg-cover`}
             style={{ backgroundImage: `url(${userInfo.avatar || '/images/avatar.jpg'})` }}
           >
             <span className="absolute top-0 left-0 w-full h-full bg-primary-500 opacity-10"></span>
@@ -70,10 +70,11 @@ export const AvatarSection = () => {
           <ul className="relative list-none mt-4">
             {items.map((item, index) => (
               <li key={index}>
+                <hr />
                 <Link
                   to={item.route}
                   className={`flex h-12 cursor-pointer items-center truncate rounded-sm px-4 py-1 text-sm
-                   outline-none transition duration-300 ease-in-out hover:bg-primary-100 hover:text-primary
+                   outline-none transition duration-300 ease-in-out hover:bg-primary-100 hover:text-primary hover:font-semibold
                   hover:outline-none gap-2 my-1`}
                 >
                   {item.icon && <item.icon className="w-6 h-6" />}
@@ -83,9 +84,7 @@ export const AvatarSection = () => {
             ))}
           </ul>
           <div className="flex flex-col gap-2 my-4">
-            <Buttonz onClick={() => onSignOut()} className={`w-full flex gap-2 truncate`}>
-              <span>Đăng xuất</span>
-            </Buttonz>
+            <Buttonz onClick={() => onSignOut()} className="w-full flex gap-2 truncate" label="Đăng xuất" />
           </div>
         </div>
       </div>

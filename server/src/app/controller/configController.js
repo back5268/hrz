@@ -1,7 +1,7 @@
 import { uploadFileToFirebase } from '@lib/firebase';
 import { getConfigValid, updateConfigValid } from '@lib/validation';
 import { detailConfigMd, updateConfigMd } from '@models';
-import { checkJson, validateData } from '@utils';
+import { validateData } from '@utils';
 
 export const getConfig = async (req, res) => {
   try {
@@ -10,7 +10,7 @@ export const getConfig = async (req, res) => {
     const { type } = value;
     const where = { type };
     const data = (await detailConfigMd(where)) || {};
-    const object = type === 1 ? data.detail : type === 2 ? data.salary : data.tax
+    const object = type === 1 ? data.timekeeping : type === 2 ? data.salary : data.tax
     res.json({ status: 1, data: { updatedBy: data.updatedBy, ...object, note: data.note, files: data.files } });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

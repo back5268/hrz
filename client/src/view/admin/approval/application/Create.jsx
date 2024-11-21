@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { databaseDate } from '@lib/helper';
 import { ApplicationValidation } from '@lib/validation';
 import { useToastState } from '@store';
+import moment from 'moment';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -20,7 +21,8 @@ export const CreateApplication = (props) => {
     handleSubmit,
     formState: { errors },
     setValue,
-    watch
+    watch,
+    reset
   } = useForm({
     resolver: yupResolver(ApplicationValidation)
   });
@@ -74,7 +76,6 @@ export const CreateApplication = (props) => {
     if ([6].includes(type)) {
       if (!value.date) return showToast({ title: 'Ngày không được bỏ trống!', severity: 'error' });
       else if (new Date(value.date) < new Date()) {
-        console.log(1);
         return showToast({ title: 'Ngày không được nhỏ hơn ngày hiện tại!', severity: 'error' });
       }
       else if (!value.fromTime) return showToast({ title: 'Thời gian bắt đầu không được bỏ trống!', severity: 'error' });
@@ -85,8 +86,6 @@ export const CreateApplication = (props) => {
         params.toTime = databaseDate(value.toTime, 'timez');
       }
     }
-
-    console.log(params);
     
     if (files?.length > 0) params.formData = { files: files };
     setLoading(true);
@@ -96,11 +95,12 @@ export const CreateApplication = (props) => {
       showToast({ title: 'Thêm mới đơn thành công', severity: 'success' });
       setParams((pre) => ({ ...pre, render: !pre.render }));
       setOpen(false);
+      reset()
     }
   };
 
   return (
-    <Dialogz className="w-[1200px]" header="Chi tiết đơn từ" open={open} setOpen={setOpen}>
+    <Dialogz className="w-[1200px]" header="Thêm mới đơn từ" open={open} setOpen={setOpen}>
       <form onSubmit={handleSubmit(onSubmit)} className="border-t border-border">
         <div className="w-full max-h-[1200px] overflow-scroll">
           <div className="relative w-full mt-4">
@@ -142,7 +142,7 @@ export const CreateApplication = (props) => {
               <DropdownFormz
                 id="type"
                 label="Loại đơn (*)"
-                options={applicationTypes}
+                options={applicationTypes.filter(a => a._id !== 8)}
                 value={watch('type')}
                 errors={errors}
                 onChange={(e) => {

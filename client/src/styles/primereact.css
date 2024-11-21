@@ -81,11 +81,19 @@ hr {
 
 .p-datatable .p-datatable-tbody>tr>td,
 .p-datatable .p-datatable-thead>tr>th,
-.p-datatable-header, .p-paginator {
+.p-datatable-header,
+.p-paginator {
     border-color: var(--border-color);
 }
 
 .p-tag-value {
     font-weight: 300;
     line-height: 2;
+}
+
+.p-dialog-title {
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--primary-color)
 }

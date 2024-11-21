@@ -18,7 +18,7 @@ import {
   listApplicationMd,
   listPermissionMd,
   listTimekeepingMd,
-  updateApplicationMd,
+  updateApplicationMd
 } from '@models';
 import { approveApplication } from '@repository';
 import { validateData } from '@utils';
@@ -29,7 +29,25 @@ export const getListApplication = async (req, res) => {
     const { error, value } = validateData(listApplicationValid, req.query);
     if (error) return res.json({ status: 0, mess: error });
     const { page, limit, status, department, account, type } = value;
-    const where = {};
+    const where = { typez: 1 };
+    if (status) where.status = status;
+    if (department) where.department = department;
+    if (account) where.account = account;
+    if (type) where.type = type;
+    const documents = await listApplicationMd(where, page, limit);
+    const total = await countApplicationMd(where);
+    res.json({ status: 1, data: { documents, total } });
+  } catch (error) {
+    res.status(500).json({ status: 0, mess: error.toString() });
+  }
+};
+
+export const getListAppprove = async (req, res) => {
+  try {
+    const { error, value } = validateData(listApplicationValid, req.query);
+    if (error) return res.json({ status: 0, mess: error });
+    const { page, limit, status, department, account, type } = value;
+    const where = { typez: 2 };
     if (status) where.status = status;
     if (department) where.department = department;
     if (account) where.account = account;
@@ -91,7 +109,7 @@ export const updateApplication = async (req, res) => {
     const dataz = await detailApplicationMd({ _id });
     if (!dataz) return res.json({ status: 0, mess: 'Đơn không tồn tại!' });
     const data = await updateApplicationMd({ _id }, { updatedBy: req.account._id, ...value });
-    if (status === 2) await approveApplication(dataz)
+    if (status === 2) await approveApplication(dataz);
     const application = await createNotifyMd({
       account: dataz.account,
       content: status === 2 ? 'Đơn bạn tạo đã được duyệt!' : 'Đơn bạn tạo không được duyệt!',
@@ -140,14 +158,16 @@ export const createApplication = async (req, res) => {
       });
       if (checkOt) return res.json({ status: 0, mess: 'Đã có lịch làm việc không thể tạo đơn OT!' });
     }
-    value.files = []
+    value.files = [];
     if (req.files?.['files']?.length > 0) {
       for (const file of req.files['files']) {
         value.files.push(await uploadFileToFirebase(file));
       }
     }
+    value.typez = type === 8 ? 2 : 1;
+    const where = type === 8 ? { 'tools.route': 'approve' } : { 'tools.route': 'application' };
     const data = await createApplicationMd({ account: req.account?._id, department: req.account?.department?._id, ...value });
-    const permissions = await listPermissionMd({ 'tools.route': 'application' });
+    const permissions = await listPermissionMd(where);
     const accounts = await listAccountMd({ role: 'admin' });
     for (const permission of permissions) {
       const accountz = await listAccountMd({ department: { $in: permission.departments }, position: { $in: permission.positions } });
@@ -189,16 +209,19 @@ export const createApplicationAdmin = async (req, res) => {
       });
       if (checkOt) return res.json({ status: 0, mess: 'Đã có lịch làm việc không thể tạo đơn OT!' });
     }
-    value.files = []
+    value.files = [];
     if (req.files?.['files']?.length > 0) {
       for (const file of req.files['files']) {
         value.files.push(await uploadFileToFirebase(file));
       }
     }
+    value.typez = type === 8 ? 2 : 1;
     const data = await createApplicationMd({ ...value, status: 2, updatedBy: req.account?._id });
-    await approveApplication(data)
+    await approveApplication(data);
     res.status(201).json({ status: 1, data });
   } catch (error) {
+    console.log(error);
+    
     res.status(500).json({ status: 0, mess: error.toString() });
   }
 };

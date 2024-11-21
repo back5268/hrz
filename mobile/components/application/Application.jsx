@@ -115,7 +115,7 @@ export const Application = ({ _id }) => {
       else if (new Date(value.date) < new Date()) return showToast('Ngày nghỉ không được nhỏ hơn ngày hiện tại!');
       else params.dates = [databaseDate(value.date, 'date')];
     }
-    if ([3, 7].includes(type)) {
+    if ([3, 7, 8].includes(type)) {
       if (!value.fromDate) return showToast('Ngày bắt đầu không được bỏ trống!');
       else if (!value.toDate) return showToast('Ngày kết thúc không được bỏ trống!');
       else if (new Date(value.fromDate) < new Date()) return showToast('Ngày bắt đầu không được nhỏ hơn ngày hiện tại!');
@@ -256,6 +256,21 @@ export const Application = ({ _id }) => {
                 value={watch('toTime')}
                 setValue={(e) => setValue('toTime', e)}
                 mode="timez"
+                disabled={isUpdate}
+              />
+            </>
+          ) : type === 8 ? (
+            <>
+              <DateTimePickerz
+                label="Ngày bắt đầu (*)"
+                value={watch('fromDate')}
+                setValue={(e) => setValue('fromDate', e)}
+                disabled={isUpdate}
+              />
+              <DateTimePickerz
+                label="Ngày kết thúc (*)"
+                value={watch('toDate')}
+                setValue={(e) => setValue('toDate', e)}
                 disabled={isUpdate}
               />
             </>

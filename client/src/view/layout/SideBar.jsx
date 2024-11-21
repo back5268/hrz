@@ -26,9 +26,13 @@ export const SideBar = (props) => {
     let item = null,
       indexz = null;
     if (pathname === '/') item = { name: 'Trang chủ', icon: 'Squares2X2Icon', route: '/' };
+    else if (pathname === '/timekeeping-config') {
+      item = { name: 'Cấu hình chấm công', icon: 'Squares2X2Icon', route: '/timekeeping-config' };
+      indexz = 2
+    }
     else {
       tools.forEach((tool, index) => {
-        if (tool.route !== '/') {
+        if (!['/', '/timekeeping-config'].includes(tool.route)) {
           if (tool.items?.length > 0) {
             tool.items.forEach((child) => {
               if (pathname?.includes(child.route)) {
@@ -70,9 +74,7 @@ export const SideBar = (props) => {
         </nav>
       </div>
       <div className="p-4 border-t border-border">
-        <Buttonz onClick={onSignOut} className="w-full">
-          Đăng xuất
-        </Buttonz>
+        <Buttonz onClick={() => onSignOut()} className="w-full flex gap-2 truncate" label="Đăng xuất" />
       </div>
     </div>
   );

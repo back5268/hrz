@@ -13,7 +13,7 @@ export const TopBar = (props) => {
         <div className="flex justify-between items-center h-full">
           <Buttonz
             onClick={() => setShowSidebar(!showSidebar)}
-            className="!p-0 h-9 w-9 flex justify-center items-center"
+            className="!p-0 h-10 w-11 flex justify-center items-center"
             icon={<Bars3Icon className="w-8 stroke-1" />}
           />
           <div className="flex gap-4 justify-between items-center mr-2">
