@@ -30,16 +30,21 @@ const Notify = () => {
 
   return (
     <SafeAreaView className="flex-1">
-      <Text
-        onPress={async () => {
-          await readAllNotifyApi();
-          setRender((pre) => !pre);
-        }}
-        className="text-center border-b pb-2 font-semibold"
-        style={{ borderColor: themeColor.secondary, color: themeColor.primary }}
-      >
-        Đánh dấu tất cả đã đọc
-      </Text>
+      {data?.length && (
+        <Pressable
+          onPress={async () => {
+            await readAllNotifyApi();
+            setRender((pre) => !pre);
+          }}
+        >
+          <Text
+            className="text-center border-b pb-2 font-semibold"
+            style={{ borderColor: themeColor.secondary, color: themeColor.primary }}
+          >
+            Đánh dấu tất cả đã đọc
+          </Text>
+        </Pressable>
+      )}
       <FlatList
         data={data}
         keyExtractor={(item) => item._id?.toString()}

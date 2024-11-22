@@ -1,5 +1,3 @@
-import { REGEX } from '@constant';
-
 export const signInValid = {
   username: 'string',
   password: { type: 'string' }

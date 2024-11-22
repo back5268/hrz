@@ -102,6 +102,7 @@ const Application = () => {
             justifyContent: 'center',
             width: 120
           }}
+          getLabelText={({ route }) => route.title}
         />
       )}
     />

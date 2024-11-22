@@ -9,8 +9,21 @@ export const SigninValidation = yup.object({
     .required()
 });
 
+export const ChangePasswordValidation = yup.object({
+  password: yup
+    .string()
+    .min(6, 'Mật khẩu cần dài ít nhất 6 ký tự!')
+    .matches(/^(?=.*\d)(?=.*[a-zA-Z])/, 'Mật khẩu cần chứa cả số và chữ cái!')
+    .required(),
+  newPassword: yup
+    .string()
+    .min(6, 'Mật khẩu cần dài ít nhất 6 ký tự!')
+    .matches(/^(?=.*\d)(?=.*[a-zA-Z])/, 'Mật khẩu cần chứa cả số và chữ cái!')
+    .required()
+});
+
 export const ForgotPasswordValidation = yup.object({
-  username: yup.string().min(3, 'Tài khoản cần dài ít nhất 3 ký tự!').required(),
+  username: yup.string().min(3, 'Tài khoản cần dài ít nhất 3 ký tự!').required()
 });
 
 export const ConfirmPasswordValidation = yup.object({

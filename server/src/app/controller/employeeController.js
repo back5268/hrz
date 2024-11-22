@@ -1,6 +1,6 @@
 import { EmployeeTypes } from '@constant';
 import { uploadFileToFirebase } from '@lib/firebase';
-import { createEmployeeValid, detailEmployeeValid, listEmployeeValid, updateEmployeeValid } from '@lib/validation';
+import { changePasswordValid, createEmployeeValid, detailEmployeeValid, listEmployeeValid, updateEmployeeValid } from '@lib/validation';
 import {
   countAccountMd,
   createAccountMd,
@@ -322,6 +322,22 @@ export const resetPassword = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const password = await bcrypt.hash(newPassword, salt);
     await updateAccountMd({ _id }, { password, token: '' });
+    res.status(201).json({ status: 1, data: newPassword });
+  } catch (error) {
+    res.status(500).json({ status: 0, mess: error.toString() });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  try {
+    const { error, value } = validateData(changePasswordValid, req.body);
+    if (error) return res.json({ status: 0, mess: error });
+    const { password, newPassword } = value;
+    const checkpassword = await bcrypt.compare(password, req.account?.password);
+    if (!checkpassword) return res.json({ status: 0, mess: 'Mật khẩu không chính xác!' });
+    const salt = await bcrypt.genSalt(10);
+    const passwordz = await bcrypt.hash(newPassword, salt);
+    await updateAccountMd({ _id: req.account?._id }, { password: passwordz, token: '' });
     res.status(201).json({ status: 1, data: newPassword });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

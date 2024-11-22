@@ -4,11 +4,12 @@ import { DashBoard } from './admin/dashboard';
 import { Department, DetailJobPosition, DetailEmployee, DetailPosition, JobPosition, Employee, Position } from './admin/human-resource';
 import { ApprovedPayslip, Bonus, PendingPayslip, Preview, SalaryCalculation } from './admin/payroll';
 import { DetailShift, Device, ImportLog, Schedule, Shift, Timekeeping, TimekeepingConfig } from './admin/timekeeping';
-import { ForgotPassword, SignIn } from './auth';
+import { ChangePassword, ForgotPassword, SignIn } from './auth';
 
 export const routes = [
   { path: '/auth/sign-in', element: SignIn, public: true },
   { path: '/auth/forgot-password', element: ForgotPassword, public: true },
+  { path: '/auth/change-password', element: ChangePassword },
 
   { path: '/', element: DashBoard, layout: true },
   { path: '/position', element: Position, layout: true },

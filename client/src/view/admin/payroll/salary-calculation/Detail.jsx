@@ -13,7 +13,7 @@ export const Detail = (props) => {
   return (
     <Dialogz className="w-[1200px]" header={`Chi tiết ${item?.title?.toLowerCase()}`} open={open} setOpen={setOpen}>
       <form className="border-t border-border">
-        <div className="w-full max-h-[1000px] overflow-scroll">
+        <div className="w-full h-bodyModal overflow-scroll">
           <div className="relative w-full mt-4">
             <Tablez
               value={item?.detail}

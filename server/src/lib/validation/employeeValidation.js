@@ -55,7 +55,7 @@ export const updateEmployeeValid = {
   taxFiles: { type: 'json', allowNull: true },
   healthFiles: { type: 'json', allowNull: true },
   educationFiles: { type: 'json', allowNull: true },
-  status: { type: 'number', allowNull: true },
+  status: { type: 'number', allowNull: true }
 };
 
 export const createEmployeeValid = {
@@ -93,5 +93,10 @@ export const createEmployeeValid = {
   birthday: 'date',
   dateIn: 'date',
   contacts: { type: 'json', allowNull: true },
-  dependents: { type: 'json', allowNull: true },
+  dependents: { type: 'json', allowNull: true }
+};
+
+export const changePasswordValid = {
+  password: 'string',
+  newPassword: 'string'
 };

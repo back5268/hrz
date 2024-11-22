@@ -7,7 +7,8 @@ const OtherLayout = () => {
   if (!isAuthenticated) return <Redirect href="/sign-in" />;
 
   const items = [
-    { title: 'Đổi mật khẩu', name: 'change-password' }
+    { title: 'Đổi mật khẩu', name: 'change-password' },
+    { title: 'Thông tin cá nhân', name: 'account' },
   ];
 
   return (

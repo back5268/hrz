@@ -6,7 +6,7 @@ import { Buttonz, Imagez } from '@components/core';
 import { IMAGE_TYPE } from '@constant';
 import { useToastState } from '@store';
 
-export const UploadImage = ({ data, setData, label, className = '' }) => {
+export const UploadImage = ({ data, setData, label, isView, className = '' }) => {
   const [file, setFile] = useState([]);
   const [fileUrl, setFileUrl] = useState(data);
   const { showToast } = useToastState();

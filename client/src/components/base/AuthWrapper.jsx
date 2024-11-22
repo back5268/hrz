@@ -9,7 +9,7 @@ export const AuthWrapper = (props) => {
         <div className="w-[24rem] py-12 px-6 shadow-custom rounded-md">
           <div className="text-center">
             <Logo className="mb-6" />
-            <p className="mb-8 text-md text-primary">{headerLabel}</p>
+            <p className="mb-8 text-md text-primary uppercase font-semibold">{headerLabel}</p>
           </div>
           {children}
           <div className="flex flex-col gap-4 mt-6">

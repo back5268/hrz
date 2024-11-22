@@ -1,19 +1,17 @@
 import { Buttonz } from '@components/core';
-import { UserIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon, UserIcon } from '@heroicons/react/24/outline';
 import { useToastState, useUserState } from '@store';
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-
-const items = [
-  { label: 'Thông tin cá nhân', icon: UserIcon, route: '' },
-  { label: 'Đổi mật khẩu', icon: UserIcon, route: '' }
-];
+import { useNavigate } from 'react-router-dom';
+import { Account } from './Account';
 
 export const AvatarSection = () => {
   const { userInfo, setLoadingz, clearUserInfo } = useUserState();
   const { showToast } = useToastState();
   const ref = useRef(null);
   const [isShow, setIsShow] = useState(false);
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate()
 
   const handleClickOutside = (e) => {
     if (ref.current && !ref.current.contains(e.target)) setIsShow(false);
@@ -35,8 +33,14 @@ export const AvatarSection = () => {
     setLoadingz();
   };
 
+  const items = [
+    { label: 'Thông tin cá nhân', icon: UserIcon, onClick: () => setOpen(true) },
+    { label: 'Đổi mật khẩu', icon: ArrowPathIcon, onClick: () => navigate('/auth/change-password') }
+  ];
+
   return (
     <div ref={ref} className="relative items-center">
+      <Account open={open} setOpen={setOpen} data={userInfo} />
       <Buttonz
         onClick={() => setIsShow(!isShow)}
         className="!p-0 h-9 w-11 flex justify-center items-center"
@@ -69,17 +73,16 @@ export const AvatarSection = () => {
           </div>
           <ul className="relative list-none mt-4">
             {items.map((item, index) => (
-              <li key={index}>
+              <li key={index} onClick={() => item.onClick()}>
                 <hr />
-                <Link
-                  to={item.route}
+                <div
                   className={`flex h-12 cursor-pointer items-center truncate rounded-sm px-4 py-1 text-sm
                    outline-none transition duration-300 ease-in-out hover:bg-primary-100 hover:text-primary hover:font-semibold
                   hover:outline-none gap-2 my-1`}
                 >
                   {item.icon && <item.icon className="w-6 h-6" />}
                   <span>{item.label}</span>
-                </Link>
+                </div>
               </li>
             ))}
           </ul>

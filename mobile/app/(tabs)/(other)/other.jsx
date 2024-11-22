@@ -1,5 +1,5 @@
 import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
-import { router, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React, { Fragment } from 'react';
 import { useUserState } from '@/store';
 import { removeStorage } from '@/lib/async-storage';
@@ -32,10 +32,10 @@ const Other = () => {
   };
 
   const items = [
-    { label: 'Thông tin cá nhân', icon: 'card-account-details' },
-    { label: 'Bảng công', icon: 'briefcase-clock' },
-    { label: 'Bảng lương', icon: 'credit-card' },
-    { label: 'Đơn từ', icon: 'archive' },
+    { label: 'Thông tin cá nhân', icon: 'card-account-details', onPress: () => router.push('/account') },
+    { label: 'Bảng công', icon: 'briefcase-clock', onPress: () => router.push('/timekeeping') },
+    { label: 'Bảng lương', icon: 'credit-card', onPress: () => router.push('/payroll') },
+    { label: 'Đơn từ', icon: 'archive', onPress: () => router.push('/application') },
     { label: 'Đổi mật khẩu', icon: 'key-change', onPress: () => router.push('/change-password') },
     { label: 'Đăng xuất', icon: 'logout', onPress: showAlert }
   ];
@@ -46,7 +46,7 @@ const Other = () => {
         <View className="flex flex-row items-center justify-start my-16 ml-8">
           <View className="w-20 h-20 rounded-lg flex justify-center items-center">
             <Image
-              source={userInfo?.avatar ? { uri: userInfo?.avatar } : images.avatar}
+              source={!userInfo?.avatar ? { uri: userInfo?.avatar } : images.avatar}
               className="w-full h-full rounded-lg"
               resizeMode="cover"
             />

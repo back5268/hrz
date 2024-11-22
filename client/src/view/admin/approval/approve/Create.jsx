@@ -28,7 +28,7 @@ export const CreateApprove = (props) => {
   });
 
   const onSubmit = async (value) => {
-    const params = { shift: value.shift, type: value.type, reason: value.reason, department: value.department, account: value.account, type: 8 };
+    const params = { shift: value.shift, reason: value.reason, department: value.department, account: value.account, type: 8 };
     if (!value.fromDate) return showToast({ title: 'Ngày bắt đầu không được bỏ trống!', severity: 'error' });
     else if (!value.toDate) return showToast({ title: 'Ngày kết thúc không được bỏ trống!', severity: 'error' });
     else if (new Date(value.fromDate) < new Date())
