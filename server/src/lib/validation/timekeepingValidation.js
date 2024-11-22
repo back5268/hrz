@@ -45,7 +45,6 @@ export const checkTimekeepingAppValid = {
 
 export const listTimekeepingLogAppValid = {
   date: 'string',
-  // shift: 'string'
 };
 
 export const listTimekeepingAppValid = {

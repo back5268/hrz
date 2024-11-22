@@ -14,7 +14,7 @@ export const convertParams = (params, html) => {
   return replaceFistText(html);
 };
 
-export const sendMailUse = async ({ type, params, to }) => {
+export const sendMailUse = async ({ type, params = {}, to }) => {
   const template = await detailTemplateMd({ type, status: 1 });
   if (template) {
     const subject = convertParams(params, template.subject);

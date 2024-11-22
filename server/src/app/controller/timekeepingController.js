@@ -21,7 +21,8 @@ import {
   listTimekeepingMd,
   listTimekeepingLogMd,
   updateTimekeepingMd,
-  createImportLogMd
+  createImportLogMd,
+  detailConfigMd
 } from '@models';
 import { calTimekeeping, checkTimekeepingRp, syntheticTimekeeping } from '@repository';
 import { checkValidTime, formatDate, convertNumberToTime, databaseDate, getDates, validateData } from '@utils';
@@ -362,17 +363,33 @@ export const checkTimekeepingApp = async (req, res) => {
     if (!req.file) return res.json({ status: 0, mess: 'Vui lòng truyền hình ảnh!' });
     const { status, mess, data } = await checkFace(req.file);
     if (status && String(data) === String(req.account?._id)) {
-      const date = databaseDate(value.date, 'date');
-      await checkTimekeepingRp({ account: req.account?._id, date, time: value.time });
-      res.json({
-        status: 1,
-        data: await createTimekeepingLogMd({
-          ...value,
-          account: req.account?._id,
-          department: req.account?.department?._id,
-          date
-        })
-      });
+      const { latitude, longitude } = value;
+      const timekeepingConfig = await detailConfigMd({ type: 1 });
+      const locations = timekeepingConfig?.timekeeping?.locations;
+      if (Array.isArray(locations) && locations.length) {
+        let checkLocation = false;
+        locations.forEach((l) => {
+          const latCheck = l.latitude;
+          const longCheck = l.longitude;
+          const value = 100 / 111000;
+          if (latitude < latCheck + value && latitude > latCheck - value && longitude < longCheck + value && longitude > longCheck - value)
+            checkLocation = true;
+        });
+
+        if (checkLocation) {
+          const date = databaseDate(value.date, 'date');
+          await checkTimekeepingRp({ account: req.account?._id, date, time: value.time });
+          res.json({
+            status: 1,
+            data: await createTimekeepingLogMd({
+              ...value,
+              account: req.account?._id,
+              department: req.account?.department?._id,
+              date
+            })
+          });
+        } else res.json({ status: 0, mess: 'Vị trí chấm công không đúng!' });
+      } else res.json({ status: 0, mess: 'Chưa thiết lập vị trí chấm công, vui lòng liên hệ quản trị viên!' });
     } else res.json({ status: 0, mess: mess || 'Không tìm thấy nhân viên!' });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
