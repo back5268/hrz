@@ -28,11 +28,13 @@ export const SideBar = (props) => {
     if (pathname === '/') item = { name: 'Trang chủ', icon: 'Squares2X2Icon', route: '/' };
     else if (pathname === '/timekeeping-config') {
       item = { name: 'Cấu hình chấm công', icon: 'Squares2X2Icon', route: '/timekeeping-config' };
-      indexz = 2
-    }
-    else {
+      indexz = 2;
+    } else if (pathname === '/approved-payslip') {
+      item = { name: 'Phiếu lương đã duyệt', icon: 'Squares2X2Icon', route: '/approved-payslip' };
+      indexz = 3;
+    } else {
       tools.forEach((tool, index) => {
-        if (!['/', '/timekeeping-config'].includes(tool.route)) {
+        if (!['/', '/timekeeping-config', '/approved-payslip'].includes(tool.route)) {
           if (tool.items?.length > 0) {
             tool.items.forEach((child) => {
               if (pathname?.includes(child.route)) {

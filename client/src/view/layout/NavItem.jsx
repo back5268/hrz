@@ -4,7 +4,10 @@ import { Link } from 'react-router-dom';
 
 export const NavItem = (props) => {
   const { item = {}, pathname = '', Icon } = props;
-  const isSelected = ('/timekeeping-config' === pathname || '/' === pathname) ? pathname === item.route : pathname.includes(item.route);
+  const isSelected =
+    '/timekeeping-config' === pathname || '/' === pathname || '/approved-payslip' === pathname
+      ? pathname === item.route
+      : item.route !== '/' && pathname.includes(item.route);
 
   const Fragment = ({ children }) => {
     const route = item.route;

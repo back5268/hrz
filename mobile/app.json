@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "hrz",
+    "slug": "hrz",
     "plugins": [
       [
         "expo-camera",
@@ -21,7 +21,7 @@
     "permissions": [
       "CAMERA"
     ],
-    "scheme": "myapp",
+    "scheme": "hrz",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -45,7 +45,7 @@
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
       ],
-      "package": "com.hundredz.mobile",
+      "package": "com.hundredz.hrz",
       "versionCode": 5
     },
     "web": {

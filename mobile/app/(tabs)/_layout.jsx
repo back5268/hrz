@@ -6,6 +6,7 @@ import { CommonActions } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { socket } from '@/lib/socket-io';
 import Toast from 'react-native-toast-message';
+import { View } from 'react-native';
 
 const TabBar = (props) => {
   const { userInfo } = useUserState();
@@ -20,7 +21,7 @@ const TabBar = (props) => {
           type: 'info',
           text2: event.data?.content
         });
-      }
+      };
       socket.on('connect', onConnect);
       socket.on('disconnect', onDisconnect);
       socket.on(key, onEvent);
@@ -79,12 +80,12 @@ const TabsHeader = (props) => (
 const TabLayout = () => {
   const { isAuthenticated } = useUserState();
   const segments = useSegments();
+  if (!isAuthenticated || !segments) return <Redirect href="/sign-in" />;
   const isShow = ['home', 'other', '(other)'].includes(segments?.[2] || segments?.[1]);
-  if (!isAuthenticated) return <Redirect href="/sign-in" />;
 
   return (
     <Tabs
-      tabBar={(props) => (isShow ? <TabBar {...props} /> : <></>)}
+      tabBar={(props) => (isShow ? <TabBar {...props} /> : <View key={props.key}></View>)}
       screenOptions={{
         tabBarHideOnKeyboard: true,
         header: (props) => <TabsHeader navProps={props} children={undefined} />

@@ -3,8 +3,8 @@ import axios from 'axios';
 import Toast from 'react-native-toast-message';
 
 export const clientApi = axios.create({
-  baseURL: 'http://api.backz.s-tech.info/',
-  // baseURL: 'http://192.168.6.40:5000/',
+  // baseURL: 'http://api.backz.s-tech.info/',
+  baseURL: 'http://192.168.6.41:5000/',
   timeout: 10000
 });
 
@@ -26,6 +26,8 @@ clientApi.interceptors.response.use(
     } else return res.data;
   },
   async function (error) {
+    console.log(error);
+    
     if (error) {
       Toast.show({
         type: 'error',

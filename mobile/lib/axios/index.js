@@ -18,6 +18,8 @@ export const postData = (url, data, isUpload = false, blob = false, timeout = 60
     const { formData, ...params } = data;
     data = createFormData(params, formData);
   } else data = convertData(data);
+  console.log(data);
+  
   if (blob)
     return clientApi.post(url, data, {
       timeout,
