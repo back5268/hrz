@@ -16,9 +16,9 @@ export const NavItem = (props) => {
 
   return (
     <Fragment>
-      <div className={`p-3 rounded-md ${isSelected ? 'text-primary font-semibold' : 'hover:text-primary hover:font-semibold'}`}>
-        <div className="flex items-center gap-2">
-          {Icon ? <Icon className="h-5 w-5" /> : <ChevronRightIcon strokeWidth={4} className="h-4 w-5" />}
+      <div className={`p-[0.75rem] my-1 rounded-sm ${isSelected ? 'bg-primary font-semibold' : 'hover:bg-hoverSidebar'}`}>
+        <div className="flex items-center gap-2 pl-2 text-[0.8rem]">
+          {Icon ? <Icon className="h-3 w-3" /> : <ChevronRightIcon strokeWidth={4} className="h-3 w-3" />}
           <span>{item.name}</span>
         </div>
       </div>

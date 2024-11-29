@@ -43,10 +43,10 @@ export const AvatarSection = () => {
       <Account open={open} setOpen={setOpen} data={userInfo} />
       <Buttonz
         onClick={() => setIsShow(!isShow)}
-        className="!p-0 h-9 w-11 flex justify-center items-center"
+        className="!p-0 h-10 w-10 flex justify-center items-center"
         icon={
           <div
-            className={`relative cursor-pointer h-11 w-11 rounded-sm bg-cover`}
+            className={`relative cursor-pointer h-10 w-10 rounded-sm bg-cover`}
             style={{ backgroundImage: `url(${userInfo.avatar || '/images/avatar.jpg'})` }}
           >
             <span className="absolute top-0 left-0 w-full h-full bg-primary-500 opacity-10"></span>

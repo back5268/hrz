@@ -72,7 +72,7 @@ export const NotifySection = () => {
             }
             setIsShow(!isShow);
           }}
-          className="!p-0 h-9 w-11 flex justify-center items-center"
+          className="!p-0 h-9 w-9 flex justify-center items-center"
           icon={<BellIcon className="w-6 stroke-1" />}
         />
         {numberView > 0 && <span className="absolute top-2 right-2 block h-2 w-2 rounded-full ring-1 ring-primary-50 bg-red-400" />}

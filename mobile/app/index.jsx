@@ -24,7 +24,7 @@ const Welcome = () => {
         }}
       >
         <View className="w-full flex justify-center items-center h-full px-4">
-          <Image source={images.logoz} className="w-48 h-48" resizeMode="contain" />
+          <Image source={images.logo} className="w-48 h-48" resizeMode="contain" />
           <View className="relative mb-4">
             <Text className="text-xl text-primary font-bold text-center">
               Phần mềm quản lý nhân sự <Text className="text-secondary-200">Hrz</Text>

@@ -28,7 +28,7 @@ export const UserBody = (time, accountId) => {
   const { accounts } = useDataState();
 
   return (
-    <div className="flex flex-col gap-1 justify-center items-center">
+    <div className="flex flex-col justify-center items-center">
       <span className='text-nowrap'>{moment(time).format('DD/MM/YYYY HH:mm:ss')}</span>
       <span>{accountId === 0 ? accounts.find((a) => a._id === accountId)?.fullName : "ADMIN"}</span>
     </div>

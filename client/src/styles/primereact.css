@@ -83,7 +83,9 @@ hr {
 .p-datatable .p-datatable-thead>tr>th,
 .p-datatable-header,
 .p-paginator {
+    color: rgba(47, 43, 61, 0.9);
     border-color: var(--border-color);
+    font-size: 0.875rem;
 }
 
 .p-tag-value {
@@ -96,4 +98,8 @@ hr {
     font-weight: 600;
     text-transform: uppercase;
     color: var(--primary-color)
+}
+
+.p-datatable-loading-overlay {
+    color: var(--primary-color);
 }

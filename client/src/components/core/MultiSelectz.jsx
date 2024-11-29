@@ -26,6 +26,7 @@ export const MultiSelectz = (props) => {
           filter
           display="chip"
           className="w-full"
+          emptyMessage={label ? `Không tìm thấy ${label.toLowerCase()}` : 'Không có dữ liệu'}
           {...register(id)}
           {...prop}
         />

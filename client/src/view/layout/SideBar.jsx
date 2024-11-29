@@ -57,8 +57,8 @@ export const SideBar = (props) => {
 
   return (
     <div
-      className={`fixed left-0 inset-y-0 h-screen z-40 w-full lg:max-w-[18rem] flex flex-col justify-between border-r
-      transition-all duration-500 ease-in-out shadow-custom bg-surfaceVariant ${showSidebar ? '' : '-translate-x-full'}`}
+      className={`fixed left-0 inset-y-0 h-screen z-40 w-full lg:max-w-[17rem] flex flex-col justify-between border-r
+      transition-all duration-500 ease-in-out shadow-custom bg-sidebar text-onSidebar ${showSidebar ? '' : '-translate-x-full'}`}
     >
       <div>
         <div className="p-4">
@@ -66,7 +66,8 @@ export const SideBar = (props) => {
             <Logo classNameImg="h-16" />
           </div>
         </div>
-        <nav className="flex flex-col gap-1 text-sm font-normal text-inherit h-sidebar overflow-scroll mt-4 px-4">
+        <hr className='bg-onSidebar' />
+        <nav className="flex flex-col gap-1 text-sm font-normal text-inherit h-sidebar overflow-scroll mt-4 px-3">
           {tools?.map((item, index) => {
             const Icon = icons[item.icon];
             if (!item.items) return <NavItem key={index} item={item} pathname={pathname} Icon={Icon} />;
@@ -75,8 +76,8 @@ export const SideBar = (props) => {
           })}
         </nav>
       </div>
-      <div className="p-4 border-t border-border">
-        <Buttonz onClick={() => onSignOut()} className="w-full flex gap-2 truncate" label="Đăng xuất" />
+      <div className="p-3 border-t border-onSidebar">
+        <Buttonz outlined onClick={() => onSignOut()} className="w-full flex gap-2 truncate" label="Đăng xuất" />
       </div>
     </div>
   );
