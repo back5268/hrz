@@ -83,11 +83,11 @@ export const Checking = ({ setResult = () => {}, setLoading = () => {} }) => {
     if (cameraRef.current) {
       setLoading(true);
       const file = await cameraRef.current.takePictureAsync({
-        base64: false,
         quality: 0.8
       });
       const latitude = location?.coords?.latitude;
       const longitude = location?.coords?.longitude;
+      console.log(file);
       const reponse = await checkTimekeepingApi({
         formData: { file: { uri: file.uri, type: 'image/jpeg', name: 'photo.jpg' } },
         date: moment().format('YYYY-MM-DD'),
@@ -99,7 +99,7 @@ export const Checking = ({ setResult = () => {}, setLoading = () => {} }) => {
       setLoading(false);
       let address = '',
         status = false;
-      if (reponse) {
+      if (reponse && !reponse.mess) {
         speak('Cảm ơn bạn đã chấm công');
         status = 1;
         address = (

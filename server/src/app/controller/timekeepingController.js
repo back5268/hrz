@@ -22,8 +22,8 @@ import {
   updateTimekeepingMd,
   createImportLogMd,
   detailConfigMd
-} from '@models';
-import { calTimekeeping, checkTimekeepingRp, syntheticTimekeeping } from '@repository';
+} from '@repository';
+import { calTimekeeping, checkTimekeepingRp, syntheticTimekeeping } from '@service';
 import { checkValidTime, formatDate, convertNumberToTime, databaseDate, getDates, validateData } from '@utils';
 import moment from 'moment';
 
@@ -357,6 +357,7 @@ export const importTimekeeping = async (req, res) => {
 //====================================App====================================
 export const checkTimekeepingApp = async (req, res) => {
   try {
+    console.log(1);
     const { error, value } = validateData(checkTimekeepingAppValid, req.body);
     if (error) return res.json({ status: 0, mess: error });
     if (!req.file) return res.json({ status: 0, mess: 'Vui lòng truyền hình ảnh!' });
@@ -370,7 +371,7 @@ export const checkTimekeepingApp = async (req, res) => {
         locations.forEach((l) => {
           const latCheck = l.latitude;
           const longCheck = l.longitude;
-          const value = 100 / 111000;
+          const value = 1000 / 111000;
           if (latitude < latCheck + value && latitude > latCheck - value && longitude < longCheck + value && longitude > longCheck - value)
             checkLocation = true;
         });
@@ -387,9 +388,9 @@ export const checkTimekeepingApp = async (req, res) => {
               date
             })
           });
-        } else res.json({ status: 0, mess: 'Vị trí chấm công không đúng!' });
-      } else res.json({ status: 0, mess: 'Chưa thiết lập vị trí chấm công, vui lòng liên hệ quản trị viên!' });
-    } else res.json({ status: 0, mess: mess || 'Không tìm thấy nhân viên!' });
+        } else res.json({ status: 1, data: { mess: 'Vị trí chấm công không đúng!' } });
+      } else res.json({ status: 1, data: { mess: 'Chưa thiết lập vị trí chấm công, vui lòng liên hệ quản trị viên!' } });
+    } else res.json({ status: 1, data: { mess: 'Khuôn mặt không đúng!' } });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
   }
@@ -401,6 +402,8 @@ export const getListTimekeepingLogApp = async (req, res) => {
     if (error) return res.json({ status: 0, mess: error });
     const { date } = value;
     const where = { account: req.account?._id, date };
+    console.log(where);
+    
     res.json({ status: 1, data: await listTimekeepingLogMd(where) });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

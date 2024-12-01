@@ -23,6 +23,7 @@ export const CheckTimekeepingResult = ({ result = {} }) => {
           <>
             <Iconz name="alert-circle" size={32} />
             <Text className="my-2 text-lg text-primary uppercase font-bold">Chấm công thất bại</Text>
+            <Text>{result.mess}</Text>
           </>
         )}
         <View className="w-6/12 my-2">

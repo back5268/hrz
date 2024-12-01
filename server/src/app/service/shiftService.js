@@ -1,122 +1,71 @@
-import { createShiftValid, detailShiftValid, listShiftValid, updateShiftValid } from '@lib/validation';
-import {
-  countShiftMd,
-  createShiftMd,
-  deleteShiftMd,
-  deleteTimekeepingMd,
-  detailShiftMd,
-  listShiftMd,
-  updateShiftMd
-} from '@models';
-import { createTimekeepingByShift } from '@repository';
-import { validateData } from '@utils';
+import { dateData } from '@constant';
+import { createTimekeepingMd, listAccountMd } from '@repository';
 import moment from 'moment';
 
-export const getListShift = async (req, res) => {
-  try {
-    const { error, value } = validateData(listShiftValid, req.query);
-    if (error) return res.json({ status: 0, mess: error });
-    const { page, limit, keySearch, department, status } = value;
-    const where = {};
-    if (keySearch) where.$or = [{ name: { $regex: keySearch, $options: 'i' } }, { code: { $regex: keySearch, $options: 'i' } }];
-    if (status || status === 0) where.status = status;
-    if (department) where.departments = { $elemMatch: { $eq: department } };
-    const documents = await listShiftMd(where, page, limit);
-    const total = await countShiftMd(where);
-    res.json({ status: 1, data: { documents, total } });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
-};
-
-export const getListShiftInfo = async (req, res) => {
-  try {
-    res.json({ status: 1, data: await listShiftMd({}) });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
-};
-
-export const deleteShift = async (req, res) => {
-  try {
-    const { error, value } = validateData(detailShiftValid, req.body);
-    if (error) return res.json({ status: 0, mess: error });
-    const { _id } = value;
-    const data = await deleteShiftMd({ _id });
-    if (!data) return res.json({ status: 0, mess: 'Ca làm việc không tồn tại!' });
-    res.status(201).json({ status: 1, data });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
-};
-
-export const detailShift = async (req, res) => {
-  try {
-    const { error, value } = validateData(detailShiftValid, req.query);
-    if (error) return res.json({ status: 0, mess: error });
-    const { _id } = value;
-    const data = await detailShiftMd({ _id });
-    if (!data) return res.json({ status: 0, mess: 'Ca làm việc không tồn tại!' });
-    res.json({ status: 1, data });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
-};
-
-export const updateShift = async (req, res) => {
-  try {
-    const { error, value } = validateData(updateShiftValid, req.body);
-    if (error) return res.json({ status: 0, mess: error });
-    const { _id, name, code, dateEnd } = value;
-    const dataz = await detailShiftMd({ _id });
-    if (!dataz) return res.json({ status: 0, mess: 'Ca làm việc không tồn tại!' });
-    if (name) {
-      const checkName = await detailShiftMd({ name });
-      if (checkName) return res.json({ status: 0, mess: 'Tên ca làm việc đã tồn tại!' });
+export const createTimekeepingByShift = async (shift) => {
+  const departments = shift.departments;
+  const accounts = await listAccountMd({ department: { $in: departments } });
+  const startDate = moment(shift?.dateStart);
+  const endDate = shift?.dateEnd ? moment(shift?.dateEnd) : moment(startDate).add(1, 'months');
+  const duration = moment.duration(endDate.diff(startDate));
+  const days = duration.asDays() + 1;
+  const arr = new Array(days).fill(null);
+  if (arr?.length > 0) {
+    let index = 0;
+    for (let i of arr) {
+      const date = startDate.clone().add(index, 'days').format('YYYY-MM-DD');
+      index += 1;
+      const day = dateData[new Date(date).getDay()] || '';
+      const dates = shift.dates;
+      const info = dates.find((d) => d.date === day);
+      if (!day || !info) continue;
+      for (const account of accounts) {
+        const params = {
+          department: account.department,
+          account: account._id,
+          shift: shift._id,
+          date,
+          timeStart: info.timeStart,
+          timeEnd: info.timeEnd,
+          timeBreakStart: info.timeBreakStart,
+          timeBreakEnd: info.timeBreakEnd,
+          totalTime: info.totalTime,
+          totalWork: info.totalWork
+        };
+        await createTimekeepingMd(params);
+      }
     }
-    if (code) {
-      const checkCode = await detailShiftMd({ code });
-      if (checkCode) return res.json({ status: 0, mess: 'Mã ca làm việc đã tồn tại!' });
-    }
-    if (dateEnd && new Date(dateEnd) < new Date())
-      return res.json({ status: 0, mess: 'Ngày kết thúc phải lớn hơn ngày hiện tại!' });
-    const data = await updateShiftMd({ _id }, { updatedBy: req.account._id, name, code, dateEnd });
-    if (dateEnd) {
-      if (new Date(dateEnd) > new Date(dataz.dateEnd))
-        createTimekeepingByShift({ ...dataz, dateStart: moment(dataz.dateStart).add(1, 'days').format('YYYY-MM-DD'), dateEnd });
-      else await deleteTimekeepingMd({ shift: _id, date: { $gt: dateEnd } });
-    }
-    res.status(201).json({ status: 1, data });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
   }
 };
 
-export const createShift = async (req, res) => {
-  try {
-    const { error, value } = validateData(createShiftValid, req.body);
-    if (error) return res.json({ status: 0, mess: error });
-    const { name, code } = value;
-    const checkName = await detailShiftMd({ name });
-    if (checkName) return res.json({ status: 0, mess: 'Tên ca làm việc đã tồn tại!' });
-    const checkCode = await detailShiftMd({ code });
-    if (checkCode) return res.json({ status: 0, mess: 'Mã ca làm việc đã tồn tại!' });
-    const data = await createShiftMd({ updatedBy: req.account._id, ...value });
-    await createTimekeepingByShift(data);
-    res.status(201).json({ status: 1, data });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
-};
-
-export const getListShiftApp = async (req, res) => {
-  try {
-    const where = { departments: { $elemMatch: { $eq: req.account?.department?._id } }, status: 1 };
-    const data = await listShiftMd(where)
-    res.json({ status: 1, data });
-  } catch (error) {
-    console.log(error);
-    
-    res.status(500).json({ status: 0, mess: error.toString() });
+export const createTimekeepingByAccount = async (account, shift) => {
+  const startDate = moment(shift?.dateStart);
+  const endDate = shift?.dateEnd ? moment(shift?.dateEnd) : moment(startDate).add(1, 'months');
+  const duration = moment.duration(endDate.diff(startDate));
+  const days = duration.asDays() + 1;
+  const arr = new Array(days).fill(null);
+  if (arr?.length > 0) {
+    let index = 0;
+    for (let i of arr) {
+      const date = startDate.clone().add(index, 'days').format('YYYY-MM-DD');
+      index += 1;
+      const day = dateData[new Date(date).getDay()] || '';
+      const dates = shift.dates;
+      const info = dates.find((d) => d.date === day);
+      if (!day || !info) continue;
+      const params = {
+        department: account.department,
+        account: account._id,
+        shift: shift._id,
+        date,
+        timeStart: info.timeStart,
+        timeEnd: info.timeEnd,
+        timeBreakStart: info.timeBreakStart,
+        timeBreakEnd: info.timeBreakEnd,
+        totalTime: info.totalTime,
+        totalWork: info.totalWork
+      };
+      await createTimekeepingMd(params);
+    }
   }
 };

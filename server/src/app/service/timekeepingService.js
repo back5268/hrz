@@ -1,447 +1,128 @@
-import { days } from '@constant';
-import { convertToExcel, handleFileExcel } from '@lib/excel-js';
-import { checkFace } from '@lib/face-id';
-import {
-  listTimekeepingLogValid,
-  listTimekeepingValid,
-  listSyntheticTimekeepingValid,
-  exportTimekeepingValid,
-  checkTimekeepingAppValid,
-  listTimekeepingLogAppValid,
-  listTimekeepingAppValid
-} from '@lib/validation';
-import {
-  countTimekeepingMd,
-  countTimekeepingLogMd,
-  createTimekeepingLogMd,
-  detailAccountMd,
-  detailDeviceMd,
-  detailShiftMd,
-  listTimekeepingMd,
-  listTimekeepingLogMd,
-  updateTimekeepingMd,
-  createImportLogMd,
-  detailConfigMd
-} from '@models';
-import { calTimekeeping, checkTimekeepingRp, syntheticTimekeeping } from '@repository';
-import { checkValidTime, formatDate, convertNumberToTime, databaseDate, getDates, validateData } from '@utils';
-import moment from 'moment';
+import { listTimekeepingLogMd, listTimekeepingMd, updateTimekeepingMd } from '@repository';
+import { convertTimeToDate, roundNumber } from '@utils';
 
-const handleParams = (value) => {
-  const { shift, department, account, fromDate, toDate } = value;
-  const where = {};
-  if (shift) where.shift = shift;
-  if (department) where.department = department;
-  if (account) where.account = account;
-  where.date = {
-    $gte: fromDate,
-    $lte: toDate
-  };
-  return where;
-};
-
-export const getListTimekeepingLog = async (req, res) => {
-  try {
-    const { error, value } = validateData(listTimekeepingLogValid, req.query);
-    if (error) return res.json({ status: 0, mess: error });
-    const { page, limit } = value;
-    const where = handleParams(value);
-    const documents = await listTimekeepingLogMd(where, page, limit);
-    const total = await countTimekeepingLogMd(where);
-    res.json({ status: 1, data: { documents, total } });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
-};
-
-export const exportTimekeepingLog = async (req, res) => {
-  try {
-    const { error, value } = validateData(exportTimekeepingValid, req.query);
-    if (error) return res.json({ status: false, mess: error });
-    const where = handleParams(value);
-    const data = await listTimekeepingLogMd(where, false, false, [
-      { path: 'account', select: 'fullName staffCode' },
-      { path: 'department', select: 'name' }
-    ]);
-    const dataz = [];
-    dataz.push(['STT', 'Phòng ban', 'Nhân viên', 'Mã NV', 'Ngày', 'Ngày trong tuần', 'Thời gian', 'Thiết bị chấm công']);
-    if (data?.length > 0) {
-      let index = 1;
-      for (const datum of data) {
-        dataz.push([
-          index,
-          datum.department?.name,
-          datum.account?.fullName,
-          datum.account?.staffCode,
-          formatDate(datum.date, 'date'),
-          days[new Date(datum.date).getDay()]?.name,
-          datum.time,
-          datum.deviceName || ''
-        ]);
-        index += 1;
-      }
+export const calTimekeeping = (schedule = {}, checkInTime, checkOutTime) => {
+  const { timeStart, timeEnd, timeBreakStart, timeBreakEnd, totalTime, totalWork } = schedule;
+  const object = { checkInTime, checkOutTime };
+  if (checkInTime && checkOutTime) {
+    let miss = 0;
+    const start = convertTimeToDate(timeStart);
+    const end = convertTimeToDate(timeEnd);
+    const breakStart = convertTimeToDate(timeBreakStart);
+    const breakEnd = convertTimeToDate(timeBreakEnd);
+    const checkIn = convertTimeToDate(checkInTime);
+    const checkout = convertTimeToDate(checkOutTime);
+    let latez = 0,
+      soonz = 0;
+    if (checkIn > start) {
+      if (checkIn > breakEnd) {
+        latez = checkIn - (breakEnd - breakStart) - start;
+      } else if (checkIn > breakStart && checkIn < breakEnd) latez = breakStart - start;
+      else latez = checkIn - start;
     }
-    res
-      .status(200)
-      .attachment('file.xlsx')
-      .send(await convertToExcel(dataz));
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
-};
-
-export const getListTimekeeping = async (req, res) => {
-  try {
-    const { error, value } = validateData(listTimekeepingValid, req.query);
-    if (error) return res.json({ status: 0, mess: error });
-    const { page, limit } = value;
-    const where = handleParams(value);
-    const documents = await listTimekeepingMd(where, page, limit);
-    const total = await countTimekeepingMd(where);
-    res.json({ status: 1, data: { documents, total } });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
-};
-
-export const exportTimekeeping = async (req, res) => {
-  try {
-    const { error, value } = validateData(exportTimekeepingValid, req.query);
-    if (error) return res.json({ status: false, mess: error });
-    const where = handleParams(value);
-    const data = await listTimekeepingMd(where, false, false, [
-      { path: 'account', select: 'fullName staffCode' },
-      { path: 'department', select: 'name' },
-      { path: 'shift', select: 'name' }
-    ]);
-    const dataz = [];
-    dataz.push([
-      'STT',
-      'Phòng ban',
-      'Nhân viên',
-      'Mã NV',
-      'Ca làm việc',
-      'Ngày',
-      'Ngày trong tuần',
-      'Thời gian vào',
-      'Thời gian ra',
-      'Đi muộn',
-      'Về sớm',
-      'Tổng thời gian',
-      'Công thực tế',
-      'Đơn từ'
-    ]);
-    if (data?.length > 0) {
-      let index = 1;
-      for (const datum of data) {
-        dataz.push([
-          index,
-          datum.department?.name,
-          datum.account?.fullName,
-          datum.account?.staffCode,
-          datum.shift?.name,
-          formatDate(datum.date, 'date'),
-          days[new Date(datum.date).getDay()]?.name,
-          datum.checkInTime || '-',
-          datum.checkOutTime || '-',
-          convertNumberToTime(datum.late),
-          convertNumberToTime(datum.soon),
-          convertNumberToTime(datum.totalTimeReality),
-          datum.summary || 0,
-          ''
-        ]);
-        index += 1;
-      }
+    if (checkout < end) {
+      if (checkout < breakStart) {
+        soonz = end - (breakEnd - breakStart) - checkout;
+      } else if (checkout > breakStart && checkout < breakEnd) soonz = end - breakEnd;
+      else soonz = end - checkout;
     }
-    res
-      .status(200)
-      .attachment('file.xlsx')
-      .send(await convertToExcel(dataz));
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
-};
+    if (latez > 0) {
+      let late = roundNumber(latez / (1000 * 60 * 60));
+      object.late = late;
+      miss += late;
+    } else object.late = 0;
+    if (soonz > 0) {
+      let soon = roundNumber(soonz / (1000 * 60 * 60));
+      object.soon = soon;
+      miss += soon;
+    } else object.soon = 0;
 
-export const getListSyntheticTimekeeping = async (req, res) => {
-  try {
-    const { error, value } = validateData(listSyntheticTimekeepingValid, req.query);
-    if (error) return res.json({ status: 0, mess: error });
-    const where = handleParams(value);
-    const data = await listTimekeepingMd(where);
-    res.json({ status: 1, data: syntheticTimekeeping(data) });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
-};
-
-export const exportSyntheticTimekeeping = async (req, res) => {
-  try {
-    const { error, value } = validateData(exportTimekeepingValid, req.query);
-    if (error) return res.json({ status: false, mess: error });
-    const { fromDate, toDate } = value;
-    const where = handleParams(value);
-    const data = await listTimekeepingMd(where, false, false, [
-      { path: 'account', select: 'fullName staffCode' },
-      { path: 'department', select: 'name' },
-      { path: 'shift', select: 'name' }
-    ]);
-    const documents = syntheticTimekeeping(data);
-    const dataz = [];
-    const arr1 = ['STT', 'Nhân viên', 'Mã NV', 'Ca làm việc', 'Công OT', 'Tổng công', 'Thực tế'];
-    const arr2 = ['STT', 'Nhân viên', 'Mã NV', 'Ca làm việc', 'Công OT', 'Tổng công', 'Thực tế'];
-    const dates = getDates(fromDate, toDate);
-    dates.forEach((date) => {
-      arr1.push(days[new Date(date).getDay()]?.name);
-      arr2.push(moment(date).format('DD/MM'));
-    });
-
-    dataz.push(arr1);
-    dataz.push(arr2);
-    if (documents?.length > 0) {
-      let index = 1;
-      for (const datum of documents) {
-        const arr = [
-          index,
-          datum.account?.fullName,
-          datum.account?.staffCode,
-          datum.shift?.name,
-          datum.totalOt,
-          datum.total,
-          datum.reality
-        ];
-        dates.forEach((date) => {
-          const datez = datum.data?.find((d) => formatDate(d.date, 'date') === formatDate(date, 'date'));
-          arr.push(datez ? datez.summary || '-' : '');
-        });
-        dataz.push(arr);
-        index += 1;
-      }
-    }
-    const options = {
-      mergeCells: ['A1:A2', 'B1:B2', 'C1:C2', 'D1:D2', 'E1:E2', 'F1:F2'],
-      alignments: [
-        { A1: { horizontal: 'center', vertical: 'middle' } },
-        { B1: { horizontal: 'center', vertical: 'middle' } },
-        { C1: { horizontal: 'center', vertical: 'middle' } },
-        { D1: { horizontal: 'center', vertical: 'middle' } },
-        { E1: { horizontal: 'center', vertical: 'middle' } },
-        { F1: { horizontal: 'center', vertical: 'middle' } }
-      ]
-    };
-    res
-      .status(200)
-      .attachment('file.xlsx')
-      .send(await convertToExcel(dataz, options));
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
-};
-
-export const importTimekeeping = async (req, res) => {
-  try {
-    if (req.file) {
-      const attributes = ['stt', 'deviceCode', 'staffCode', 'shiftCode', 'date', 'checkInTime', 'checkOutTime'];
-      const data = await handleFileExcel(req.file, attributes);
-      if (data?.length > 0) {
-        for (const datum of data) {
-          const { stt, deviceCode, staffCode, shiftCode, date, checkInTime, checkOutTime } = datum;
-          if (!stt) {
-            datum.mess = 'Số thứ tự không được bỏ trống';
-            continue;
-          }
-          if (!deviceCode) {
-            datum.mess = 'Mã máy chấm công không được bỏ trống';
-            continue;
-          }
-          if (!staffCode) {
-            datum.mess = 'Mã nhân viên không được bỏ trống';
-            continue;
-          }
-          if (!shiftCode) {
-            datum.mess = 'Mã ca làm việc không được bỏ trống';
-            continue;
-          }
-          if (!date) {
-            datum.mess = 'Ngày chấm công không được bỏ trống';
-            continue;
-          }
-          datum.date = moment(datum.date).format('YYYY-MM-DD');
-          if (!checkInTime) {
-            datum.mess = 'Thời gian vào không được bỏ trống';
-            continue;
-          }
-          if (!checkValidTime(checkInTime)) {
-            datum.mess = `Thời gian vào không đúng định dạng HH:mm`;
-            continue;
-          }
-          if (checkOutTime && !checkValidTime(checkOutTime)) {
-            datum.mess = `Thời gian ra không đúng định dạng HH:mm`;
-            continue;
-          }
-          const device = await detailDeviceMd({ code: deviceCode });
-          if (!device) {
-            datum.mess = `Không tìm thấy máy chấm công có mã ${deviceCode}`;
-            continue;
-          }
-          const account = await detailAccountMd({ staffCode });
-          if (!account) {
-            datum.mess = `Không tìm thấy nhân viên có mã ${staffCode}`;
-            continue;
-          }
-          const shift = await detailShiftMd({ code: shiftCode });
-          if (!shift) {
-            datum.mess = `Không tìm thấy ca làm việc có mã ${shiftCode}`;
-            continue;
-          }
-          if (!device.departments?.includes(String(account.department))) {
-            datum.mess = `Nhân sự không được chấm công tại máy có mã ${deviceCode}`;
-            continue;
-          }
-          const timekeepings = await listTimekeepingMd({ account: account._id, date: datum.date, shift: shift._id });
-          if (!(timekeepings?.length > 0)) {
-            datum.mess = `Nhân sự không có ca làm việc trong ngày ${formatDate(datum.date, 'date')}`;
-            continue;
-          }
-          for (const timekeeping of timekeepings) {
-            await updateTimekeepingMd(
-              { _id: timekeeping._id },
-              { ...calTimekeeping(timekeeping, checkInTime, checkOutTime || checkInTime) }
-            );
-          }
+    const totalTimeReality = totalTime - miss > 0 ? totalTime - miss : 0;
+    const totalWorkReality = (totalTimeReality / totalTime) * totalWork;
+    object.totalTimeReality = totalTimeReality;
+    object.totalWorkReality = roundNumber(totalWorkReality);
+    object.summary = roundNumber(totalWorkReality);
+  } else {
+    if (checkInTime) {
+      const start = convertTimeToDate(timeStart);
+      const breakStart = convertTimeToDate(timeBreakStart);
+      const breakEnd = convertTimeToDate(timeBreakEnd);
+      const checkIn = convertTimeToDate(checkInTime);
+      let latez = 0;
+      if (checkIn > start) {
+        if (checkIn > breakEnd) {
+          latez = checkIn - (breakEnd - breakStart) - start;
+        } else if (checkIn > breakStart && checkIn < breakEnd) latez = breakStart - start;
+        else latez = checkIn - start;
+        if (latez > 0) {
+          let late = latez / (1000 * 60 * 60);
+          object.late = roundNumber(late);
         }
       }
-      const dataz = [];
-      dataz.push([
-        'STT',
-        'Mã máy chấm công',
-        'Mã nhân viên',
-        'Mã ca làm việc',
-        'Ngày chấm công',
-        'Thời gian vào',
-        'Thời gian ra',
-        'Trạng thái',
-        'Thông báo'
-      ]);
-      if (data && data.length > 0) {
-        for (const datum of data) {
-          dataz.push([
-            datum.stt,
-            datum.deviceCode,
-            datum.staffCode,
-            datum.shiftCode,
-            formatDate(datum.date, 'date'),
-            datum.checkInTime,
-            datum.checkOutTime,
-            datum.mess ? 'Thất bại' : 'Thành công',
-            datum.mess || 'Import máy chấm công thành công'
-          ]);
-          await createImportLogMd({
-            ...datum,
-            timeStart: datum.checkInTime,
-            timeEnd: datum.checkOutTime,
-            status: datum.mess ? 0 : 1,
-            by: req.account?._id
-          });
-        }
+    }
+    object.totalTimeReality = 0;
+    object.totalWorkReality = 0;
+    object.summary = 0;
+  }
+  return object;
+};
+
+export const syntheticTimekeeping = (data = []) => {
+  const dataz = [];
+  data.forEach((datum) => {
+    const index = dataz.findIndex(
+      (n) => String(n.account?._id) === String(datum.account?._id) && String(n.shift?._id) === String(datum.shift?._id)
+    );
+    datum.summary = roundNumber(datum.summary || 0);
+    datum.totalWork = roundNumber(datum.totalWork || 0);
+    if (datum.type === 2) {
+      datum.timeStartOt = datum.timeStart;
+      datum.timeEndOt = datum.timeEnd;
+      datum.timeStart = undefined;
+      datum.timeEnd = undefined;
+    }
+    if (index >= 0) {
+      if (datum.type === 1) {
+        dataz[index].reality += datum.summary;
+        dataz[index].total += datum.totalWork;
+      } else if (datum.type === 2) {
+        dataz[index].realityOt += datum.summary;
+        dataz[index].totalOt += datum.totalWork;
       }
-      res
-        .status(200)
-        .attachment('file.xlsx')
-        .send(await convertToExcel(dataz));
-    } else res.json({ status: 0, mess: 'Vui lòng truyền file excel!' });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
+      const checkDate = dataz[index].data?.findIndex((d) => d.date === datum.date);
+      if (checkDate >= 0) {
+        const datumz = dataz[index].data[checkDate];
+        dataz[index].data[checkDate] = {
+          ...datumz,
+          ...datum,
+          summary: roundNumber(datumz.summary) + roundNumber(datum.summary),
+          applications: [...datumz.applications, ...datum.applications],
+          type: 2
+        };
+      } else dataz[index].data.push(datum);
+    } else
+      dataz.push({
+        account: datum.account,
+        shift: datum.shift,
+        total: datum.type === 1 ? datum.totalWork : 0,
+        totalOt: datum.type === 2 ? datum.totalWork : 0,
+        reality: datum.type === 1 ? datum.summary : 0,
+        realityOt: datum.type === 2 ? datum.summary : 0,
+        data: [datum]
+      });
+  });
+  return dataz;
 };
 
-//====================================App====================================
-export const checkTimekeepingApp = async (req, res) => {
-  try {
-    const { error, value } = validateData(checkTimekeepingAppValid, req.body);
-    if (error) return res.json({ status: 0, mess: error });
-    if (!req.file) return res.json({ status: 0, mess: 'Vui lòng truyền hình ảnh!' });
-    const { status, mess, data } = await checkFace(req.file);
-    if (status && String(data) === String(req.account?._id)) {
-      const { latitude, longitude } = value;
-      const timekeepingConfig = await detailConfigMd({ type: 1 });
-      const locations = timekeepingConfig?.timekeeping?.locations;
-      if (Array.isArray(locations) && locations.length) {
-        let checkLocation = false;
-        locations.forEach((l) => {
-          const latCheck = l.latitude;
-          const longCheck = l.longitude;
-          const value = 100 / 111000;
-          if (latitude < latCheck + value && latitude > latCheck - value && longitude < longCheck + value && longitude > longCheck - value)
-            checkLocation = true;
-        });
-
-        if (checkLocation) {
-          const date = databaseDate(value.date, 'date');
-          await checkTimekeepingRp({ account: req.account?._id, date, time: value.time });
-          res.json({
-            status: 1,
-            data: await createTimekeepingLogMd({
-              ...value,
-              account: req.account?._id,
-              department: req.account?.department?._id,
-              date
-            })
-          });
-        } else res.json({ status: 0, mess: 'Vị trí chấm công không đúng!' });
-      } else res.json({ status: 0, mess: 'Chưa thiết lập vị trí chấm công, vui lòng liên hệ quản trị viên!' });
-    } else res.json({ status: 0, mess: mess || 'Không tìm thấy nhân viên!' });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
-};
-
-export const getListTimekeepingLogApp = async (req, res) => {
-  try {
-    const { error, value } = validateData(listTimekeepingLogAppValid, req.query);
-    if (error) return res.json({ status: 0, mess: error });
-    const { date } = value;
-    const where = { account: req.account?._id, date };
-    res.json({ status: 1, data: await listTimekeepingLogMd(where) });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
-};
-
-export const getListTimekeepingApp = async (req, res) => {
-  try {
-    const { error, value } = validateData(listTimekeepingAppValid, req.query);
-    if (error) return res.json({ status: 0, mess: error });
-    const { fromDate, toDate, shift } = value;
-    const where = {
-      account: req.account?._id,
-      date: {
-        $gte: fromDate,
-        $lte: toDate
-      },
-      shift
-    };
-    res.json({ status: 1, data: await listTimekeepingMd(where) });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
-};
-
-export const getListSyntheticTimekeepingApp = async (req, res) => {
-  try {
-    const { error, value } = validateData(listTimekeepingAppValid, req.query);
-    if (error) return res.json({ status: 0, mess: error });
-    const { fromDate, toDate, shift } = value;
-    const where = {
-      account: req.account?._id,
-      date: {
-        $gte: fromDate,
-        $lte: toDate
-      }
-    };
-    if (shift) where.shift = shift;
-    const data = await listTimekeepingMd(where);
-    res.json({ status: 1, data: syntheticTimekeeping(data) });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
+export const checkTimekeepingRp = async (data) => {
+  const { account, date, time } = data;
+  const timekeepings = await listTimekeepingMd({ account, date });
+  const logs = await listTimekeepingLogMd({ account, date });
+  const log = logs[logs.length - 1];
+  for (const timekeeping of timekeepings) {
+    if (!timekeeping) continue;
+    const checkInTime = timekeeping.checkIn || log.time || time;
+    const checkOutTime = time;
+    await updateTimekeepingMd({ _id: timekeeping._id }, { ...calTimekeeping(timekeeping, checkInTime, checkOutTime) });
   }
 };

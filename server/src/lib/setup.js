@@ -7,7 +7,7 @@ import {
   createPositionMd,
   createTemplateMd,
   createToolMd
-} from '@models';
+} from '@repository';
 
 export const setup = async () => {
   for (const account of accounts) {

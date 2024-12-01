@@ -14,6 +14,8 @@
       "@models/*": ["src/app/db/models/*"],
       "@repository": ["src/app/repository"],
       "@repository/*": ["src/app/repository/*"],
+      "@service": ["src/app/service"],
+      "@service/*": ["src/app/service/*"],
       "@constant": ["src/constant"],
       "@constant/*": ["src/constant/*"],
       "@config": ["src/app/db/config"],

@@ -7,7 +7,7 @@ import {
   listAccountMd,
   listDepartmentMd,
   updateDepartmentMd
-} from '@models';
+} from '@repository';
 import { validateData } from '@utils';
 
 export const getListDepartment = async (req, res) => {

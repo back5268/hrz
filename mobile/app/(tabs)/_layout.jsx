@@ -3,12 +3,61 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useUserState } from '@/store';
 import { Appbar, BottomNavigation } from 'react-native-paper';
 import { CommonActions } from '@react-navigation/native';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { socket } from '@/lib/socket-io';
 import Toast from 'react-native-toast-message';
 import { View } from 'react-native';
 
-const TabBar = (props) => {
+const TabBar = (props) => (
+  <BottomNavigation.Bar
+    navigationState={props.state}
+    safeAreaInsets={props.insets}
+    onTabPress={({ route, preventDefault }) => {
+      const event = props.navigation.emit({
+        type: 'tabPress',
+        target: route.key,
+        canPreventDefault: true
+      });
+
+      if (event.defaultPrevented) {
+        preventDefault();
+      } else {
+        props.navigation.dispatch({
+          ...CommonActions.navigate(route.name, route.params),
+          target: props.state.key
+        });
+      }
+    }}
+    renderIcon={({ route, focused, color }) => {
+      const { options } = props.descriptors[route.key];
+      if (options.tabBarIcon) {
+        return options.tabBarIcon({ focused, color, size: 30 });
+      }
+      return null;
+    }}
+    getLabelText={({ route }) => {
+      const { options } = props.descriptors[route.key];
+      const label = options.tabBarLabel !== undefined ? options.tabBarLabel : options.title !== undefined ? options.title : route.title;
+      return label;
+    }}
+    key={props.state?.key}
+  />
+);
+
+const TabsHeader = (props) => (
+  <Appbar.Header {...props}>
+    {props.navProps.options.headerLeft ? props.navProps.options.headerLeft({}) : undefined}
+    <Appbar.Content title="Home" />
+    {props.navProps.options.headerRight ? props.navProps.options.headerRight({}) : undefined}
+  </Appbar.Header>
+);
+
+const TabLayout = () => {
+  const { isAuthenticated } = useUserState();
+  const segments = useSegments();
+  if (!isAuthenticated) return <Redirect href="/sign-in" />;
+  const isShow = ['home', 'other', '(other)'].includes(segments?.[2] || segments?.[1]);
+  const [isSegmentsReady, setIsSegmentsReady] = useState(false);
   const { userInfo } = useUserState();
 
   useEffect(() => {
@@ -33,56 +82,13 @@ const TabBar = (props) => {
     }
   }, [userInfo?._id]);
 
-  return (
-    <BottomNavigation.Bar
-      navigationState={props.state}
-      safeAreaInsets={props.insets}
-      onTabPress={({ route, preventDefault }) => {
-        const event = props.navigation.emit({
-          type: 'tabPress',
-          target: route.key,
-          canPreventDefault: true
-        });
+  useEffect(() => {
+    if (segments.length > 0) {
+      setIsSegmentsReady(true);
+    }
+  }, [segments]);
 
-        if (event.defaultPrevented) {
-          preventDefault();
-        } else {
-          props.navigation.dispatch({
-            ...CommonActions.navigate(route.name, route.params),
-            target: props.state.key
-          });
-        }
-      }}
-      renderIcon={({ route, focused, color }) => {
-        const { options } = props.descriptors[route.key];
-        if (options.tabBarIcon) {
-          return options.tabBarIcon({ focused, color, size: 30 });
-        }
-        return null;
-      }}
-      getLabelText={({ route }) => {
-        const { options } = props.descriptors[route.key];
-        const label = options.tabBarLabel !== undefined ? options.tabBarLabel : options.title !== undefined ? options.title : route.title;
-        return label;
-      }}
-    />
-  );
-};
-
-const TabsHeader = (props) => (
-  <Appbar.Header {...props}>
-    {props.navProps.options.headerLeft ? props.navProps.options.headerLeft({}) : undefined}
-    <Appbar.Content title="Home" />
-    {props.navProps.options.headerRight ? props.navProps.options.headerRight({}) : undefined}
-  </Appbar.Header>
-);
-
-const TabLayout = () => {
-  const { isAuthenticated } = useUserState();
-  const segments = useSegments();
-  if (!isAuthenticated || !segments) return <Redirect href="/sign-in" />;
-  const isShow = ['home', 'other', '(other)'].includes(segments?.[2] || segments?.[1]);
-
+  if (!isSegmentsReady) return <View />;
   return (
     <Tabs
       tabBar={(props) => (isShow ? <TabBar {...props} /> : <View key={props.key}></View>)}

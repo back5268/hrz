@@ -1,39 +1,29 @@
-import { listNotifyMd, updateNotifyMd } from '@models';
+import { NotifyMd } from "@models";
 
-export const getListNotify = async (req, res) => {
-  try {
-    const where = { account: req.account?._id };
-    const data = await listNotifyMd(where);
-    res.json({ status: 1, data });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
+export const listNotifyMd = (where, page, limit, populates, attr, sort) => {
+  return NotifyMd.find({ where, page, limit, populates, attr, sort });
 };
 
-export const viewAllNotify = async (req, res) => {
-  try {
-    await updateNotifyMd({ account: req.account?._id }, { status: 1 });
-    res.status(201).json({ status: 1 });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
+export const countNotifyMd = (where) => {
+  return NotifyMd.count({ where });
 };
 
-export const readNotify = async (req, res) => {
-  try {
-    const { _id } = req.body;
-    await updateNotifyMd({ _id, account: req.account?._id }, { status: 2 });
-    res.status(201).json({ status: 1 });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
+export const detailNotifyMd = (where, populates, attr) => {
+  return NotifyMd.findOne({ where, populates, attr });
 };
 
-export const readAllNotify = async (req, res) => {
-  try {
-    await updateNotifyMd({ account: req.account?._id }, { status: 2 });
-    res.status(201).json({ status: 1 });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
+export const createNotifyMd = (attr) => {
+  return NotifyMd.create({ attr });
+};
+
+export const updateNotifyMd = (where, attr) => {
+  return NotifyMd.update({ where, attr });
+};
+
+export const updateManyNotifyMd = (where, attr) => {
+  return NotifyMd.update({ where, attr });
+};
+
+export const deleteNotifyMd = (where) => {
+  return NotifyMd.delete({ where });
 };

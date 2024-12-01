@@ -5,7 +5,7 @@ import {
   aggregateDepartmentMd,
   aggregateTimekeepingMd,
   listTimekeepingMd
-} from '@models';
+} from '@repository';
 import { databaseDate, validateData } from '@utils';
 import mongoose from 'mongoose';
 

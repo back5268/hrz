@@ -1,101 +1,29 @@
-import { createJobPositionValid, detailJobPositionValid, listJobPositionValid, updateJobPositionValid } from '@lib/validation';
-import {
-  countJobPositionMd,
-  createJobPositionMd,
-  deleteJobPositionMd,
-  detailJobPositionMd,
-  listAccountMd,
-  listJobPositionMd,
-  updateJobPositionMd
-} from '@models';
-import { validateData } from '@utils';
+import { JobPositionMd } from "@models";
 
-export const getListJobPosition = async (req, res) => {
-  try {
-    const { error, value } = validateData(listJobPositionValid, req.query);
-    if (error) return res.json({ status: 0, mess: error });
-    const { page, limit, keySearch, status } = value;
-    const where = {};
-    if (keySearch) where.$or = [{ name: { $regex: keySearch, $options: 'i' } }, { code: { $regex: keySearch, $options: 'i' } }];
-    if (status || status === 0) where.status = status;
-    const documents = await listJobPositionMd(where, page, limit);
-    const total = await countJobPositionMd(where);
-    res.json({ status: 1, data: { documents, total } });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
+export const listJobPositionMd = (where, page, limit, populates, attr, sort) => {
+  return JobPositionMd.find({ where, page, limit, populates, attr, sort });
 };
 
-export const getListJobPositionInfo = async (req, res) => {
-  try {
-    res.json({ status: 1, data: await listJobPositionMd({ status: 1 }) });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
+export const countJobPositionMd = (where) => {
+  return JobPositionMd.count({ where });
 };
 
-export const deleteJobPosition = async (req, res) => {
-  try {
-    const { error, value } = validateData(detailJobPositionValid, req.body);
-    if (error) return res.json({ status: 0, mess: error });
-    const { _id } = value;
-    const data = await detailJobPositionMd({ _id });
-    if (!data) return res.json({ status: 0, mess: 'Vị trí công việc không tồn tại!' });
-    const accounts = await listAccountMd({ jobPosition: _id });
-    if (accounts.length > 0) res.json({ status: 0, mess: 'Vị trí công việc đã được áp dụng cho nhân viên, không thể xóa!' });
-    res.status(201).json({ status: 1, data: await deleteJobPositionMd({ _id }) });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
+export const detailJobPositionMd = (where, populates, attr) => {
+  return JobPositionMd.findOne({ where, populates, attr });
 };
 
-export const detailJobPosition = async (req, res) => {
-  try {
-    const { error, value } = validateData(detailJobPositionValid, req.query);
-    if (error) return res.json({ status: 0, mess: error });
-    const { _id } = value;
-    const data = await detailJobPositionMd({ _id });
-    if (!data) return res.json({ status: 0, mess: 'Vị trí công việc không tồn tại!' });
-    res.json({ status: 1, data });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
+export const createJobPositionMd = (attr) => {
+  return JobPositionMd.create({ attr });
 };
 
-export const updateJobPosition = async (req, res) => {
-  try {
-    const { error, value } = validateData(updateJobPositionValid, req.body);
-    if (error) return res.json({ status: 0, mess: error });
-    const { _id, name, code } = value;
-    const dataz = await detailJobPositionMd({ _id });
-    if (!dataz) return res.json({ status: 0, mess: 'Vị trí công việc không tồn tại!' });
-    if (name) {
-      const checkName = await detailJobPositionMd({ name });
-      if (checkName) return res.json({ status: 0, mess: 'Tên vị trí công việc đã tồn tại!' });
-    }
-    if (code) {
-      const checkCode = await detailJobPositionMd({ code });
-      if (checkCode) return res.json({ status: 0, mess: 'Mã vị trí công việc đã tồn tại!' });
-    }
-    const data = await updateJobPositionMd({ _id }, { updatedBy: req.account._id, ...value });
-    res.status(201).json({ status: 1, data });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
+export const updateJobPositionMd = (where, attr) => {
+  return JobPositionMd.update({ where, attr });
 };
 
-export const createJobPosition = async (req, res) => {
-  try {
-    const { error, value } = validateData(createJobPositionValid, req.body);
-    if (error) return res.json({ status: 0, mess: error });
-    const { name, code } = value;
-    const checkName = await detailJobPositionMd({ name });
-    if (checkName) return res.json({ status: 0, mess: 'Tên vị trí công việc đã tồn tại!' });
-    const checkCode = await detailJobPositionMd({ code });
-    if (checkCode) return res.json({ status: 0, mess: 'Mã vị trí công việc đã tồn tại!' });
-    const data = await createJobPositionMd({ updatedBy: req.account._id, ...value });
-    res.status(201).json({ status: 1, data });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
+export const updateManyJobPositionMd = (where, attr) => {
+  return JobPositionMd.update({ where, attr });
+};
+
+export const deleteJobPositionMd = (where) => {
+  return JobPositionMd.delete({ where });
 };

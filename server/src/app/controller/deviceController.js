@@ -1,5 +1,5 @@
 import { createDeviceValid, detailDeviceValid, listDeviceValid, updateDeviceValid } from '@lib/validation';
-import { countDeviceMd, createDeviceMd, deleteDeviceMd, detailDeviceMd, listDeviceMd, updateDeviceMd } from '@models';
+import { countDeviceMd, createDeviceMd, deleteDeviceMd, detailDeviceMd, listDeviceMd, updateDeviceMd } from '@repository';
 import { validateData } from '@utils';
 
 export const getListDevice = async (req, res) => {

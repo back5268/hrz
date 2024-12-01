@@ -1,6 +1,6 @@
 import { uploadFileToFirebase } from '@lib/firebase';
 import { getConfigValid, updateConfigValid } from '@lib/validation';
-import { detailConfigMd, updateConfigMd } from '@models';
+import { detailConfigMd, updateConfigMd } from '@repository';
 import { validateData } from '@utils';
 
 export const getConfig = async (req, res) => {

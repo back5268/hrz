@@ -7,7 +7,7 @@ import {
   listPermissionMd,
   listToolMd,
   updatePermissionMd
-} from '@models';
+} from '@repository';
 import { validateData } from '@utils';
 
 export const getListPermission = async (req, res) => {

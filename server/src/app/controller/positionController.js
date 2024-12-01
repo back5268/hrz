@@ -7,7 +7,7 @@ import {
   listAccountMd,
   listPositionMd,
   updatePositionMd
-} from '@models';
+} from '@repository';
 import { validateData } from '@utils';
 
 export const getListPosition = async (req, res) => {

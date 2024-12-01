@@ -1,6 +1,6 @@
 import { uploadFileToFirebase } from '@lib/firebase';
 import { createNewValid, detailNewValid, listNewValid, updateNewValid } from '@lib/validation';
-import { countNewMd, createNewMd, deleteNewMd, detailNewMd, listNewMd, updateNewMd } from '@models';
+import { countNewMd, createNewMd, deleteNewMd, detailNewMd, listNewMd, updateNewMd } from '@repository';
 import { validateData } from '@utils';
 
 export const getListNew = async (req, res) => {

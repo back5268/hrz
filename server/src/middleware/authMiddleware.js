@@ -1,4 +1,4 @@
-import { detailAccountMd } from '@models';
+import { detailAccountMd } from '@repository';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 dotenv.config();

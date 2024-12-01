@@ -1,8 +1,8 @@
 import { sendMailSalary } from '@lib/node-mailer';
 import { convertHTMLToPDF } from '@lib/puppeteer';
 import { detailSalaryValid, listSalaryValid, sendSalaryValid, updateStatusSalaryValid } from '@lib/validation';
-import { countSalaryMd, deleteSalaryMd, detailSalaryMd, listSalaryMd, updateSalaryMd } from '@models';
-import { previewSalaryRp } from '@repository/salaryRp';
+import { countSalaryMd, deleteSalaryMd, detailSalaryMd, listSalaryMd, updateSalaryMd } from '@repository';
+import { previewSalaryService } from '@service';
 import { validateData } from '@utils';
 
 export const getListSalaryApproved = async (req, res) => {
@@ -93,7 +93,7 @@ export const previewSalary = async (req, res) => {
   try {
     const { error, value } = validateData(detailSalaryValid, req.query);
     if (error) return res.json({ status: 0, mess: error });
-    const { data, mess } = await previewSalaryRp(value._id);
+    const { data, mess } = await previewSalaryService(value._id);
     if (mess) res.json({ status: 0, mess });
     else res.json({ status: 1, data: data.html });
   } catch (error) {
@@ -108,7 +108,7 @@ export const sendSalary = async (req, res) => {
     const { _ids } = value;
     if (Array.isArray(_ids)) {
       for (const _id of _ids) {
-        const { data, mess } = await previewSalaryRp(_id);
+        const { data, mess } = await previewSalaryService(_id);
         if (mess) continue;
         const { html, subject, account } = data;
         await sendMailSalary({ html, subject, to: account.email });
@@ -129,7 +129,7 @@ export const downloadSalary = async (req, res) => {
     if (!dataz) return res.json({ status: 0, mess: 'Phiếu lương không tồn tại!' });
     if (dataz.file) return res.json({ status: 1, data: dataz.file });
     else {
-      const { data, mess } = await previewSalaryRp(_id, dataz);
+      const { data, mess } = await previewSalaryService(_id, dataz);
       if (mess) res.json({ status: 0, mess });
       const file = await convertHTMLToPDF(data.html);
       await updateSalaryMd({ _id }, { file });

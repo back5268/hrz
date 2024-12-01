@@ -1,6 +1,6 @@
 import { uploadFileToFirebase } from '@lib/firebase';
 import { getConfigValid, updateConfigValid } from '@lib/validation';
-import { detailConfigMd, updateConfigMd } from '@models';
+import { detailConfigMd, updateConfigMd } from '@repository';
 import { validateData } from '@utils';
 
 export const getConfig = async (req, res) => {
@@ -37,8 +37,6 @@ export const updateConfig = async (req, res) => {
     const data = await updateConfigMd({ type }, params);
     res.status(201).json({ status: 1, data });
   } catch (error) {
-    console.log(error);
-    
     res.status(500).json({ status: 0, mess: error.toString() });
   }
 };

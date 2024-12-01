@@ -1,5 +1,5 @@
 import { listTemplateValid, updateTemplateValid } from '@lib/validation';
-import { countTemplateMd, detailTemplateMd, listTemplateMd, updateTemplateMd } from '@models';
+import { countTemplateMd, detailTemplateMd, listTemplateMd, updateTemplateMd } from '@repository';
 import { validateData } from '@utils';
 
 export const getListTemplate = async (req, res) => {

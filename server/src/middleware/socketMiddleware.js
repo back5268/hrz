@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { detailAccountMd } from '@models';
+import { detailAccountMd } from '@repository';
 dotenv.config();
 
 export const socketMiddleware = async (socket, next) => {

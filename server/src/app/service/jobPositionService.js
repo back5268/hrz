@@ -7,7 +7,7 @@ import {
   listAccountMd,
   listJobPositionMd,
   updateJobPositionMd
-} from '@models';
+} from '@repository';
 import { validateData } from '@utils';
 
 export const getListJobPosition = async (req, res) => {

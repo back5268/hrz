@@ -1,28 +1,29 @@
-import { listImportLogValid } from '@lib/validation';
-import { countImportLogMd, listImportLogMd } from '@models';
-import { validateData } from '@utils';
+import { ImportLogMd } from "@models";
 
-export const getListImportLog = async (req, res) => {
-  try {
-    const { error, value } = validateData(listImportLogValid, req.query);
-    if (error) return res.json({ status: 0, mess: error });
-    const { page, limit, status, keySearch, fromDate, toDate } = value;
-    const where = {};
-    if (status || status === 0) where.status = status;
-    if (keySearch)
-      where.$or = [
-        { deviceCode: { $regex: keySearch, $options: 'i' } },
-        { staffCode: { $regex: keySearch, $options: 'i' } },
-        { shiftCode: { $regex: keySearch, $options: 'i' } }
-      ];
-    where.createdAt = {
-      $gte: fromDate,
-      $lte: toDate
-    };
-    const documents = await listImportLogMd(where, page, limit);
-    const total = await countImportLogMd(where);
-    res.json({ status: 1, data: { documents, total } });
-  } catch (error) {
-    res.status(500).json({ status: 0, mess: error.toString() });
-  }
+export const listImportLogMd = (where, page, limit, populates, attr, sort) => {
+  return ImportLogMd.find({ where, page, limit, populates, attr, sort });
+};
+
+export const countImportLogMd = (where) => {
+  return ImportLogMd.count({ where });
+};
+
+export const detailImportLogMd = (where, populates, attr) => {
+  return ImportLogMd.findOne({ where, populates, attr });
+};
+
+export const createImportLogMd = (attr) => {
+  return ImportLogMd.create({ attr });
+};
+
+export const updateImportLogMd = (where, attr) => {
+  return ImportLogMd.update({ where, attr });
+};
+
+export const updateManyImportLogMd = (where, attr) => {
+  return ImportLogMd.update({ where, attr });
+};
+
+export const deleteImportLogMd = (where) => {
+  return ImportLogMd.delete({ where });
 };

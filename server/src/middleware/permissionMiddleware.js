@@ -1,4 +1,4 @@
-import { listPermissionMd, listToolMd } from '@models';
+import { listPermissionMd, listToolMd } from '@repository';
 
 export const permissionMiddleware = async (req, res, next) => {
   try {

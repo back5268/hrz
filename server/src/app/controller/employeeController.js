@@ -27,12 +27,12 @@ import {
   updateContactMd,
   updateEducationMd,
   updateInsuranceMd
-} from '@models';
+} from '@repository';
 import { formatNumber, generateRandomString, validateData } from '@utils';
 import moment from 'moment';
 import bcrypt from 'bcrypt';
 import { deleteFace, registerFace } from '@lib/face-id';
-import { createTimekeepingByAccount } from '@repository';
+import { createTimekeepingByAccount } from '@service';
 
 export const getListWorkHistory = async (req, res) => {
   try {

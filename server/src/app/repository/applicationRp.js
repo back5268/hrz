@@ -1,65 +1,33 @@
-import { createTimekeepingMd, detailConfigMd, detailTimekeepingMd, updateTimekeepingMd } from '@models';
-import { calTime, roundNumber } from '@utils';
-import moment from 'moment';
+import { ApplicationMd } from "@models";
 
-export const approveApplication = async (dataz) => {
-  const type = dataz.type;
-  if (type === 1) {
-    const timekeeping = await detailTimekeepingMd({ account: dataz.account, date: dataz.dates?.[0], shift: dataz.shift });
-    if (timekeeping) await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, summary: timekeeping.totalWork });
-  } else if (type === 2)
-    await updateTimekeepingMd(
-      { account: dataz.account, date: dataz.dates?.[0], shift: dataz.shift },
-      { $addToSet: { applications: dataz._id } }
-    );
-  else if (type === 3) {
-    const dates = dataz.dates;
-    for (const date of dates) {
-      const timekeeping = await detailTimekeepingMd({ account: dataz.account, date, shift: dataz.shift });
-      if (timekeeping) await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, summary: timekeeping.totalWork });
-    }
-  } else if (type === 4) {
-    const timekeeping = await detailTimekeepingMd({ account: dataz.account, date: dataz.dates?.[0], shift: dataz.shift });
-    if (timekeeping) await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, summary: timekeeping.totalWork });
-  } else if (type === 5) {
-    const timekeeping = await detailTimekeepingMd({ account: dataz.account, date: dataz.dates?.[0], shift: dataz.shift });
-    const timeStart = addTimes(timekeeping.timeStart, dataz.late);
-    const timeEnd = subtractTimes(timekeeping.timeEnd, dataz.soon);
-    if (timekeeping) await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, timeStart, timeEnd });
-  } else if (type === 6) {
-    const salarySetup = (await detailConfigMd({ type: 2 }))?.salary;
-    const ot = salarySetup.ot;
-    const holidays = salarySetup.holidays;
-    const date = dataz.dates?.[0];
-    const isHoliday = holidays.includes(date);
-    const isSunday = moment(date).day() === 0;
-    const coefficient = isHoliday ? ot.holiday : isSunday ? ot.sunday : ot.day;
-    const timekeeping = await detailTimekeepingMd({ account: dataz.account, shift: dataz.shift });
-    const totalTime = calTime(`2024-11-01 ${dataz.fromTime}:00`, `2024-11-01 ${dataz.toTime}:00`);
-    const totalWork = roundNumber(((timekeeping.totalWork / timekeeping.totalTime) * totalTime * coefficient) / 100);
-    await createTimekeepingMd({
-      department: dataz.department,
-      account: dataz.account,
-      shift: dataz.shift,
-      date,
-      timeStart: dataz.fromTime,
-      timeEnd: dataz.toTime,
-      totalTime,
-      totalWork,
-      type: 2,
-      applications: [dataz._id]
-    });
-  } else if (type === 7) {
-    const dates = dataz.dates;
-    for (const date of dates) {
-      const timekeeping = await detailTimekeepingMd({ account: dataz.account, date, shift: dataz.shift });
-      if (timekeeping) await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, summary: timekeeping.totalWork });
-    }
-  } else if (type === 8) {
-    const dates = dataz.dates;
-    for (const date of dates) {
-      const timekeeping = await detailTimekeepingMd({ account: dataz.account, date, shift: dataz.shift });
-      if (timekeeping) await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id } });
-    }
-  }
+export const listApplicationMd = (where, page, limit, populates, attr, sort) => {
+  return ApplicationMd.find({ where, page, limit, populates, attr, sort });
+};
+
+export const countApplicationMd = (where) => {
+  return ApplicationMd.count({ where });
+};
+
+export const detailApplicationMd = (where, populates, attr) => {
+  return ApplicationMd.findOne({ where, populates, attr });
+};
+
+export const createApplicationMd = (attr) => {
+  return ApplicationMd.create({ attr });
+};
+
+export const updateApplicationMd = (where, attr) => {
+  return ApplicationMd.update({ where, attr });
+};
+
+export const updateManyApplicationMd = (where, attr) => {
+  return ApplicationMd.update({ where, attr });
+};
+
+export const deleteApplicationMd = (where) => {
+  return ApplicationMd.delete({ where });
+};
+
+export const aggregateApplicationMd = (aggregate) => {
+  return ApplicationMd.aggregate({ aggregate });
 };

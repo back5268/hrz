@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
-class ConfigMd extends ModelBase {}
+export class ConfigMd extends ModelBase {}
 
 ConfigMd.init('Config', {
   updateBy: { type: ObjectId, ref: 'Account' },
@@ -41,31 +41,3 @@ ConfigMd.init('Config', {
   files: [{ type: String }],
   deletedAt: { type: Date }
 });
-
-export const listConfigMd = (where, page, limit, populates, attr, sort) => {
-  return ConfigMd.find({ where, page, limit, populates, attr, sort });
-};
-
-export const countConfigMd = (where) => {
-  return ConfigMd.count({ where });
-};
-
-export const detailConfigMd = (where, populates, attr) => {
-  return ConfigMd.findOne({ where, populates, attr });
-};
-
-export const createConfigMd = (attr) => {
-  return ConfigMd.create({ attr });
-};
-
-export const updateConfigMd = (where, attr) => {
-  return ConfigMd.update({ where, attr });
-};
-
-export const updateManyConfigMd = (where, attr) => {
-  return ConfigMd.update({ where, attr });
-};
-
-export const deleteConfigMd = (where) => {
-  return ConfigMd.delete({ where });
-};

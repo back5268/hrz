@@ -1,6 +1,6 @@
 import { ModelBase } from '@config';
 
-class ApplicationMd extends ModelBase {}
+export class ApplicationMd extends ModelBase {}
 
 ApplicationMd.init('Application', {
   updatedBy: { type: String },
@@ -10,9 +10,9 @@ ApplicationMd.init('Application', {
   type: {
     type: Number,
     required: true,
-    enum: [1, 2, 3, 4, 5, 6, 7, 8],
+    enum: [1, 2, 3, 4, 5, 6, 7, 8, 9],
     description:
-      '1: Đơn xin nghỉ (phép năm), 2: Đơn xin nghỉ (không phép), 3: Đơn xin nghỉ (phép đặc biệt), 4: Đơn xác nhận công, 5: Đơn xin đi trễ, về sớm, 6: Đơn OT, 7: Đơn công tác, 8: Đơn xin nghỉ dài hạn'
+      '1: Đơn xin nghỉ (phép năm), 2: Đơn xin nghỉ (không phép), 3: Đơn xin nghỉ (phép đặc biệt), 4: Đơn xác nhận công, 5: Đơn xin đi trễ, về sớm, 6: Đơn OT, 7: Đơn công tác, 8: Đơn xin nghỉ dài hạn, 9: Yêu cầu tính lại lương'
   },
   typez: {
     type: Number,
@@ -30,35 +30,3 @@ ApplicationMd.init('Application', {
   note: { type: String },
   deletedAt: { type: Date }
 });
-
-export const listApplicationMd = (where, page, limit, populates, attr, sort) => {
-  return ApplicationMd.find({ where, page, limit, populates, attr, sort });
-};
-
-export const countApplicationMd = (where) => {
-  return ApplicationMd.count({ where });
-};
-
-export const detailApplicationMd = (where, populates, attr) => {
-  return ApplicationMd.findOne({ where, populates, attr });
-};
-
-export const createApplicationMd = (attr) => {
-  return ApplicationMd.create({ attr });
-};
-
-export const updateApplicationMd = (where, attr) => {
-  return ApplicationMd.update({ where, attr });
-};
-
-export const updateManyApplicationMd = (where, attr) => {
-  return ApplicationMd.update({ where, attr });
-};
-
-export const deleteApplicationMd = (where) => {
-  return ApplicationMd.delete({ where });
-};
-
-export const aggregateApplicationMd = (aggregate) => {
-  return ApplicationMd.aggregate({ aggregate });
-};

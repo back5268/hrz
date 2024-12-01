@@ -7,8 +7,8 @@ import {
   detailShiftMd,
   listShiftMd,
   updateShiftMd
-} from '@models';
-import { createTimekeepingByShift } from '@repository';
+} from '@repository';
+import { createTimekeepingByShift } from '@service';
 import { validateData } from '@utils';
 import moment from 'moment';
 

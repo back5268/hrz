@@ -9,7 +9,7 @@ import {
   detailTemplateMd,
   listContractMd,
   updateContractMd
-} from '@models';
+} from '@repository';
 import { previewContractRp } from '@repository';
 import { ghepGiaTri, validateData } from '@utils';
 import moment from 'moment';

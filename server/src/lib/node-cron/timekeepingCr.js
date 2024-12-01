@@ -1,5 +1,4 @@
 import { dateData } from '@constant';
-import { sendMailWarningTimekeeping } from '@lib/node-mailer';
 import {
   createNotifyMd,
   createScheduleMd,
@@ -8,7 +7,8 @@ import {
   detailTimekeepingLogMd,
   listAccountMd,
   listTimekeepingMd
-} from '@models';
+} from '@repository';
+import { sendMailWarningTimekeeping } from '@service';
 import moment from 'moment';
 import { ioSk } from 'src';
 

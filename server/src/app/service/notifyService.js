@@ -1,4 +1,4 @@
-import { listNotifyMd, updateNotifyMd } from '@models';
+import { listNotifyMd, updateNotifyMd } from '@repository';
 
 export const getListNotify = async (req, res) => {
   try {

@@ -1,6 +1,6 @@
 import { salaryQueue } from '@lib/node-cron/salaryCr';
 import { calculateSalaryValid, listSalaryLogValid } from '@lib/validation';
-import { countSalaryLogMd, createSalaryLogMd, detailConfigMd, listBonusMd, listSalaryLogMd } from '@models';
+import { countSalaryLogMd, createSalaryLogMd, detailConfigMd, listBonusMd, listSalaryLogMd } from '@repository';
 import { validateData } from '@utils';
 import moment from 'moment';
 
