@@ -142,7 +142,7 @@ export const CreateApplication = (props) => {
               <DropdownFormz
                 id="type"
                 label="Loại đơn (*)"
-                options={applicationTypes.filter(a => a._id !== 8)}
+                options={applicationTypes.filter(a => ![8, 9].includes(a._id))}
                 value={watch('type')}
                 errors={errors}
                 onChange={(e) => {

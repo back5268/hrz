@@ -12,6 +12,8 @@ export const getListNotify = async (req, res) => {
 
 export const viewAllNotify = async (req, res) => {
   try {
+    console.log(1);
+    
     await updateNotifyMd({ account: req.account?._id }, { status: 1 });
     res.status(201).json({ status: 1 });
   } catch (error) {

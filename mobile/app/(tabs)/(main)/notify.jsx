@@ -20,11 +20,13 @@ const Notify = () => {
     setRender((pre) => !pre);
     switch (item.type) {
       case 1:
-        return router.push(`/application/${item?.data._id}`);
       case 2:
-        return router.push(`/application/${item?.data._id}`);
       case 3:
         return router.push(`/application/${item?.data._id}`);
+      case 4:
+        return router.push('/payroll');
+      default:
+        console.warn('Unhandled notification type:', item.type);
     }
   };
 

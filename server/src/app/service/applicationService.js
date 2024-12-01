@@ -21,7 +21,8 @@ import {
   createTimekeepingMd,
   detailConfigMd,
   detailTimekeepingMd,
-  updateTimekeepingMd
+  updateTimekeepingMd,
+  deleteSalaryMd
 } from '@repository';
 import { validateData, calTime, roundNumber } from '@utils';
 import { ioSk } from 'src';
@@ -157,14 +158,20 @@ export const updateApplicationService = async (req) => {
   const dataz = await detailApplicationMd({ _id });
   if (!dataz) throw new Error('Đơn không tồn tại!');
   const data = await updateApplicationMd({ _id }, { updatedBy: req.account._id, ...value });
-  if (status === 2) await approveApplication(dataz);
-  const application = await createNotifyMd({
+  console.log(dataz, dataz.type);
+  
+  if (status === 2) {
+    if (dataz.type === 9) {
+      if (dataz.month && dataz.account) await deleteSalaryMd({ account: dataz.account, month: dataz.month, status: 1 });
+    } else await approveApplication(dataz);
+  }
+  const notify = await createNotifyMd({
     account: dataz.account,
     content: status === 2 ? 'Đơn bạn tạo đã được duyệt!' : 'Đơn bạn tạo không được duyệt!',
     type: 3,
     data: { _id: dataz._id }
   });
-  ioSk.emit(`notify_${dataz.account}`, { data: application });
+  ioSk.emit(`notify_${dataz.account}`, { data: notify });
   return data;
 };
 

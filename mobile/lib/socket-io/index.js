@@ -1,11 +1,11 @@
 import { io } from 'socket.io-client';
 import { getStorage } from '../async-storage';
+import { API_URL } from '@/constants';
 
-const URL = 'http://192.168.0.101:5000/';
 export let socket;
 const initializeSocket = async () => {
   const token = await getStorage('token');
-  socket = io(URL, {
+  socket = io(API_URL, {
     query: { token },
     transports: ['websocket']
   });

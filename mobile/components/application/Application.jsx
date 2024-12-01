@@ -165,7 +165,7 @@ export const Application = ({ _id }) => {
     setLoading(false);
     if (response) {
       showToast('Thêm mới đơn thành công!', 'success');
-      router.push('/application');
+      router.back()
     }
   };
 
@@ -193,7 +193,7 @@ export const Application = ({ _id }) => {
           <SelectForm
             label="Loại đơn (*)"
             name="type"
-            options={applicationTypes}
+            options={applicationTypes.filter(a => ![9].includes(a._id))}
             errors={errors}
             control={control}
             handleOnchange={handleOnchange}

@@ -125,6 +125,7 @@ export const applicationTypes = [
   { name: 'Đơn xin làm thêm giờ', _id: 6 },
   { name: 'Đơn công tác', _id: 7 },
   { name: 'Đơn xin nghỉ dài hạn', _id: 8 },
+  { name: 'Yêu cầu tính lại lương', _id: 9 },
 ];
 
 export const applicationStatus = [
@@ -155,6 +156,8 @@ export const soonLateTypes = [
 ];
 
 export const salaryStatus = [
-  { name: 'Chờ duyệt', _id: 1, severity: 'warning' },
-  { name: 'Đã duyệt', _id: 2, severity: 'success' }
+  { name: 'Chờ xác nhận', _id: 1, severity: 'warning' },
+  { name: 'Chờ trưởng phòng duyệt', _id: 2, severity: 'info' },
+  { name: 'Chờ giám đốc duyệt', _id: 3, severity: 'success' },
+  { name: 'Đã duyệt', _id: 3, severity: 'success' },
 ];

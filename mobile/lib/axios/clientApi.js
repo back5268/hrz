@@ -1,10 +1,10 @@
+import { API_URL } from '@/constants';
 import { getStorage } from '@/lib/async-storage';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 
 export const clientApi = axios.create({
-  // baseURL: 'http://api.backz.s-tech.info/',
-  baseURL: 'http://192.168.69.199:5000/',
+  baseURL: API_URL,
   timeout: 10000
 });
 

@@ -1,19 +1,10 @@
-import { previewPayrollApi } from '@/api';
-import { useGetApi } from '@/lib/react-query';
+import { Application } from '@/components/application';
 import { useLocalSearchParams } from 'expo-router';
-import { Dimensions, ScrollView } from 'react-native';
-import RenderHTML from 'react-native-render-html';
 
 const DetailApplication = () => {
   const { _id } = useLocalSearchParams();
-  const contentWidth = Dimensions.get('window').width;
-  const { data } = useGetApi(previewPayrollApi, { _id }, 'preview');
 
-  return (
-    <ScrollView className="flex-1 p-4">
-      <RenderHTML contentWidth={contentWidth} source={{ html: data }} />
-    </ScrollView>
-  );
+  return <Application _id={_id} />;
 };
 
 export default DetailApplication;

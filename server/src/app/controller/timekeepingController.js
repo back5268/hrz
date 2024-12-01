@@ -402,8 +402,6 @@ export const getListTimekeepingLogApp = async (req, res) => {
     if (error) return res.json({ status: 0, mess: error });
     const { date } = value;
     const where = { account: req.account?._id, date };
-    console.log(where);
-    
     res.json({ status: 1, data: await listTimekeepingLogMd(where) });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

@@ -37,6 +37,7 @@ export const TaxSetup = (props) => {
   useEffect(() => {
     if (item) {
       if (item.files) setFiles(item.files);
+      if (item.taxs) setData(item.taxs);
       for (const key in defaultValues) {
         setValue(key, item[key]);
       }

@@ -1,9 +1,20 @@
 import { sendMailSalary } from '@lib/node-mailer';
 import { convertHTMLToPDF } from '@lib/puppeteer';
-import { detailSalaryValid, listSalaryValid, sendSalaryValid, updateStatusSalaryValid } from '@lib/validation';
-import { countSalaryMd, deleteSalaryMd, detailSalaryMd, listSalaryMd, updateSalaryMd } from '@repository';
+import { detailSalaryValid, handleSalaryValid, listSalaryValid, sendSalaryValid, updateStatusSalaryValid } from '@lib/validation';
+import {
+  countSalaryMd,
+  createApplicationMd,
+  createNotifyMd,
+  deleteSalaryMd,
+  detailSalaryMd,
+  listAccountMd,
+  listPermissionMd,
+  listSalaryMd,
+  updateSalaryMd
+} from '@repository';
 import { previewSalaryService } from '@service';
 import { validateData } from '@utils';
+import { ioSk } from 'src';
 
 export const getListSalaryApproved = async (req, res) => {
   try {
@@ -41,7 +52,7 @@ export const getListSalaryPending = async (req, res) => {
 
 export const getListSalaryApp = async (req, res) => {
   try {
-    const where = { status: 2, account: req.account?._id };
+    const where = { account: req.account?._id };
     res.json({ status: 1, data: await listSalaryMd(where) });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
@@ -101,6 +112,18 @@ export const previewSalary = async (req, res) => {
   }
 };
 
+export const previewSalaryApp = async (req, res) => {
+  try {
+    const { error, value } = validateData(detailSalaryValid, req.query);
+    if (error) return res.json({ status: 0, mess: error });
+    const { data, mess } = await previewSalaryService(value._id);
+    if (mess) res.json({ status: 0, mess });
+    else res.json({ status: 1, data: { content: data.html, status: data.data?.status } });
+  } catch (error) {
+    res.status(500).json({ status: 0, mess: error.toString() });
+  }
+};
+
 export const sendSalary = async (req, res) => {
   try {
     const { error, value } = validateData(sendSalaryValid, req.body);
@@ -134,6 +157,41 @@ export const downloadSalary = async (req, res) => {
       const file = await convertHTMLToPDF(data.html);
       await updateSalaryMd({ _id }, { file });
       return res.json({ status: 1, data: file });
+    }
+  } catch (error) {
+    res.status(500).json({ status: 0, mess: error.toString() });
+  }
+};
+
+export const handleSalary = async (req, res) => {
+  try {
+    const { error, value } = validateData(handleSalaryValid, req.body);
+    if (error) return res.json({ status: 0, mess: error });
+    const { _id, status, reason } = value;
+    const dataz = await detailSalaryMd({ _id });
+    if (!dataz) return res.json({ status: 0, mess: 'Phiếu lương không tồn tại!' });
+    if (status === 1) {
+      await updateSalaryMd({ _id }, { status: 2 });
+      res.json({ status: 1, data: {} });
+    } else {
+      const data = await createApplicationMd({ department: req.account?.department?._id, account: req.account?._id, type: 9, reason, month: dataz.month });
+      const where = { 'tools.route': 'application' };
+      const permissions = await listPermissionMd(where);
+      const accounts = await listAccountMd({ role: 'admin' });
+      for (const permission of permissions) {
+        const accountz = await listAccountMd({ department: { $in: permission.departments }, position: { $in: permission.positions } });
+        accountz.forEach((az) => !accounts.find((a) => a._id === az._id) && accounts.push(az));
+      }
+      for (const account of accounts) {
+        const notify = await createNotifyMd({
+          account: account._id,
+          content: `${req.account.fullName} - ${req.account.staffCode} yêu cầu tính lại phiếu lương tháng ${dataz.month}!`,
+          type: 2,
+          data: { _id: data._id }
+        });
+        ioSk.emit(`notify_${account._id}`, notify);
+      }
+      res.json({ status: 1, data: {} });
     }
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

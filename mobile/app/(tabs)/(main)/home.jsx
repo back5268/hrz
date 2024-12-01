@@ -14,6 +14,8 @@ const Home = () => {
   const router = useRouter();
   const { data } = useGetApi(getListNotifyApi, {}, 'notifyz');
   const numberView = data?.filter((d) => d.status === 0)?.length;
+  console.log(numberView,1);
+  
 
   const items = [
     { label: 'Nhân viên', icon: 'account-multiple', route: '/employee' },

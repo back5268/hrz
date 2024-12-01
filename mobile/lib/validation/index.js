@@ -40,3 +40,7 @@ export const ApplicationValidation = yup.object({
   type: yup.string().required('Loại đơn không được bỏ trống!'),
   reason: yup.string().required('Lý do tạo đơn không được bỏ trống!')
 });
+
+export const SalaryValidation = yup.object({
+  reason: yup.string().required('Lý do không được bỏ trống!'),
+});

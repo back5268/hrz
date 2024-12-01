@@ -47,8 +47,12 @@ const Scene = ({ status, index, shifts }) => {
             >
               <View className="w-8/12">
                 <Text className="font-semibold text-md uppercase mb-1">{type?.name}</Text>
-                <Text className="leading-6">Ca làm việc: {shift?.name}</Text>
-                <Text className="leading-6">Ngày: {dateTitle}</Text>
+                {item.type !== 9 && (
+                  <>
+                    <Text className="leading-6">Ca làm việc: {shift?.name}</Text>
+                    <Text className="leading-6">Ngày: {dateTitle}</Text>
+                  </>
+                )}
                 <Text className="leading-6">Lý do tạo đơn: {item.reason}</Text>
                 {item.updatedBy && (
                   <>

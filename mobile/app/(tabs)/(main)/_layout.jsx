@@ -28,6 +28,7 @@ const MainLayout = () => {
     { title: 'Tạo đơn', name: 'application/create' },
     { title: 'Chi tiết đơn', name: 'application/[_id]' },
     { title: 'Chi tiết tin tức', name: 'new/[_id]' },
+    { title: 'Chi tiết Phiếu lương', name: 'payroll/[_id]' },
     { title: 'Đơn từ', name: 'application', headerRight: () => <HeaderButton /> }
   ];
 

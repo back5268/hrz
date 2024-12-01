@@ -16,6 +16,24 @@ export const accounts = [
     bankAccount: '606606868',
     salary: 999999999,
     type: 1
+  },
+  {
+    staffCode: 'ADMINZ',
+    fullName: 'ADMINZ',
+    email: 'admin5268z@gmail.com',
+    phone: '0999999998',
+    password: '$2a$12$kpWFGCflNJs37Jn1u0uUUuYaFRCt8dAhwYyLhiUm0.GuYCNBq6CuO',
+    birthday: '2002-09-15',
+    cmt: '0999999998',
+    dateOfIssue: '2020-09-15',
+    placeOfIssue: 'Hà Nội',
+    address: 'Phúc Thọ, Hà Nội',
+    gender: 1,
+    role: 'admin',
+    dateIn: '2024-10-10',
+    bankAccount: '606606868',
+    salary: 999999999,
+    type: 1
   }
 ];
 
@@ -554,30 +572,20 @@ export const templates = [
 ];
 
 export const configs = [
-  { type: 1, timekeeping: {} },
+  {
+    type: 3,
+    tax: { self: 11000000, dependent: 4400000 }
+  },
   {
     type: 2,
     salary: {
-      salaryCoefficient: 26,
-      mandatory: {
-        bhxh: 8,
-        bhyt: 1.5,
-        bhtn: 1,
-        unionDues: 0
-      }
-    },
-    ot: {
-      day: 125,
-      sunday: 150,
-      holiday: 200
-    },
-    soonLate: [
-      { from: 1, to: 10, value: 10000, type: 1 },
-      { from: 10, to: 20, value: 20000, type: 1 }
-    ],
-    holidays: []
+      salaryCoefficient: 26
+    }
   },
-  { type: 3, tax: { self: 11000000, dependent: 4400000 } }
+  {
+    type: 1,
+    timekeeping: { timekeepingWarning: '20:00' }
+  }
 ];
 
 export const tools = [

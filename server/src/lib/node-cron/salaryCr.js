@@ -1,5 +1,5 @@
 import { ArrayRedis } from '@lib/ioredis';
-import { updateSalaryLogMd } from '@repository';
+import { createNotifyMd, updateSalaryLogMd } from '@repository';
 import { Salary } from '@service';
 import moment from 'moment';
 import { ioSk } from 'src';
@@ -28,8 +28,16 @@ salaryQueue.callbackCron = async (data) => {
     value = await salary.run();
     const { status, mess } = value;
     detail.push({ account, from, to, mess, status: status ? 1 : 0 });
-    if (status) success += 1;
-    else error += 1;
+    if (status) {
+      const notify = await createNotifyMd({
+        account: account,
+        content: 'Bạn có phiếu lương cần xác nhận',
+        type: 4,
+        data: {}
+      });
+      ioSk.emit(`notify_${account}`, { data: notify });
+      success += 1;
+    } else error += 1;
   }
   await updateSalaryLogMd({ _id: salaryLogId }, { error, success, detail, status: 2 });
   ioSk.emit('calculateSalary', { time: Date.now() });

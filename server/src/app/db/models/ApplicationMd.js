@@ -6,7 +6,7 @@ ApplicationMd.init('Application', {
   updatedBy: { type: String },
   department: { type: String, required: true },
   account: { type: String, required: true },
-  shift: { type: String, required: true },
+  shift: { type: String },
   type: {
     type: Number,
     required: true,
@@ -17,12 +17,13 @@ ApplicationMd.init('Application', {
   typez: {
     type: Number,
     default: 1,
-    description: '1: Đơn bình thường, 2: Đơn giám đốc duyệt'
+    description: '1: Đơn từ, 2: Yêu cầu'
   },
-  dates: [{ type: String, required: true }],
+  dates: [{ type: String }],
   reason: { type: String, required: true },
   soon: { type: String },
   late: { type: String },
+  month: { type: Number },
   fromTime: { type: String },
   toTime: { type: String },
   files: [{ type: String }],

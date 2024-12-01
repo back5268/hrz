@@ -38,7 +38,6 @@ export const signIn = async (req, res) => {
     const data = await signInService(req);
     res.json({ status: 1, data });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ status: 0, mess: error.message });
   }
 };

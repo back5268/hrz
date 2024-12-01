@@ -85,7 +85,8 @@ export const previewSalaryService = async (_id, dataz) => {
     data: {
       html: replaceFistText(ghepGiaTri({ params, content: html })),
       subject: replaceFistText(ghepGiaTri({ params: { $ky_thang: data.month }, content: subject })),
-      account
+      account,
+      data
     }
   };
 };

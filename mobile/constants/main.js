@@ -1,3 +1,6 @@
+export const API_URL = 'http://192.168.69.199:5000/'
+// export const API_URL = 'http://api.backz.s-tech.info/'
+
 export const contractTypes = [
   { name: 'Hợp đồng lao động', _id: 1 },
   { name: 'Hợp đồng dịch vụ', _id: 2 },
@@ -28,4 +31,5 @@ export const applicationTypes = [
   { name: 'Đơn xin làm thêm giờ', _id: 6 },
   { name: 'Đơn công tác', _id: 7 },
   { name: 'Đơn xin nghỉ dài hạn', _id: 8 },
+  { name: 'Yêu cầu tính lại lương', _id: 9 },
 ];
