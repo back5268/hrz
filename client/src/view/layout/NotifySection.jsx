@@ -36,7 +36,7 @@ export const NotifySection = () => {
         console.log(event);
         showToast({ title: event.content, severity: 'info' });
         setRender((pre) => !pre);
-      }
+      };
       socket.on('connect', onConnect);
       socket.on('disconnect', onDisconnect);
       socket.on(key, onEvent);
@@ -55,9 +55,13 @@ export const NotifySection = () => {
     setItem({ application: item?.data?._id });
     switch (item.type) {
       case 1:
-        return navigate(`/application`);
       case 2:
-        return navigate(`/application`);
+      case 3:
+        return navigate('/application');
+      case 4:
+        return navigate('/salary');
+      default:
+        console.warn('Unhandled notification type:', item.type);
     }
   };
 
@@ -112,7 +116,7 @@ export const NotifySection = () => {
                             <BellIcon className="h-8 w-8" />
                             <div className="flex flex-col gap-2">
                               <span>{item.content}</span>
-                              <span className='text-xs'>{formatDate(item.createdAt)}</span>
+                              <span className="text-xs">{formatDate(item.createdAt)}</span>
                             </div>
                           </div>
                         </div>

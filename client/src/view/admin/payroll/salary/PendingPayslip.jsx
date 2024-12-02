@@ -1,5 +1,6 @@
 import {
   deletePendingPayslipApi,
+  downloadPendingPayslipApi,
   getListMonthInfoApi,
   getListPendingPayslipApi,
   previewPendingPayslipApi,
@@ -13,7 +14,7 @@ import React, { useState } from 'react';
 import { Detail } from './Detail';
 import { useDataState, useToastState } from '@store';
 import { formatDate, formatNumber } from '@lib/helper';
-import { PrinterIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon, CheckIcon, PrinterIcon } from '@heroicons/react/24/outline';
 import { salaryStatus } from '@constant';
 
 export const PendingPayslip = () => {
@@ -26,15 +27,15 @@ export const PendingPayslip = () => {
   const { data: months } = useGetApi(getListMonthInfoApi, params, 'months');
   const { departments, accounts } = useDataState();
   const [loading, setLoading] = useState(false);
-  const { showToast } = useToastState()
+  const { showToast } = useToastState();
 
   const onUpdate = async (status) => {
-    if (!(select?.length > 0)) return showToast({ title: 'Vui lòng chọn phiếu lương cần duyệt', severity: 'warning' });
+    if (!(select?.length > 0)) return showToast({ title: 'Vui lòng chọn phiếu lương', severity: 'warning' });
     setLoading(true);
-    const response = await updateStatusPendingPayslipApi({ _ids: select?.map(s => s._id), status });
+    const response = await updateStatusPendingPayslipApi({ _ids: select?.map((s) => s._id), status });
     setLoading(false);
     if (response) {
-      showToast({ title: 'Duyệt phiếu lương thành công', severity: 'success' });
+      showToast({ title: 'Xác nhận phiếu lương thành công', severity: 'success' });
       setParams((pre) => ({ ...pre, render: !pre.render }));
       setSelect([]);
     }
@@ -47,8 +48,13 @@ export const PendingPayslip = () => {
     }
   };
 
+  const downloadPayslip = async (item) => {
+    const response = await downloadPendingPayslipApi({ _id: item._id });
+    if (response) window.open(response, '_blank');
+  };
+
   return (
-    <FormList title="Danh sách phiếu lương chờ duyệt">
+    <FormList title="Phiếu lương chờ xác nhận">
       <Detail open={open} setOpen={setOpen} data={data?.documents} accounts={accounts} />
       <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-1/4">
         <Dropdownzz
@@ -77,7 +83,7 @@ export const PendingPayslip = () => {
         />
       </DataFilter>
       <DataTable
-        title="phiếu lương chờ duyệt"
+        title="phiếu lương chờ xác nhận"
         loading={isLoading || loading}
         data={data?.documents}
         total={data?.total}
@@ -87,14 +93,30 @@ export const PendingPayslip = () => {
         setSelect={setSelect}
         baseActions={['detail', 'delete']}
         setShow={setOpen}
-        headerInfo={{ moreHeader: [{ children: () => 'Duyệt phiếu lương', onClick: () => onUpdate(2) }] }}
+        headerInfo={{
+          deleteApi: deletePendingPayslipApi,
+          moreHeader: [
+            {
+              children: () => (
+                <div className="flex gap-2 justify-center items-center">
+                  <CheckIcon className="w-5 h-5" />
+                  <span>Duyệt</span>
+                </div>
+              ),
+              onClick: () => onUpdate(2)
+            }
+          ]
+        }}
         actionsInfo={{
           onViewDetail: (item) => setOpen(item._id),
-          deleteApi: deletePendingPayslipApi,
           moreActions: [
             {
               icon: PrinterIcon,
               onClick: (item) => onPreviewPayslip(item)
+            },
+            {
+              icon: ArrowDownTrayIcon,
+              onClick: (item) => downloadPayslip(item)
             }
           ]
         }}

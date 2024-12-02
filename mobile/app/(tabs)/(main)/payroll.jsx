@@ -8,6 +8,7 @@ import { themeColor } from '@/theme';
 import { formatDate, formatNumber } from '@/lib/helper';
 import * as WebBrowser from 'expo-web-browser';
 import { router } from 'expo-router';
+import { salaryStatus } from '@/constants';
 
 const Payroll = () => {
   const [render, setRender] = useState(false);
@@ -25,6 +26,8 @@ const Payroll = () => {
         onRefresh={() => setRender((pre) => !pre)}
         refreshing={false}
         renderItem={({ item }) => {
+          const status = salaryStatus.find((a) => a._id === item.status);
+
           return (
             <Pressable
               onPress={() => router.push(`/payroll/${item._id}`)}
@@ -38,6 +41,9 @@ const Payroll = () => {
                   Thời gian: {formatDate(item.from, 'date')} - {formatDate(item.to, 'date')}
                 </Text>
                 <Text className="leading-6">Ngày duyệt: {formatDate(item.updatedAt, 'date')}</Text>
+                <View className="flex justify-center items-center rounded-md p-2 min-w-[64] mt-4" style={{ backgroundColor: status?.color }}>
+                  <Text className="uppercase text-white font-semibold text-xs">{status?.name}</Text>
+                </View>
               </View>
               <TouchableOpacity
                 onPress={async () => {

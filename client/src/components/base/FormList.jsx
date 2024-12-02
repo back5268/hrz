@@ -6,8 +6,12 @@ export const FormList = (props) => {
 
   return (
     <Cardz>
-      <h2 className="font-bold uppercase leading-normal mb-2 p-2 text-primary">{title}</h2>
-      <hr className='mx-2' />
+      {title && (
+        <>
+          <h2 className="font-bold uppercase leading-normal mb-2 p-2 text-primary">{title}</h2>
+          <hr className="mx-2" />
+        </>
+      )}
       {children}
     </Cardz>
   );

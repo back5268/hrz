@@ -159,5 +159,5 @@ export const salaryStatus = [
   { name: 'Chờ xác nhận', _id: 1, severity: 'warning' },
   { name: 'Chờ trưởng phòng duyệt', _id: 2, severity: 'info' },
   { name: 'Chờ giám đốc duyệt', _id: 3, severity: 'success' },
-  { name: 'Đã duyệt', _id: 3, severity: 'success' },
+  { name: 'Đã duyệt', _id: 4, severity: 'success' },
 ];

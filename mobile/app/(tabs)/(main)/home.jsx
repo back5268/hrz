@@ -14,8 +14,6 @@ const Home = () => {
   const router = useRouter();
   const { data } = useGetApi(getListNotifyApi, {}, 'notifyz');
   const numberView = data?.filter((d) => d.status === 0)?.length;
-  console.log(numberView,1);
-  
 
   const items = [
     { label: 'Nhân viên', icon: 'account-multiple', route: '/employee' },
@@ -33,7 +31,7 @@ const Home = () => {
           <Image source={images.logo} className="w-28 h-28" resizeMode="contain" />
           <TouchableOpacity
             onPress={async () => {
-              if (numberView > 0) await viewAllNotifyApi();
+              await viewAllNotifyApi();
               router.push('/notify');
             }}
             className="relative"

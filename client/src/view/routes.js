@@ -2,7 +2,7 @@ import { Application, Approve } from './admin/approval';
 import { DetailNewz, DetailPermission, New, Permission, Template } from './admin/config';
 import { DashBoard } from './admin/dashboard';
 import { Department, DetailJobPosition, DetailEmployee, DetailPosition, JobPosition, Employee, Position } from './admin/human-resource';
-import { ApprovedPayslip, Bonus, PendingPayslip, Preview, SalaryCalculation } from './admin/payroll';
+import { ApprovedPayslip, Bonus, PendingPayslip, PendingzPayslip, Preview, Salary, SalaryCalculation } from './admin/payroll';
 import { DetailShift, Device, ImportLog, Schedule, Shift, Timekeeping, TimekeepingConfig } from './admin/timekeeping';
 import { ChangePassword, ForgotPassword, SignIn } from './auth';
 
@@ -36,9 +36,13 @@ export const routes = [
   { path: '/bonus', element: Bonus, layout: true },
   { path: '/salary-calculation', element: SalaryCalculation, layout: true },
   { path: '/pending-payslip', element: PendingPayslip, layout: true },
-  { path: '/approved-payslip', element: ApprovedPayslip, layout: true },
   { path: '/pending-payslip/preview/:_id', element: Preview, layout: false },
+  { path: '/pendingz-payslip', element: PendingzPayslip, layout: true },
+  { path: '/pendingz-payslip/preview/:_id', element: Preview, layout: false },
+  { path: '/approved-payslip', element: ApprovedPayslip, layout: true },
   { path: '/approved-payslip/preview/:_id', element: Preview, layout: false },
+  { path: '/salary', element: Salary, layout: true },
+  { path: '/salary/preview/:_id', element: Preview, layout: false },
 
   { path: '/application', element: Application, layout: true },
   { path: '/approve', element: Approve, layout: true },

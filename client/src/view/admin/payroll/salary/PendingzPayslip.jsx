@@ -1,9 +1,9 @@
 import {
+  downloadPendingzPayslipApi,
   getListMonthInfoApi,
-  getListApprovedPayslipApi,
-  previewApprovedPayslipApi,
-  updateStatusPendingPayslipApi,
-  downloadApprovedPayslipApi
+  getListPendingzPayslipApi,
+  previewPendingzPayslipApi,
+  updateStatusPendingzPayslipApi
 } from '@api';
 import { DataTable, FormList, DataFilter, Body } from '@components/base';
 import { Columnz, Dropdownzz } from '@components/core';
@@ -16,13 +16,13 @@ import { formatDate, formatNumber } from '@lib/helper';
 import { ArrowDownTrayIcon, CheckIcon, PrinterIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { salaryStatus } from '@constant';
 
-export const ApprovedPayslip = () => {
+export const PendingzPayslip = () => {
   const initParams = useGetParams();
   const [params, setParams] = useState(initParams);
   const [filter, setFilter] = useState({});
   const [open, setOpen] = useState(false);
   const [select, setSelect] = useState([]);
-  const { isLoading, data } = useGetApi(getListApprovedPayslipApi, params, 'approved-payslip');
+  const { isLoading, data } = useGetApi(getListPendingzPayslipApi, params, 'pendingz-payslip');
   const { data: months } = useGetApi(getListMonthInfoApi, params, 'months');
   const { departments, accounts } = useDataState();
   const [loading, setLoading] = useState(false);
@@ -31,27 +31,29 @@ export const ApprovedPayslip = () => {
   const onUpdate = async (status) => {
     if (!(select?.length > 0)) return showToast({ title: 'Vui lòng chọn phiếu lương', severity: 'warning' });
     setLoading(true);
-    const response = await updateStatusPendingPayslipApi({ _ids: select?.map((s) => s._id), status });
+    const response = await updateStatusPendingzPayslipApi({ _ids: select?.map((s) => s._id), status });
     setLoading(false);
     if (response) {
-      showToast({ title: status === 4 ? 'Duyệt phiếu lương thành công' : 'Từ chối phiếu lương thành công', severity: 'success' });
+      showToast({ title: 'Duyệt phiếu lương thành công', severity: 'success' });
       setParams((pre) => ({ ...pre, render: !pre.render }));
       setSelect([]);
     }
   };
 
   const onPreviewPayslip = async (item) => {
-    const response = await previewApprovedPayslipApi({ _id: item._id });
-    if (response) window.open(`/approved-payslip/preview/${item._id}`, '_blank');
+    const response = await previewPendingzPayslipApi({ _id: item._id });
+    if (response) {
+      window.open(`/pendingz-payslip/preview/${item._id}`, '_blank');
+    }
   };
 
   const downloadPayslip = async (item) => {
-    const response = await downloadApprovedPayslipApi({ _id: item._id });
+    const response = await downloadPendingzPayslipApi({ _id: item._id });
     if (response) window.open(response, '_blank');
   };
 
   return (
-    <FormList title="Phiếu lương chờ giám đốc duyệt">
+    <FormList title="Phiếu lương chờ trưởng phòng duyệt">
       <Detail open={open} setOpen={setOpen} data={data?.documents} accounts={accounts} />
       <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-1/4">
         <Dropdownzz
@@ -80,7 +82,7 @@ export const ApprovedPayslip = () => {
         />
       </DataFilter>
       <DataTable
-        title="phiếu lương chờ giám đốc duyệt"
+        title="phiếu lương chờ trưởng phòng duyệt"
         loading={isLoading || loading}
         data={data?.documents}
         total={data?.total}
@@ -99,7 +101,7 @@ export const ApprovedPayslip = () => {
                   <span>Duyệt</span>
                 </div>
               ),
-              onClick: () => onUpdate(4)
+              onClick: () => onUpdate(3)
             },
             {
               children: () => (
@@ -108,7 +110,7 @@ export const ApprovedPayslip = () => {
                   <span>Từ chối</span>
                 </div>
               ),
-              onClick: () => onUpdate(2),
+              onClick: () => onUpdate(1),
               severity: 'danger'
             }
           ]

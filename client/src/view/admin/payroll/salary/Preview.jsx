@@ -1,4 +1,4 @@
-import { previewApprovedPayslipApi, previewPendingPayslipApi } from '@api';
+import { previewApprovedPayslipApi, previewPendingPayslipApi, previewPendingzPayslipApi, previewSalaryApi } from '@api';
 import { useGetApi } from '@lib/react-query';
 import { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
@@ -8,7 +8,13 @@ export const Preview = () => {
   const location = useLocation();
   const pathname = location?.pathname;
   const { data } = useGetApi(
-    pathname?.includes('/approved-payslip') ? previewApprovedPayslipApi : previewPendingPayslipApi,
+    pathname?.includes('/approved-payslip')
+      ? previewApprovedPayslipApi
+      : pathname?.includes('/pending-payslip')
+        ? previewPendingPayslipApi
+        : pathname?.includes('/pending-payslip')
+          ? previewPendingzPayslipApi
+          : previewSalaryApi,
     { _id },
     'preview',
     Boolean(_id)

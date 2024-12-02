@@ -3,7 +3,8 @@ export const listSalaryValid = {
   limit: 'number',
   month: { type: 'string', allowNull: true },
   department: { type: 'string', allowNull: true },
-  account: { type: 'string', allowNull: true }
+  account: { type: 'string', allowNull: true },
+  status: { type: 'number', allowNull: true },
 };
 
 export const detailSalaryValid = {

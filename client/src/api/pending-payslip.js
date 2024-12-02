@@ -5,3 +5,4 @@ export const detailPendingPayslipApi = (params) => getData('/web/pending-payslip
 export const previewPendingPayslipApi = (params) => getData('/web/pending-payslip/previewSalary', params);
 export const deletePendingPayslipApi = (params) => deleteData('/web/pending-payslip/deleteSalary', params);
 export const updateStatusPendingPayslipApi = (params) => putData('/web/pending-payslip/updateStatusSalary', params);
+export const downloadPendingPayslipApi = (params) => getData('/web/pending-payslip/download', params);

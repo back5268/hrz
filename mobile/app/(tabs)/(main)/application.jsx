@@ -24,7 +24,7 @@ const Scene = ({ status, index, shifts }) => {
     <SafeAreaView className="flex-1">
       <FlatList
         data={data}
-        keyExtractor={(item) => item._id?.toString()}
+        keyExtractor={(item, index) => item._id ? item._id.toString() : `item-${index}`}
         showsVerticalScrollIndicator={true}
         onEndReached={() => console.log('Load more data')}
         onRefresh={() => setRender((pre) => !pre)}
@@ -77,15 +77,16 @@ const Application = () => {
   const layout = Dimensions.get('window');
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: '0', title: 'Tất cả', status: undefined },
-    { key: '1', title: 'Chờ duyệt', status: 1 },
-    { key: '2', title: 'Đã duyệt', status: 2 },
-    { key: '3', title: 'Từ chối', status: 3 },
-    { key: '4', title: 'Hủy', status: 4 }
+    { key: 0, title: 'Tất cả', status: undefined },
+    { key: 1, title: 'Chờ duyệt', status: 1 },
+    { key: 2, title: 'Đã duyệt', status: 2 },
+    { key: 3, title: 'Từ chối', status: 3 },
+    { key: 4, title: 'Hủy', status: 4 }
   ]);
 
   const renderScene = ({ route }) => {
-    return <Scene status={route.status} index={index} shifts={shifts} />;
+    if (!route || !route.key) return null;
+    return <Scene key={route.key} status={route.status} index={index} shifts={shifts} />;
   };
 
   return (

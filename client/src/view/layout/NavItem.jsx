@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 export const NavItem = (props) => {
   const { item = {}, pathname = '', Icon } = props;
   const isSelected =
-    '/timekeeping-config' === pathname || '/' === pathname || '/approved-payslip' === pathname
+    '/timekeeping-config' === pathname || '/' === pathname || '/approved-payslip' === pathname || '/salary-calculation' === pathname
       ? pathname === item.route
       : item.route !== '/' && pathname.includes(item.route);
 

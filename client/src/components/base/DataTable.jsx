@@ -34,7 +34,8 @@ export const DataTable = (props) => {
     onDelete,
     deleteApi = () => {},
     handleDelete = (item) => ({ _id: item._id }),
-    moreActions
+    moreActions,
+    isHideDelete = () => false
   } = actionsInfo;
   const { onCreate = () => {}, onImport = () => {}, exportApi, moreHeader, items } = headerInfo;
   const { changeStatusApi = () => {}, handleChangeStatus = (item) => ({ _id: item._id, status: item.status ? 0 : 1 }) } = statusInfo;
@@ -133,13 +134,13 @@ export const DataTable = (props) => {
           Export
         </Buttonz>
       )}
-      {items?.length > 0 && <SplitButtonz model={items.map((item) => ({ ...item, onClick: () => handleSelect(item.onClick) }))}  label="Tác vụ" raised />}
+      {items?.length > 0 && (
+        <SplitButtonz model={items.map((item) => ({ ...item, onClick: () => handleSelect(item.onClick) }))} label="Tác vụ" raised />
+      )}
       {moreHeader?.length > 0 &&
         moreHeader.map((header, index) => {
-          const color = header.color || 'cyan';
-
           return (
-            <Buttonz key={index} color={color} onClick={() => header.onClick()}>
+            <Buttonz key={index} severity={header.severity} onClick={() => header.onClick()}>
               {header.children() || ''}
             </Buttonz>
           );
@@ -182,46 +183,50 @@ export const DataTable = (props) => {
         {isActions && (
           <Columnz
             header="Thao tác"
-            body={(item) => (
-              <div className="flex justify-center items-center gap-2">
-                {baseActions.includes('detail') && (
-                  <Buttonz
-                    onClick={() => onViewDetail(item)}
-                    outlined
-                    className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
-                    icon={<DocumentMagnifyingGlassIcon className="w-6" />}
-                  />
-                )}
-                {baseActions.includes('delete') && (
-                  <Buttonz
-                    severity="danger"
-                    outlined
-                    onClick={() => (onDelete ? onDelete(item) : onDeletez(item))}
-                    className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
-                    icon={<TrashIcon className="w-5" />}
-                  />
-                )}
-                {moreActions?.length > 0 &&
-                  moreActions.map((action, index) => {
-                    const severity = action.severity || '';
-                    const Icon = action.icon;
-                    const isHide = action.isHide && action.isHide(item);
+            body={(item) => {
+              const isHide = isHideDelete && isHideDelete(item);
 
-                    return (
-                      !isHide && (
-                        <Buttonz
-                          key={index}
-                          severity={severity}
-                          outlined
-                          onClick={() => action.onClick(item)}
-                          className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
-                          icon={<Icon className="w-6" />}
-                        />
-                      )
-                    );
-                  })}
-              </div>
-            )}
+              return (
+                <div className="flex justify-center items-center gap-2">
+                  {baseActions.includes('detail') && (
+                    <Buttonz
+                      onClick={() => onViewDetail(item)}
+                      outlined
+                      className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
+                      icon={<DocumentMagnifyingGlassIcon className="w-6" />}
+                    />
+                  )}
+                  {baseActions.includes('delete') && !isHide && (
+                    <Buttonz
+                      severity="danger"
+                      outlined
+                      onClick={() => (onDelete ? onDelete(item) : onDeletez(item))}
+                      className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
+                      icon={<TrashIcon className="w-5" />}
+                    />
+                  )}
+                  {moreActions?.length > 0 &&
+                    moreActions.map((action, index) => {
+                      const severity = action.severity || '';
+                      const Icon = action.icon;
+                      const isHide = action.isHide && action.isHide(item);
+
+                      return (
+                        !isHide && (
+                          <Buttonz
+                            key={index}
+                            severity={severity}
+                            outlined
+                            onClick={() => action.onClick(item)}
+                            className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
+                            icon={<Icon className="w-6" />}
+                          />
+                        )
+                      );
+                    })}
+                </div>
+              );
+            }}
           />
         )}
       </Tablez>

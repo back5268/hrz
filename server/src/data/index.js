@@ -595,7 +595,7 @@ export const tools = [
     sort: 1,
     items: [
       { name: 'Dashboard', route: '/', actions: ['read'] },
-      { name: 'Dashboard', route: '/dashboard', actions: ['read'], showSidebar: false }
+      { name: 'Dashboard', route: '/dashboard', showSidebar: false, actions: ['read'] }
     ]
   },
   {
@@ -684,12 +684,22 @@ export const tools = [
         actions: ['create', 'update', 'read']
       },
       {
-        name: 'Phiếu lương chờ duyệt',
-        route: '/pending-payslip',
-        actions: ['delete', 'update', 'read']
+        name: 'Danh sách phiếu lương',
+        route: '/salary',
+        actions: ['delete', 'read']
       },
       {
-        name: 'Phiếu lương đã duyệt',
+        name: 'Phiếu lương chờ xác nhận',
+        route: '/pending-payslip',
+        actions: ['update', 'read', 'delete']
+      },
+      {
+        name: 'Phiếu lương chờ trưởng phòng duyệt',
+        route: '/pendingz-payslip',
+        actions: ['update', 'read']
+      },
+      {
+        name: 'Phiếu lương chờ giám đốc duyệt',
         route: '/approved-payslip',
         actions: ['update', 'read']
       }

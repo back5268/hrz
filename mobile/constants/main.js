@@ -1,5 +1,5 @@
-export const API_URL = 'http://192.168.69.199:5000/'
-// export const API_URL = 'http://api.backz.s-tech.info/'
+// export const API_URL = 'http://192.168.6.21:5000/';
+export const API_URL = 'http://api.backz.s-tech.info/'
 
 export const contractTypes = [
   { name: 'Hợp đồng lao động', _id: 1 },
@@ -31,5 +31,12 @@ export const applicationTypes = [
   { name: 'Đơn xin làm thêm giờ', _id: 6 },
   { name: 'Đơn công tác', _id: 7 },
   { name: 'Đơn xin nghỉ dài hạn', _id: 8 },
-  { name: 'Yêu cầu tính lại lương', _id: 9 },
+  { name: 'Yêu cầu tính lại lương', _id: 9 }
+];
+
+export const salaryStatus = [
+  { name: 'Chờ xác nhận', _id: 1, color: '#2594f4' },
+  { name: 'Chờ trưởng phòng duyệt', _id: 2, color: '#f9c42f' },
+  { name: 'Chờ giám đốc duyệt', _id: 3, color: '#d42d2f' },
+  { name: 'Đã duyệt', _id: 4, color: '#6a9f4a' }
 ];

@@ -24,6 +24,8 @@ import { pendingPayslipRouter } from './pendingPayslip';
 import { dashboardRouter } from './dashboard';
 import { approveRouter } from './approve';
 import { timekeepingConfigRouter } from './timekeepingConfig';
+import { salaryRouter } from './salary';
+import { pendingzPayslipRouter } from './pendingzPayslip';
 
 export const webRouter = express.Router();
 
@@ -49,6 +51,8 @@ webRouter.use('/bonus', bonusRouter);
 webRouter.use('/salary-calculation', salaryCalculationRouter);
 webRouter.use('/approved-payslip', approvedPayslipRouter);
 webRouter.use('/pending-payslip', pendingPayslipRouter);
+webRouter.use('/pendingz-payslip', pendingzPayslipRouter);
 webRouter.use('/dashboard', dashboardRouter);
 webRouter.use('/approve', approveRouter);
 webRouter.use('/timekeeping-config', timekeepingConfigRouter);
+webRouter.use('/salary', salaryRouter);

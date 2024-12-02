@@ -18,5 +18,7 @@ export * from './template';
 export * from './timekeeping';
 export * from './approved-payslip';
 export * from './pending-payslip';
+export * from './pendingz-payslip';
 export * from './dashboard';
 export * from './timkeeping-config';
+export * from './salary';

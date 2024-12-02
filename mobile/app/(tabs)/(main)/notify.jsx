@@ -58,7 +58,7 @@ const Notify = () => {
           <Pressable
             onPress={() => onClickNoti(item)}
             className="rounded-md p-2 flex flex-row items-center border-b"
-            style={{ backgroundColor: [0, 1].includes(item.status) ? themeColor.surfaceVariant : undefined }}
+            style={{ backgroundColor: [0, 1].includes(item.status) ? themeColor.surfaceVariant : '' }}
           >
             <View>
               <Logo imageClassName="h-16 w-16" />

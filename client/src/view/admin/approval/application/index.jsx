@@ -9,13 +9,13 @@ import { useDataState, useItemState } from '@store';
 import { applicationStatus, applicationTypes } from '@constant';
 import { CreateApplication } from './Create';
 
-export const Application = () => {
+export const Application = ({ _id }) => {
   const initParams = useGetParams();
   const [params, setParams] = useState(initParams);
   const [filter, setFilter] = useState({});
   const [open, setOpen] = useState(false);
   const [openz, setOpenz] = useState(false);
-  const { isLoading, data } = useGetApi(getListApplicationApi, params, 'application');
+  const { isLoading, data } = useGetApi(getListApplicationApi, { account: _id, ...params }, 'application');
   const { data: shifts } = useGetApi(getListShiftInfoApi, {}, 'shifts');
   const { departments, accounts } = useDataState();
   const { item, setItem } = useItemState();
@@ -28,7 +28,7 @@ export const Application = () => {
   }, [item?.application]);
 
   return (
-    <FormList title="Danh sách đơn từ">
+    <FormList title={_id ? '' : 'Danh sách đơn từ'}>
       <DetailApplication
         open={open}
         setOpen={setOpen}
@@ -46,39 +46,42 @@ export const Application = () => {
         departments={departments}
         accounts={accounts}
       />
-      <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-full">
-        <Dropdownzz
-          value={filter.department}
-          onChange={(e) => setFilter({ ...filter, department: e.target.value, account: undefined })}
-          options={departments}
-          label="Phòng ban"
-          showClear
-          filter
-        />
-        <Dropdownzz
-          value={filter.account}
-          onChange={(e) => setFilter({ ...filter, account: e.target.value })}
-          options={filter.department ? accounts.filter((a) => a.department === filter.department) : accounts}
-          optionLabel="fullName"
-          label="Nhân viên"
-          showClear
-        />
-        <Dropdownzz
-          value={filter.type}
-          onChange={(e) => setFilter({ ...filter, type: e.target.value })}
-          options={applicationTypes}
-          label="Loại đơn"
-          showClear
-        />
-        <Dropdownzz
-          value={filter.status}
-          onChange={(e) => setFilter({ ...filter, status: e.target.value })}
-          options={applicationStatus}
-          label="Trạng thái"
-          showClear
-        />
-      </DataFilter>
+      {!_id && (
+        <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-full">
+          <Dropdownzz
+            value={filter.department}
+            onChange={(e) => setFilter({ ...filter, department: e.target.value, account: undefined })}
+            options={departments}
+            label="Phòng ban"
+            showClear
+            filter
+          />
+          <Dropdownzz
+            value={filter.account}
+            onChange={(e) => setFilter({ ...filter, account: e.target.value })}
+            options={filter.department ? accounts.filter((a) => a.department === filter.department) : accounts}
+            optionLabel="fullName"
+            label="Nhân viên"
+            showClear
+          />
+          <Dropdownzz
+            value={filter.type}
+            onChange={(e) => setFilter({ ...filter, type: e.target.value })}
+            options={applicationTypes}
+            label="Loại đơn"
+            showClear
+          />
+          <Dropdownzz
+            value={filter.status}
+            onChange={(e) => setFilter({ ...filter, status: e.target.value })}
+            options={applicationStatus}
+            label="Trạng thái"
+            showClear
+          />
+        </DataFilter>
+      )}
       <DataTable
+        hideParams={_id}
         title="đơn từ"
         loading={isLoading}
         data={data?.documents}

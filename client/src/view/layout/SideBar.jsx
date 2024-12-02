@@ -32,9 +32,12 @@ export const SideBar = (props) => {
     } else if (pathname === '/approved-payslip') {
       item = { name: 'Phiếu lương đã duyệt', icon: 'Squares2X2Icon', route: '/approved-payslip' };
       indexz = 3;
+    } else if (pathname === '/salary-calculation') {
+      item = { name: 'Tính toán công lương', icon: 'Squares2X2Icon', route: '/salary-calculation' };
+      indexz = 3;
     } else {
       tools.forEach((tool, index) => {
-        if (!['/', '/timekeeping-config', '/approved-payslip'].includes(tool.route)) {
+        if (!['/', '/timekeeping-config', '/approved-payslip', '/salary-calculation'].includes(tool.route)) {
           if (tool.items?.length > 0) {
             tool.items.forEach((child) => {
               if (pathname?.includes(child.route)) {
@@ -57,7 +60,7 @@ export const SideBar = (props) => {
 
   return (
     <div
-      className={`fixed left-0 inset-y-0 h-screen z-40 w-full lg:max-w-[17rem] flex flex-col justify-between border-r
+      className={`fixed left-0 inset-y-0 h-screen z-40 w-[17rem] flex flex-col justify-between border-r
       transition-all duration-500 ease-in-out shadow-custom bg-sidebar text-onSidebar ${showSidebar ? '' : '-translate-x-full'}`}
     >
       <div>
@@ -66,7 +69,7 @@ export const SideBar = (props) => {
             <Logo classNameImg="h-16" />
           </div>
         </div>
-        <hr className='bg-onSidebar' />
+        <hr className="bg-onSidebar" />
         <nav className="flex flex-col gap-1 text-sm font-normal text-inherit h-sidebar overflow-scroll mt-4 px-3">
           {tools?.map((item, index) => {
             const Icon = icons[item.icon];
