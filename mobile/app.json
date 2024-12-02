@@ -45,15 +45,14 @@
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
       ],
-      "package": "com.hundredz.hrz",
-      "versionCode": 5
+      "package": "com.hundredz.hrz"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "704784ad-a674-44df-9edf-db2ed9c9a7f6"
+        "projectId": "ab086a0c-0265-48ca-b9a2-37c6a9f8f129"
       }
     }
   }

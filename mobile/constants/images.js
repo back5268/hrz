@@ -4,6 +4,6 @@ import cards from "../assets/images/cards.png";
 import path from "../assets/images/path.png";
 import logo from "../assets/images/logo.png";
 import empty from "../assets/images/empty.png";
-import avatar from "../assets/images/avatar.png";
+import avatar from "../assets/images/logo.png";
 
 export default { profile, thumbnail, cards, path, logo, empty, avatar };

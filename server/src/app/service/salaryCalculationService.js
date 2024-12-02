@@ -1,6 +1,18 @@
 import { createSalaryMd, detailAccountMd, detailInsuranceMd, detailSalaryMd, listTimekeepingMd } from '@repository';
 import { roundNumber } from '@utils';
 
+export const calSoonlate = (soonLates, soonLateConfigs, monneyOfDay) => {
+  let monney = 0;
+  soonLates.forEach((s) => {
+    const soonLateConfig = soonLateConfigs.find((sc) => s >= sc.from && s <= sc.to);
+    if (soonLateConfig) {
+      if (soonLateConfig.type === 1) monney += Math.round(soonLateConfig.value) || 0;
+      else monney += Math.round((soonLateConfig.value * monneyOfDay) / 100) || 0;
+    } else monney += 0;
+  });
+  return monney
+};
+
 export class Salary {
   constructor({ month, accountId, from, to, note, config, salarySetup, taxSetup, by, bonuses }) {
     this.month = month;
