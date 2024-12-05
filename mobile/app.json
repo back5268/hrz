@@ -18,13 +18,10 @@
         }
       ]
     ],
-    "permissions": [
-      "CAMERA"
-    ],
     "scheme": "hrz",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/logo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -50,10 +47,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-      "eas": {
-        "projectId": "ab086a0c-0265-48ca-b9a2-37c6a9f8f129"
-      }
-    }
+    "extra": {}
   }
 }

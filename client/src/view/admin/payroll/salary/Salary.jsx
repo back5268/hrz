@@ -1,4 +1,4 @@
-import { getListMonthInfoApi, getListSalaryApi, previewSalaryApi, downloadSalaryApi } from '@api';
+import { getListMonthInfoApi, getListSalaryApi, previewSalaryApi, downloadSalaryApi, exportSalaryApi } from '@api';
 import { DataTable, FormList, DataFilter, Body } from '@components/base';
 import { Columnz, Dropdownzz } from '@components/core';
 import { useGetParams } from '@hooks';
@@ -76,8 +76,9 @@ export const Salary = ({ _id }) => {
         total={data?.total}
         params={params}
         setParams={setParams}
-        baseActions={['detail']}
+        baseActions={['detail', 'export']}
         setShow={setOpen}
+        headerInfo={{ exportApi: exportSalaryApi }}
         actionsInfo={{
           onViewDetail: (item) => setOpen(item._id),
           moreActions: [

@@ -2,14 +2,30 @@ import { checkTimekeepingApi } from '@/api';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as Location from 'expo-location';
 import { getDeviceName, speak } from '@/lib/expo';
+import { Buttonz } from '../core';
+import * as FileSystem from 'expo-file-system';
 
-const NUMBER_OF_CIRCLES = 120; // Số lượng que quay xung quanh camera
-const BAR_WIDTH = 4; // Độ rộng của hình que
-const BAR_HEIGHT = 20; // Chiều dài của hình que
+const getFileSize = async (uri) => {
+  try {
+    const info = await FileSystem.getInfoAsync(uri);
+    if (info.exists) {
+      console.log('File size in bytes:', info.size);
+      return info.size;
+    } else {
+      console.error('File does not exist');
+    }
+  } catch (error) {
+    console.error('Error getting file size:', error.message);
+  }
+};
+
+const NUMBER_OF_CIRCLES = 120;
+const BAR_WIDTH = 4;
+const BAR_HEIGHT = 20;
 export const Checking = ({ setResult = () => {}, setLoading = () => {} }) => {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef(null);
@@ -71,12 +87,7 @@ export const Checking = ({ setResult = () => {}, setLoading = () => {} }) => {
 
   if (!permission) return <View />;
   if (!permission.granted) {
-    return (
-      <View>
-        <Text>We need your permission to show the camera</Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
-    );
+    return <Buttonz onPress={requestPermission} label="Cho phép truy cập máy ảnh" />;
   }
 
   const onSubmit = async () => {
@@ -87,9 +98,8 @@ export const Checking = ({ setResult = () => {}, setLoading = () => {} }) => {
       });
       const latitude = location?.coords?.latitude;
       const longitude = location?.coords?.longitude;
-      console.log(file);
       const reponse = await checkTimekeepingApi({
-        formData: { file: { uri: file.uri, type: 'image/jpeg', name: 'photo.jpg' } },
+        formData: { file: { uri: file.uri, name: file.name || 'image.jpg', type: file.type || 'image/jpeg' } },
         date: moment().format('YYYY-MM-DD'),
         time: moment().format('HH:mm'),
         deviceName: getDeviceName(),
@@ -100,7 +110,7 @@ export const Checking = ({ setResult = () => {}, setLoading = () => {} }) => {
       let address = '',
         status = false;
       if (reponse && !reponse.mess) {
-        speak('Cảm ơn bạn đã chấm công');
+        // speak('Cảm ơn bạn đã chấm công');
         status = 1;
         address = (
           await Location.reverseGeocodeAsync({
@@ -110,7 +120,7 @@ export const Checking = ({ setResult = () => {}, setLoading = () => {} }) => {
         )?.[0];
       } else {
         status = 0;
-        speak('Chấm công thất bại');
+        // speak('Chấm công thất bại');
       }
       setResult((pre) => ({
         ...reponse,

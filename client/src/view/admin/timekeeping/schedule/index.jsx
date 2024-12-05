@@ -1,9 +1,10 @@
-import { getListScheduleApi, getListShiftInfoApi } from '@api';
+import { exportScheduleApi, getListScheduleApi } from '@api';
 import { DataFilter, FormList } from '@components/base';
-import { Dropdownzz } from '@components/core';
+import { Buttonz, Dropdownzz } from '@components/core';
 import { sheduleTypes, days } from '@constant';
+import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { useGetApi } from '@lib/react-query';
-import { useDataState } from '@store';
+import { useDataState, useToastState } from '@store';
 import { themeColor } from '@theme';
 import moment from 'moment';
 import { Column } from 'primereact/column';
@@ -97,43 +98,10 @@ export const Schedule = () => {
   const { accounts, departments } = useDataState();
   const [params, setParams] = useState(INITPARAMS);
   const [weekData, setWeekData] = useState({});
+  const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState({ year: new Date().getFullYear() });
   const { isLoading, data } = useGetApi(getListScheduleApi, handleParams(params), 'schedule');
-  const { data: shifts } = useGetApi(getListShiftInfoApi, {}, 'shifts');
-  const [schedule, setSchedule] = useState([]);
-
-  useEffect(() => {
-    if (Array.isArray(data)) {
-      const newData = [],
-        dataz = [];
-      data.forEach((datum) => {
-        const index = newData.findIndex((n) => n.account === datum.account && n.shift === datum.shift);
-        if (index >= 0) newData[index].data.push(datum);
-        else newData.push({ account: datum.account, shift: datum.shift, data: [datum] });
-      });
-      newData.forEach((n) => {
-        const object = {};
-        const data = n.data;
-        const shift = shifts?.find((s) => s._id === n.shift);
-        let totalTime = 0, totalTimeOt = 0, totalWork = 0, totalWorkOt = 0; 
-        data.forEach((datum) => {
-          if (datum.type === 2) {
-            totalTimeOt += datum.totalTime
-            totalWorkOt += datum.totalWork
-          } else {
-            totalTime += datum.totalTime
-            totalWork += datum.totalWork
-          }
-          const title = `${datum.timeStart} - ${datum.timeEnd}`;
-          const day = days[moment(datum.date).day()];
-          if (object[day._id]) object[day._id].push({ type: datum.type, title, totalWork: datum.totalWork, totalTime: datum.totalTime });
-          else object[day._id] = [{ type: datum.type, title, totalWork: datum.totalWork, totalTime: datum.totalTime }];
-        });
-        dataz.push({ ...n, ...object, shift, totalTime, totalTimeOt, totalWork, totalWorkOt });
-      });
-      setSchedule(dataz);
-    }
-  }, [JSON.stringify(data)]);
+  const { showToast } = useToastState();
 
   useEffect(() => {
     setWeekData(getWeekData(filter.year));
@@ -152,14 +120,27 @@ export const Schedule = () => {
         ))}
       </Row>
       <Row>
-      <Column header="Số giờ / Số Công" />
-      <Column header="Số giờ / Số Công" />
+        <Column header="Số giờ / Số Công" />
+        <Column header="Số giờ / Số Công" />
         {getDatesByWeek(params.week).map((w, index) => (
           <Column key={index} header={w} />
         ))}
       </Row>
     </ColumnGroup>
   );
+
+  const onExport = async () => {
+    setLoading(true);
+    const response = await exportScheduleApi(handleParams(params));
+    setLoading(false);
+    if (response) {
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(response);
+      downloadLink.download = `ket-qua-export-lich-lam-viec.xlsx`;
+      downloadLink.click();
+      showToast({ title: `Export lịch làm việc thành công!`, severity: 'success' });
+    }
+  };
 
   return (
     <FormList title="Lịch làm việc">
@@ -208,7 +189,7 @@ export const Schedule = () => {
       <div className="w-full px-2">
         <DataTable
           loading={isLoading}
-          value={schedule}
+          value={data}
           headerColumnGroup={headerGroup}
           rowGroupMode="rowspan"
           groupRowsBy="account"
@@ -218,6 +199,19 @@ export const Schedule = () => {
           showGridlines
           scrollable
           emptyMessage="Không có nhân viên làm việc trong khoảng thời gian này"
+          header={
+            <div className="flex gap-4 justify-start mb-1">
+              <Buttonz
+                severity="success"
+                onClick={onExport}
+                loading={loading}
+                className="flex gap-4 items-center"
+                icon={<ArrowDownTrayIcon className="h-5 w-5 stroke-2" />}
+              >
+                Export
+              </Buttonz>
+            </div>
+          }
         >
           <Column
             field="account"
@@ -250,12 +244,22 @@ export const Schedule = () => {
             )}
             className="min-w-28"
           ></Column>
-          <Column body={(e) => <span className="font-medium">
-            {e.totalTime} / {e.totalWork}
-          </span>} className="min-w-28"></Column>
-          <Column body={(e) => <span className="font-medium">
-            {e.totalTimeOt} / {e.totalWorkOt}
-          </span>} className="min-w-28"></Column>
+          <Column
+            body={(e) => (
+              <span className="font-medium">
+                {e.totalTime} / {e.totalWork}
+              </span>
+            )}
+            className="min-w-28"
+          ></Column>
+          <Column
+            body={(e) => (
+              <span className="font-medium">
+                {e.totalTimeOt} / {e.totalWorkOt}
+              </span>
+            )}
+            className="min-w-28"
+          ></Column>
           {getDaysByWeek(params.week).map((work, index) => (
             <Column
               key={index}

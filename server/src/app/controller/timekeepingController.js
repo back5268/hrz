@@ -218,14 +218,15 @@ export const exportSyntheticTimekeeping = async (req, res) => {
       }
     }
     const options = {
-      mergeCells: ['A1:A2', 'B1:B2', 'C1:C2', 'D1:D2', 'E1:E2', 'F1:F2'],
+      mergeCells: ['A1:A2', 'B1:B2', 'C1:C2', 'D1:D2', 'E1:E2', 'F1:F2', 'G1:G2'],
       alignments: [
         { A1: { horizontal: 'center', vertical: 'middle' } },
         { B1: { horizontal: 'center', vertical: 'middle' } },
         { C1: { horizontal: 'center', vertical: 'middle' } },
         { D1: { horizontal: 'center', vertical: 'middle' } },
         { E1: { horizontal: 'center', vertical: 'middle' } },
-        { F1: { horizontal: 'center', vertical: 'middle' } }
+        { F1: { horizontal: 'center', vertical: 'middle' } },
+        { G1: { horizontal: 'center', vertical: 'middle' } },
       ]
     };
     res
@@ -357,7 +358,6 @@ export const importTimekeeping = async (req, res) => {
 //====================================App====================================
 export const checkTimekeepingApp = async (req, res) => {
   try {
-    console.log(1);
     const { error, value } = validateData(checkTimekeepingAppValid, req.body);
     if (error) return res.json({ status: 0, mess: error });
     if (!req.file) return res.json({ status: 0, mess: 'Vui lòng truyền hình ảnh!' });

@@ -4,7 +4,7 @@ export const listSalaryValid = {
   month: { type: 'string', allowNull: true },
   department: { type: 'string', allowNull: true },
   account: { type: 'string', allowNull: true },
-  status: { type: 'number', allowNull: true },
+  status: { type: 'number', allowNull: true }
 };
 
 export const detailSalaryValid = {
@@ -24,4 +24,11 @@ export const handleSalaryValid = {
   _id: 'string',
   status: 'number',
   reason: { type: 'string', allowNull: true }
+};
+
+export const exportSalaryValid = {
+  month: { type: 'string', allowNull: true },
+  department: { type: 'string', allowNull: true },
+  account: { type: 'string', allowNull: true },
+  status: { type: 'number', allowNull: true }
 };

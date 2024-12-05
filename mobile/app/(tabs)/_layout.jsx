@@ -8,44 +8,41 @@ import { socket } from '@/lib/socket-io';
 import Toast from 'react-native-toast-message';
 import { View } from 'react-native';
 
-const TabBar = (props) => {
-  console.log(props.state, 99999);
+const TabBar = (props) => (
+  <BottomNavigation.Bar
+    navigationState={props.state}
+    safeAreaInsets={props.insets}
+    onTabPress={({ route, preventDefault }) => {
+      const event = props.navigation.emit({
+        type: 'tabPress',
+        target: route.key,
+        canPreventDefault: true
+      });
 
-  return (
-    <BottomNavigation.Bar
-      navigationState={props.state}
-      safeAreaInsets={props.insets}
-      onTabPress={({ route, preventDefault }) => {
-        const event = props.navigation.emit({
-          type: 'tabPress',
-          target: route.key,
-          canPreventDefault: true
+      if (event.defaultPrevented) {
+        preventDefault();
+      } else {
+        props.navigation.dispatch({
+          ...CommonActions.navigate(route.name, route.params),
+          target: props.state.key
         });
-
-        if (event.defaultPrevented) {
-          preventDefault();
-        } else {
-          props.navigation.dispatch({
-            ...CommonActions.navigate(route.name, route.params),
-            target: props.state.key
-          });
-        }
-      }}
-      renderIcon={({ route, focused, color }) => {
-        const { options } = props.descriptors[route.key];
-        if (options.tabBarIcon) {
-          return options.tabBarIcon({ focused, color, size: 30 });
-        }
-        return null;
-      }}
-      getLabelText={({ route }) => {
-        const { options } = props.descriptors[route.key];
-        const label = options.tabBarLabel !== undefined ? options.tabBarLabel : options.title !== undefined ? options.title : route.title;
-        return label;
-      }}
-    />
-  );
-};
+      }
+    }}
+    renderIcon={({ route, focused, color }) => {
+      const { options } = props.descriptors[route.key];
+      if (options.tabBarIcon) {
+        return options.tabBarIcon({ focused, color, size: 30 });
+      }
+      return null;
+    }}
+    getLabelText={({ route }) => {
+      const { options } = props.descriptors[route.key];
+      const label = options.tabBarLabel !== undefined ? options.tabBarLabel : options.title !== undefined ? options.title : route.title;
+      return label;
+    }}
+    key={props.state?.key}
+  />
+);
 
 const TabsHeader = (props) => (
   <Appbar.Header {...props}>
@@ -94,7 +91,7 @@ const TabLayout = () => {
   if (!isSegmentsReady) return <View />;
   return (
     <Tabs
-      tabBar={(props) => <TabBar {...props} />}
+      tabBar={(props) => (isShow ? <TabBar {...props} /> : <View key={props.key}></View>)}
       screenOptions={{
         tabBarHideOnKeyboard: true,
         header: (props) => <TabsHeader navProps={props} children={undefined} />

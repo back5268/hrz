@@ -1,5 +1,5 @@
 import { getConfigTimekeepingApi, updateConfigSalaryApi } from '@api';
-import { Buttonz, Cardz, DropdownFormz, Inputzz, ProgressSpinnerz } from '@components/core';
+import { Buttonz, Cardz, DropdownFormz, InputFormz, Inputzz, ProgressSpinnerz } from '@components/core';
 import { useGetApi } from '@lib/react-query';
 import { useToastState } from '@store';
 import React, { useEffect, useState } from 'react';
@@ -107,8 +107,11 @@ export const TimekeepingConfig = () => {
                 onChange={(e) => setValue('timekeepingWarning', e.target.value)}
                 showClear
               />
-              <div className="flex flex-wrap w-full">
+              <div className="w-full my-2 mt-6">
                 <label className="inline-block font-medium text-left mb-2 w-full">Cấu hình phép</label>
+                <hr />
+              </div>
+              <div className="flex flex-wrap w-full">
                 <InputFormz
                   id="numberDayOffPermonth"
                   label="Số phép thêm mỗi tháng"

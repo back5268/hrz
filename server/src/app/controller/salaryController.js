@@ -1,5 +1,6 @@
+import { convertToExcel } from '@lib/excel-js';
 import { convertHTMLToPDF } from '@lib/puppeteer';
-import { detailSalaryValid, handleSalaryValid, listSalaryValid, updateStatusSalaryValid } from '@lib/validation';
+import { detailSalaryValid, exportSalaryValid, handleSalaryValid, listSalaryValid, updateStatusSalaryValid } from '@lib/validation';
 import {
   countSalaryMd,
   createApplicationMd,
@@ -186,6 +187,67 @@ export const downloadSalary = async (req, res) => {
   }
 };
 
+export const exportSalary = async (req, res) => {
+  try {
+    const { error, value } = validateData(exportSalaryValid, req.query);
+    if (error) return res.json({ status: 0, mess: error });
+    const { month, department, account, status } = value;
+    const where = {};
+    if (month) where.month = month;
+    if (department) where.department = department;
+    if (account) where.account = account;
+    if (status) where.status = status;
+    const data = await listSalaryMd(where);
+    const dataz = [];
+    dataz.push([
+      'STT',
+      'Nhân viên',
+      'Mã nhân viên',
+      'Tháng',
+      'Lương cơ bản',
+      'Số ngày được tính lương',
+      'Số công chính thức',
+      'Số công làm thêm giờ',
+      'Lương theo ngày công',
+      'Trợ cấp/Phụ cấp',
+      'Phạt đi muộn về sớm',
+      'Bảo hiểm',
+      'Thuế thu nhập',
+      'Lương thực nhận'
+    ]);
+    let index = 0;
+    const accounts = await listAccountMd({});
+    for (const datum of data) {
+      index += 1;
+      const account = accounts.find((a) => String(a._id) === String(datum.account));
+      const accountInfo = datum.accountInfo;
+      const number = datum.day?.nomal + datum.day?.ot + datum.day?.holiday + datum.day?.annualLeave + datum.day?.regime;
+      dataz.push([
+        index,
+        account?.fullName,
+        account?.staffCode,
+        datum.month,
+        accountInfo?.salary,
+        number,
+        datum.day?.nomal,
+        datum.day?.ot,
+        datum.officialSalary,
+        datum.allowances?.reduce((a, b) => a + b.summary, 0),
+        datum.soonLates?.reduce((a, b) => a + b.summary, 0),
+        datum.mandatoryAmount,
+        datum.tax.summary,
+        datum.summary
+      ]);
+    }
+    res
+      .status(200)
+      .attachment('file.xlsx')
+      .send(await convertToExcel(dataz));
+  } catch (error) {
+    res.status(500).json({ status: 0, mess: error.toString() });
+  }
+};
+
 export const handleSalary = async (req, res) => {
   try {
     const { error, value } = validateData(handleSalaryValid, req.body);
@@ -197,7 +259,13 @@ export const handleSalary = async (req, res) => {
       await updateSalaryMd({ _id }, { status: 2 });
       res.json({ status: 1, data: {} });
     } else {
-      const data = await createApplicationMd({ department: req.account?.department?._id, account: req.account?._id, type: 9, reason, month: dataz.month });
+      const data = await createApplicationMd({
+        department: req.account?.department?._id,
+        account: req.account?._id,
+        type: 9,
+        reason,
+        month: dataz.month
+      });
       const where = { 'tools.route': 'application' };
       const permissions = await listPermissionMd(where);
       const accounts = await listAccountMd({ role: 'admin' });
