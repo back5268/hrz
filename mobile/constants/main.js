@@ -1,5 +1,5 @@
-// export const API_URL = 'http://192.168.6.21:5000/';
-export const API_URL = 'http://api.backz.s-tech.info/'
+export const API_URL = 'http://192.168.0.101:5000/';
+// export const API_URL = 'http://api.backz.s-tech.info/'
 
 export const contractTypes = [
   { name: 'Hợp đồng lao động', _id: 1 },

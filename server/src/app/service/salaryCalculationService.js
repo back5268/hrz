@@ -10,7 +10,19 @@ export const calSoonlate = (soonLates, soonLateConfigs, monneyOfDay) => {
       else monney += Math.round((soonLateConfig.value * monneyOfDay) / 100) || 0;
     } else monney += 0;
   });
-  return monney
+  return monney;
+};
+
+export const calTax = (taxSetup, { pretaxIncome, dependent }) => {
+  const totalTax = pretaxIncome - taxSetup?.self - taxSetup?.dependent * dependent;
+  let summary = 0;
+  taxSetup.taxs.forEach((r) => {
+    if (totalTax > 0 && r.from * 1000000 <= totalTax && r.to * 1000000 >= totalTax) {
+      summary = (totalTax * r.value) / 100;
+    } else summary = (totalTax * (taxSetup.taxs?.[taxSetup.taxs.length - 1]?.value)) / 100;
+  });
+  summary = summary < 0 ? 0 : summary
+  return summary;
 };
 
 export class Salary {
