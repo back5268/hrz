@@ -52,7 +52,8 @@ const defaultValues = {
   foreignLanguage: '',
   computerScience: '',
   healthStatus: '',
-  pathology: ''
+  pathology: '',
+  numberDayoff: ''
 };
 
 export const Infos = () => {
@@ -87,9 +88,9 @@ export const Infos = () => {
   });
 
   const getSalaryTitle = (type) => {
-    let title = type === 3 ? 'Lương dịch vụ theo ngày' : 'Lương theo tháng'
+    let title = type === 3 ? 'Lương dịch vụ theo ngày' : 'Lương theo tháng';
     if (type === 3) title = 'Lương dịch vụ theo ngày';
-    return title
+    return title;
   };
 
   useEffect(() => {
@@ -182,6 +183,14 @@ export const Infos = () => {
                     <label className="inline-block font-medium text-left">Thông tin Làm việc</label>
                     <hr />
                   </div>
+                  <InputFormz
+                    type="number"
+                    id="numberDayoff"
+                    label="Số ngày nghỉ phép còn lại (*)"
+                    value={watch('numberDayoff')}
+                    errors={errors}
+                    register={register}
+                  />
                   <DropdownFormz
                     id="type"
                     label="Loại nhân sự (*)"

@@ -8,7 +8,13 @@ export class ConfigMd extends ModelBase {}
 ConfigMd.init('Config', {
   updateBy: { type: ObjectId, ref: 'Account' },
   type: { type: Number, enum: [1, 2, 3], description: '1: Cấu hình chấm công, 2: Cấu hình tính lương, 3: Cấu hình thuế' },
-  timekeeping: { timekeepingWarning: String, locations: [{ latitude: Number, longitude: Number, location: String }] },
+  timekeeping: {
+    timekeepingWarning: String,
+    locations: [{ latitude: Number, longitude: Number, location: String }],
+    numberDayOffPermonth: Number,
+    date: Number,
+    time: String
+  },
   salary: {
     salaryCoefficient: { type: Number, min: 0 },
     mandatory: {
@@ -30,7 +36,7 @@ ConfigMd.init('Config', {
         type: { type: Number, enum: [1, 2], description: '1: Trừ trực tiếp (VNĐ), 2: Trừ theo % công' }
       }
     ],
-    holidays: [{ type: String }],
+    holidays: [{ type: String }]
   },
   tax: {
     self: { type: Number, min: 0 },

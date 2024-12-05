@@ -55,7 +55,8 @@ export const updateEmployeeValid = {
   taxFiles: { type: 'json', allowNull: true },
   healthFiles: { type: 'json', allowNull: true },
   educationFiles: { type: 'json', allowNull: true },
-  status: { type: 'number', allowNull: true }
+  status: { type: 'number', allowNull: true },
+  numberDayoff: { type: 'number', allowNull: true },
 };
 
 export const createEmployeeValid = {

@@ -22,8 +22,19 @@ const getTimeWarning = () => {
   return times;
 };
 
+const getDate = () => {
+  const dates = [];
+  for (let i = 1; i < 32; i++) {
+    dates.push({ name: i, _id: i });
+  }
+  return dates;
+};
+
 const defaultValues = {
-  timekeepingWarning: ''
+  timekeepingWarning: '',
+  time: '',
+  date: '',
+  numberDayOffPermonth: ''
 };
 export const TimekeepingConfig = () => {
   const { showToast } = useToastState();
@@ -36,6 +47,7 @@ export const TimekeepingConfig = () => {
     formState: { errors },
     watch,
     setValue,
+    register
   } = useForm();
 
   useEffect(() => {
@@ -61,6 +73,9 @@ export const TimekeepingConfig = () => {
       type: 1,
       detail: {
         timekeepingWarning: value.timekeepingWarning,
+        numberDayOffPermonth: value.numberDayOffPermonth,
+        date: value.date,
+        time: value.time,
         locations: data
       }
     };
@@ -92,6 +107,38 @@ export const TimekeepingConfig = () => {
                 onChange={(e) => setValue('timekeepingWarning', e.target.value)}
                 showClear
               />
+              <div className="flex flex-wrap w-full">
+                <label className="inline-block font-medium text-left mb-2 w-full">Cấu hình phép</label>
+                <InputFormz
+                  id="numberDayOffPermonth"
+                  label="Số phép thêm mỗi tháng"
+                  value={watch('numberDayOffPermonth')}
+                  errors={errors}
+                  register={register}
+                  min={0}
+                  className="!lg:w-4/12"
+                />
+                <DropdownFormz
+                  id="date"
+                  label="Ngày tính thêm phép"
+                  options={getDate()}
+                  value={watch('date')}
+                  errors={errors}
+                  onChange={(e) => setValue('date', e.target.value)}
+                  showClear
+                  className="!lg:w-4/12"
+                />
+                <DropdownFormz
+                  id="time"
+                  label="Thời gian tính thêm phép"
+                  options={getTimeWarning()}
+                  value={watch('time')}
+                  errors={errors}
+                  onChange={(e) => setValue('time', e.target.value)}
+                  showClear
+                  className="!lg:w-4/12"
+                />
+              </div>
               <div className="w-full my-4">
                 <div className="p-2">
                   <div className="flex justify-between items-center">

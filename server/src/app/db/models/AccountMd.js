@@ -19,10 +19,11 @@ AccountMd.init('Account', {
   dateOfIssue: { type: Date, required: true },
   placeOfIssue: { type: String, required: true },
   address: { type: String, required: true },
-  nationality: { type: String, default: "Việt Nam", description: 'Quốc tịch' },
+  nationality: { type: String, default: 'Việt Nam', description: 'Quốc tịch' },
   gender: { type: Number, required: true, enum: [1, 2, 3], description: '1: Nam, 2: Nữ, 3: Khác' },
-  role: { type: String, enum: ["staff", "admin"], default: "staff" },
+  role: { type: String, enum: ['staff', 'admin'], default: 'staff' },
   avatar: { type: String },
+  numberDayoff: { type: Number, default: 0 },
   dateIn: { type: Date },
   bankAccount: { type: String, required: true },
   bank: { type: Number },
@@ -35,4 +36,3 @@ AccountMd.init('Account', {
   timeSendOtp: { type: Date },
   deletedAt: { type: Date }
 });
-

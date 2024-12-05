@@ -58,7 +58,6 @@ export const calculateSalary = async (req, res) => {
     }, true);
     res.json({ status: true, data: 1 });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ status: false, mess: error.toString() });
   }
 };

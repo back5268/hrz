@@ -22,7 +22,8 @@ import {
   detailConfigMd,
   detailTimekeepingMd,
   updateTimekeepingMd,
-  deleteSalaryMd
+  deleteSalaryMd,
+  detailAccountMd
 } from '@repository';
 import { validateData, calTime, roundNumber } from '@utils';
 import { ioSk } from 'src';
@@ -159,7 +160,7 @@ export const updateApplicationService = async (req) => {
   if (!dataz) throw new Error('Đơn không tồn tại!');
   const data = await updateApplicationMd({ _id }, { updatedBy: req.account._id, ...value });
   console.log(dataz, dataz.type);
-  
+
   if (status === 2) {
     if (dataz.type === 9) {
       if (dataz.month && dataz.account) await deleteSalaryMd({ account: dataz.account, month: dataz.month, status: 1 });
@@ -211,6 +212,8 @@ export const createApplicationService = async (req) => {
       value.files.push(await uploadFileToFirebase(file));
     }
   }
+  const numberDayoff = req.account?.numberDayoff;
+  if (type === 1 && (!Number(numberDayoff) || Number(numberDayoff) < 1)) throw new Error('Bạn đã dùng hết số ngày nghỉ phép năm!');
   value.typez = type === 8 ? 2 : 1;
   const where = type === 8 ? { 'tools.route': 'approve' } : { 'tools.route': 'application' };
   const data = await createApplicationMd({ account: req.account?._id, department: req.account?.department?._id, ...value });
@@ -238,6 +241,10 @@ export const createApplicationAdminService = async (req) => {
   const { account, shift, type, dates, fromTime, toTime } = value;
   const shiftz = await detailShiftMd({ _id: shift });
   if (!shiftz) throw new Error('Ca làm việc không tồn tại!');
+  const accountz = await detailAccountMd({ _id: account });
+  if (!accountz) throw new Error('Không tìm thấy nhân viên!');
+  const numberDayoff = accountz.numberDayoff;
+  if (type === 1 && (!Number(numberDayoff) || Number(numberDayoff) < 1)) throw new Error('Nhân sự này đã dùng hết số ngày nghỉ phép năm!');
   const timekeepings = await listTimekeepingMd({ date: { $in: dates }, account });
   if (timekeepings.length === 0 && type !== 6) throw new Error('Không có lịch làm việc trong thời gian đã chọn!');
   if (type === 6) {
