@@ -6,7 +6,8 @@ import { QueryProvider } from '@/lib/react-query';
 import { DefaultTheme, PaperProvider } from 'react-native-paper';
 import { themeColor } from '../theme';
 import '../styles/index.css';
-
+import { enableScreens } from 'react-native-screens';
+enableScreens();
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {

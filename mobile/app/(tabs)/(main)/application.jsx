@@ -10,21 +10,16 @@ import { Dimensions, FlatList, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TabBar, TabView } from 'react-native-tab-view';
 
-const Scene = ({ status, index, shifts }) => {
+const Scene = ({ status, shifts }) => {
   const [render, setRender] = useState(false);
-  const { isLoading, data } = useGetApi(
-    getListApplicationApi,
-    { render, status },
-    `application${status || ''}`,
-    index === (status ? status : 0)
-  );
+  const { isLoading, data } = useGetApi(getListApplicationApi, { render, status }, `application${status || ''}`);
   if (isLoading) return <Loadingz />;
 
   return (
     <SafeAreaView className="flex-1">
       <FlatList
         data={data}
-        keyExtractor={(item, index) => item._id ? item._id.toString() : `item-${index}`}
+        keyExtractor={(item, index) => (item._id ? item._id.toString() : `item-${index}`)}
         showsVerticalScrollIndicator={true}
         onEndReached={() => console.log('Load more data')}
         onRefresh={() => setRender((pre) => !pre)}
@@ -77,16 +72,16 @@ const Application = () => {
   const layout = Dimensions.get('window');
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: 0, title: 'Tất cả', status: undefined },
-    { key: 1, title: 'Chờ duyệt', status: 1 },
-    { key: 2, title: 'Đã duyệt', status: 2 },
-    { key: 3, title: 'Từ chối', status: 3 },
-    { key: 4, title: 'Hủy', status: 4 }
+    { key: 1, title: 'Tất cả', status: 0 },
+    { key: 2, title: 'Chờ duyệt', status: 1 },
+    { key: 3, title: 'Đã duyệt', status: 2 },
+    { key: 4, title: 'Từ chối', status: 3 },
+    { key: 5, title: 'Hủy', status: 4 }
   ]);
 
   const renderScene = ({ route }) => {
     if (!route || !route.key) return null;
-    return <Scene key={route.key} status={route.status} index={index} shifts={shifts} />;
+    return <Scene key={route.key} status={route.status} shifts={shifts} />;
   };
 
   return (
