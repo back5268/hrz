@@ -1,5 +1,6 @@
 import {
   deletePendingPayslipApi,
+  deletePendingPayslipsApi,
   downloadPendingPayslipApi,
   getListMonthInfoApi,
   getListPendingPayslipApi,
@@ -14,7 +15,7 @@ import React, { useState } from 'react';
 import { Detail } from './Detail';
 import { useDataState, useToastState } from '@store';
 import { formatDate, formatNumber } from '@lib/helper';
-import { ArrowDownTrayIcon, CheckIcon, PrinterIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon, CheckIcon, PrinterIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { salaryStatus } from '@constant';
 
 export const PendingPayslip = () => {
@@ -36,6 +37,18 @@ export const PendingPayslip = () => {
     setLoading(false);
     if (response) {
       showToast({ title: 'Xác nhận phiếu lương thành công', severity: 'success' });
+      setParams((pre) => ({ ...pre, render: !pre.render }));
+      setSelect([]);
+    }
+  };
+
+  const onDelete = async (status) => {
+    if (!(select?.length > 0)) return showToast({ title: 'Vui lòng chọn phiếu lương', severity: 'warning' });
+    setLoading(true);
+    const response = await deletePendingPayslipsApi({ _ids: select?.map((s) => s._id), status });
+    setLoading(false);
+    if (response) {
+      showToast({ title: 'Xóa phiếu lương thành công', severity: 'success' });
       setParams((pre) => ({ ...pre, render: !pre.render }));
       setSelect([]);
     }
@@ -94,20 +107,30 @@ export const PendingPayslip = () => {
         baseActions={['detail', 'delete']}
         setShow={setOpen}
         headerInfo={{
-          deleteApi: deletePendingPayslipApi,
           moreHeader: [
             {
               children: () => (
                 <div className="flex gap-2 justify-center items-center">
                   <CheckIcon className="w-5 h-5" />
-                  <span>Duyệt</span>
+                  <span>Xác nhận</span>
                 </div>
               ),
               onClick: () => onUpdate(2)
+            },
+            {
+              children: () => (
+                <div className="flex gap-2 justify-center items-center">
+                  <TrashIcon className="w-5 h-5" />
+                  <span>Xóa</span>
+                </div>
+              ),
+              onClick: () => onDelete(),
+              severity: 'danger'
             }
           ]
         }}
         actionsInfo={{
+          deleteApi: deletePendingPayslipApi,
           onViewDetail: (item) => setOpen(item._id),
           moreActions: [
             {

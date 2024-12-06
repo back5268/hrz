@@ -137,7 +137,8 @@ export class Salary {
     const officialSalary =
       Math.round((day.holiday + day.nomal + day.ot) * monneyOfDay) - soonLates.reduce((a, b) => a + roundNumber(b.summary) || 0, 0);
     const mandatoryAmount = bhxh + bhyt + bhtn + unionDues;
-    const pretaxIncome = officialSalary - mandatoryAmount;
+    let pretaxIncome = officialSalary - mandatoryAmount;
+    pretaxIncome = pretaxIncome < 0 ? 0 : pretaxIncome
     const rates = this.taxSetup.taxs;
     const totalTax = pretaxIncome - this.taxSetup?.self - this.taxSetup?.dependent * this.dependent;
     const tax = {
@@ -177,6 +178,8 @@ export class Salary {
       tax,
       summary: pretaxIncome - tax.summary
     };
+    console.log(params);
+    
     await createSalaryMd(params);
     return { status: true };
   }

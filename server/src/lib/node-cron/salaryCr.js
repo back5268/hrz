@@ -4,7 +4,7 @@ import { Salary } from '@service';
 import moment from 'moment';
 import { ioSk } from 'src';
 
-export const salaryQueue = new ArrayRedis('salaryQueue');
+export const salaryQueue = new ArrayRedis('salaryQueuez');
 salaryQueue.callbackCron = async (data) => {
   data.from = moment(data.from).format('YYYY-MM-DD');
   data.to = moment(data.to).format('YYYY-MM-DD');
@@ -38,6 +38,8 @@ salaryQueue.callbackCron = async (data) => {
       ioSk.emit(`notify_${account}`, { data: notify });
       success += 1;
     } else error += 1;
+    await updateSalaryLogMd({ _id: salaryLogId }, { error, success, detail });
+    ioSk.emit('calculateSalary', { time: Date.now() });
   }
   await updateSalaryLogMd({ _id: salaryLogId }, { error, success, detail, status: 2 });
   ioSk.emit('calculateSalary', { time: Date.now() });

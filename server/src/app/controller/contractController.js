@@ -1,18 +1,14 @@
 import { convertHTMLToPDF } from '@lib/puppeteer';
 import { createContractValid, detailContractValid, listContractValid, updateContractValid } from '@lib/validation';
-import { getListBankVietQr } from '@lib/viet-qr';
 import {
   createContractMd,
   deleteContractMd,
-  detailAccountMd,
   detailContractMd,
-  detailTemplateMd,
   listContractMd,
   updateContractMd
 } from '@repository';
-import { previewContractRp } from '@repository';
-import { ghepGiaTri, validateData } from '@utils';
-import moment from 'moment';
+import { previewContractService } from '@service';
+import { validateData } from '@utils';
 
 export const getListContract = async (req, res) => {
   try {
@@ -154,7 +150,7 @@ export const previewContract = async (req, res) => {
     if (!contract) res.json({ status: 0, mess: 'Không tìm thấy hợp đồng!' });
     if (contract.template) return res.json({ status: 1, data: contract.template });
     else {
-      const { data, mess } = await previewContractRp(_id, accountz, contract);
+      const { data, mess } = await previewContractService(_id, accountz, contract);
       if (mess) res.json({ status: 0, mess });
       else res.json({ status: 1, data: data.html });
     }
@@ -171,7 +167,7 @@ export const downloadContract = async (req, res) => {
     const contract = await detailContractMd({ _id, account: accountz });
     if (!contract) res.json({ status: 0, mess: 'Không tìm thấy hợp đồng!' });
     if (!contract.template) {
-      const { data, mess } = await previewContractRp(_id, accountz, contract);
+      const { data, mess } = await previewContractService(_id, accountz, contract);
       if (mess) res.json({ status: 0, mess });
       contract.template = data.html;
     }

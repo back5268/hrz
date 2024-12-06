@@ -44,7 +44,7 @@ export const Template = () => {
         <Columnz header="Loại mẫu thông báo" body={e => Body(templateTypes, e.type)} />
         <Columnz header="Tiêu đề" field="subject" />
         <Columnz header="Mô tả" field="description" />
-        <Columnz header="Thời gian cập nhật" body={e => e.updatedBy ? UserBody(e.updatedAt, e.updatedBy) : ""} />
+        <Columnz header="Thời gian cập nhật" body={e => UserBody(e.updatedAt, e.updatedBy)} />
       </DataTable>
     </FormList>
   );

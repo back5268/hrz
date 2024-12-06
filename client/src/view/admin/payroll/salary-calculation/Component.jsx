@@ -173,7 +173,7 @@ export const Accounts = ({ data = {}, setData = () => {} }) => {
                 severity="danger"
                 outlined
                 onClick={() => setData(data.filter((d) => d._id !== item._id)?.map((d) => d._id))}
-                className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
                 icon={<TrashIcon className="w-5" />}
               />
             </div>

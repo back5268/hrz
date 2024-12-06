@@ -113,14 +113,14 @@ export const Contracts = () => {
                   severity="danger"
                   outlined
                   onClick={() => onCancle(e)}
-                  className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                  className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
                   icon={<XMarkIcon className="w-5" />}
                 />
               )}
               <Buttonz
                 onClick={() => onViewPrint(e)}
                 outlined
-                className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
                 icon={<PrinterIcon className="w-5" />}
               />
               <Buttonz
@@ -131,7 +131,7 @@ export const Contracts = () => {
                   if (response) window.open(response, '_blank');
                 }}
                 outlined
-                className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
                 icon={<ArrowDownTrayIcon className="w-5" />}
               />
             </div>
@@ -144,14 +144,14 @@ export const Contracts = () => {
               <Buttonz
                 onClick={() => setOpen(e._id)}
                 outlined
-                className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
                 icon={<DocumentMagnifyingGlassIcon className="w-6" />}
               />
               <Buttonz
                 severity="danger"
                 outlined
                 onClick={() => onDelete(e)}
-                className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
                 icon={<TrashIcon className="w-5" />}
               />
             </div>

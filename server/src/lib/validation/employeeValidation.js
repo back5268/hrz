@@ -94,7 +94,8 @@ export const createEmployeeValid = {
   birthday: 'date',
   dateIn: 'date',
   contacts: { type: 'json', allowNull: true },
-  dependents: { type: 'json', allowNull: true }
+  dependents: { type: 'json', allowNull: true },
+  numberDayoff: { type: 'number', allowNull: true },
 };
 
 export const changePasswordValid = {

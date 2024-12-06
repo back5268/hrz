@@ -100,7 +100,7 @@ export const Application = ({ _id }) => {
         <Columnz header="Mã NV" body={(e) => Body(accounts, e.account, '_id', 'staffCode')} />
         <Columnz header="Loại đơn" body={(e) => Body(applicationTypes, e.type)} />
         <Columnz header="Lý do tạo đơn" field="reason" />
-        <Columnz header="Thời gian duyệt" body={(e) => (e.updatedBy ? UserBody(e.updatedAt, e.updatedBy) : '')} />
+        <Columnz header="Thời gian duyệt" body={(e) => UserBody(e.updatedAt, e.updatedBy)} />
         <Columnz header="Trạng thái" body={(e) => Body(applicationStatus, e.status)} />
       </DataTable>
     </FormList>

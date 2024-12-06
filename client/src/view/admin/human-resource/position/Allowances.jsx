@@ -74,7 +74,7 @@ export const Allowances = (props) => {
                 severity="danger"
                 outlined
                 onClick={() => setData((pre) => pre.filter((p) => p.idz !== item.idz))}
-                className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
                 icon={<TrashIcon className="w-5" />}
               />
             </div>

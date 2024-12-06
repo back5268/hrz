@@ -1,6 +1,13 @@
 import { convertToExcel } from '@lib/excel-js';
 import { convertHTMLToPDF } from '@lib/puppeteer';
-import { detailSalaryValid, exportSalaryValid, handleSalaryValid, listSalaryValid, updateStatusSalaryValid } from '@lib/validation';
+import {
+  deleteSalarysValid,
+  detailSalaryValid,
+  exportSalaryValid,
+  handleSalaryValid,
+  listSalaryValid,
+  updateStatusSalaryValid
+} from '@lib/validation';
 import {
   countSalaryMd,
   createApplicationMd,
@@ -125,6 +132,22 @@ export const deleteSalary = async (req, res) => {
     if (!data) return res.json({ status: 0, mess: 'Phiếu lương không tồn tại!' });
     if (data.status !== 1) return res.json({ status: 0, mess: 'Phiếu lương đã được duyệt không thể xóa!' });
     res.status(201).json({ status: 1, data: await deleteSalaryMd({ _id, status: 1 }) });
+  } catch (error) {
+    res.status(500).json({ status: 0, mess: error.toString() });
+  }
+};
+
+export const deleteSalarys = async (req, res) => {
+  try {
+    const { error, value } = validateData(deleteSalarysValid, req.body);
+    if (error) return res.json({ status: 0, mess: error });
+    const { _ids } = value;
+    for (const _id of _ids) {
+      const data = await detailSalaryMd({ _id });
+      if (!data || data.status !== 1) continue;
+      await deleteSalaryMd({ _id, status: 1 });
+    }
+    res.status(201).json({ status: 1, data: {} });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
   }

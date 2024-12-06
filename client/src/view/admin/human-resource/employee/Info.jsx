@@ -53,7 +53,7 @@ const defaultValues = {
   computerScience: '',
   healthStatus: '',
   pathology: '',
-  numberDayoff: ''
+  numberDayoff: 0
 };
 
 export const Infos = () => {

@@ -32,3 +32,7 @@ export const exportSalaryValid = {
   account: { type: 'string', allowNull: true },
   status: { type: 'number', allowNull: true }
 };
+
+export const deleteSalarysValid = {
+  _ids: 'json'
+};

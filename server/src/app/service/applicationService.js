@@ -23,7 +23,8 @@ import {
   detailTimekeepingMd,
   updateTimekeepingMd,
   deleteSalaryMd,
-  detailAccountMd
+  detailAccountMd,
+  updateAccountMd
 } from '@repository';
 import { validateData, calTime, roundNumber } from '@utils';
 import { ioSk } from 'src';
@@ -33,8 +34,10 @@ export const approveApplication = async (dataz) => {
   const type = dataz.type;
   if (type === 1) {
     const timekeeping = await detailTimekeepingMd({ account: dataz.account, date: dataz.dates?.[0], shift: dataz.shift });
+    const account = await detailAccountMd({ _id: dataz.account });
     if (timekeeping)
       await updateTimekeepingMd({ _id: timekeeping._id }, { $addToSet: { applications: dataz._id }, summary: timekeeping.totalWork });
+    await updateAccountMd({ account: dataz.account }, { numberDayoff: (Number(account.numberDayoff) || 1) - 1 });
   } else if (type === 2)
     await updateTimekeepingMd(
       { account: dataz.account, date: dataz.dates?.[0], shift: dataz.shift },
