@@ -121,7 +121,7 @@ export const checkTimekeepingRp = async (data) => {
   const log = logs[logs.length - 1];
   for (const timekeeping of timekeepings) {
     if (!timekeeping) continue;
-    const checkInTime = timekeeping.checkIn || log.time || time;
+    const checkInTime = timekeeping?.checkIn || log?.time || time;
     const checkOutTime = time;
     await updateTimekeepingMd({ _id: timekeeping._id }, { ...calTimekeeping(timekeeping, checkInTime, checkOutTime) });
   }

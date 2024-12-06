@@ -110,7 +110,7 @@ export const Checking = ({ setResult = () => {}, setLoading = () => {} }) => {
       let address = '',
         status = false;
       if (reponse && !reponse.mess) {
-        // speak('Cảm ơn bạn đã chấm công');
+        speak('Cảm ơn bạn đã chấm công');
         status = 1;
         address = (
           await Location.reverseGeocodeAsync({
@@ -120,7 +120,7 @@ export const Checking = ({ setResult = () => {}, setLoading = () => {} }) => {
         )?.[0];
       } else {
         status = 0;
-        // speak('Chấm công thất bại');
+        speak('Chấm công thất bại');
       }
       setResult((pre) => ({
         ...reponse,

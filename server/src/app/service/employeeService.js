@@ -296,7 +296,7 @@ export const createEmployee = async (req, res) => {
     });
 
     if (req.files?.['avatar']?.length > 0) {
-      const { status, mess } = await registerFace(222, value.fullName, req.files['avatar'][0]);
+      const { status, mess } = await registerFace(data._id, value.fullName, req.files['avatar'][0]);
       if (!status && mess) return res.json({ status: 0, mess });
     }
     if (department) {
