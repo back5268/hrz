@@ -57,7 +57,7 @@ export const PendingPayslip = () => {
   const onPreviewPayslip = async (item) => {
     const response = await previewPendingPayslipApi({ _id: item._id });
     if (response) {
-      window.open(`/pending-payslip/preview/${item._id}`, '_blank');
+      window.open(`/pending-payslip/detail/${item._id}`, '_blank');
     }
   };
 

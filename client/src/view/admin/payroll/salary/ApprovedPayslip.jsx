@@ -42,7 +42,7 @@ export const ApprovedPayslip = () => {
 
   const onPreviewPayslip = async (item) => {
     const response = await previewApprovedPayslipApi({ _id: item._id });
-    if (response) window.open(`/approved-payslip/preview/${item._id}`, '_blank');
+    if (response) window.open(`/approved-payslip/detail/${item._id}`, '_blank');
   };
 
   const downloadPayslip = async (item) => {

@@ -21,7 +21,7 @@ export const Salary = ({ _id }) => {
 
   const onPreviewSalary = async (item) => {
     const response = await previewSalaryApi({ _id: item._id });
-    if (response) window.open(`/salary/preview/${item._id}`, '_blank');
+    if (response) window.open(`/salary/detail/${item._id}`, '_blank');
   };
 
   const downloadSalary = async (item) => {

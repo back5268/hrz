@@ -43,7 +43,7 @@ export const PendingzPayslip = () => {
   const onPreviewPayslip = async (item) => {
     const response = await previewPendingzPayslipApi({ _id: item._id });
     if (response) {
-      window.open(`/pendingz-payslip/preview/${item._id}`, '_blank');
+      window.open(`/pendingz-payslip/detail/${item._id}`, '_blank');
     }
   };
 
