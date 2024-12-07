@@ -41,8 +41,8 @@ export const deleteDepartment = async (req, res) => {
     const { _id } = value;
     const data = await detailDepartmentMd({ _id });
     if (!data) return res.json({ status: 0, mess: 'Phòng ban không tồn tại!' });
-    const accounts = await listAccountMd({ department: _id });
-    if (accounts?.length > 0) res.json({ status: 0, mess: 'Phòng ban đã được thêm nhân viên, không thể xóa!' });
+    const accounts = await listAccountMd({ department: _id, status: 1 });
+    if (accounts?.length > 0) res.json({ status: 0, mess: 'Phòng ban có nhân viên đang làm việc, không thể xóa!' });
     res.status(201).json({ status: 1, data: await deleteDepartmentMd({ _id }) });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });

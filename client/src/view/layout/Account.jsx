@@ -35,7 +35,7 @@ export const Account = (props) => {
                   <label className="inline-block font-medium text-left">Thông tin Làm việc</label>
                   <hr />
                 </div>
-                <DropdownFormz id="type" label="Loại nhân sự (*)" options={employeeTypes} value={data?.type} disabled />
+                <DropdownFormz id="type" label="Loại nhân nhiên (*)" options={employeeTypes} value={data?.type} disabled />
                 <InputFormz id="department" label="Phòng ban (*)" value={data?.department?.name} disabled />
                 <InputFormz id="position" label="Chức vụ (*)" value={data?.position?.name} disabled />
                 <InputFormz id="jobPosition" label="Vị trí công việc (*)" value={data?.jobPosition?.name} disabled />

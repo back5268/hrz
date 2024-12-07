@@ -204,7 +204,7 @@ export const updateEmployee = async (req, res) => {
       const note = [];
       if (type)
         note.push(
-          `Thay đổi loại nhân sự từ ${EmployeeTypes.find((p) => p._id === dataz.type)?.name} thành ${EmployeeTypes.find((p) => p._id === type)?.name}`
+          `Thay đổi loại nhân viên từ ${EmployeeTypes.find((p) => p._id === dataz.type)?.name} thành ${EmployeeTypes.find((p) => p._id === type)?.name}`
         );
       if (department) {
         if (dataz.department?.name) note.push(`Điều chuyển phòng ban từ ${dataz.department?.name} sang ${checkDepartment?.name}`);

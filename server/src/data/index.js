@@ -562,7 +562,7 @@ export const templates = [
   {
     type: 7,
     subject: '[HRZ] - Cảnh báo chấm công!',
-    content: `<p>Hôm nay bạn chưa chấm công vui lòng kiểm tra lại.</p>
+    content: `<p>Ngày $date bạn chưa chấm công vui lòng kiểm tra lại.</p>
             <p>Trân trọng cảm ơn,</p> <br />
             <p>------------------------------------------------------------</p>
             <p>PHẦN MỀM QUẢN LÝ NHÂN SỰ HRZ</p>

@@ -1,5 +1,6 @@
 import { sendMail } from '@lib/node-mailer';
 import { detailTemplateMd } from '@repository';
+import moment from 'moment';
 
 export const replaceFistText = (inputString = '', prefix = '\\$') => {
   const regex = new RegExp(`${prefix}\\w+\\s?`, 'g');
@@ -32,5 +33,5 @@ export const sendMailForgotPassword = ({ to, username, otp }) => {
 };
 
 export const sendMailWarningTimekeeping = ({ to }) => {
-  return sendMailUse({ to, type: 7 });
+  return sendMailUse({ to, type: 7, params: { $date: moment().format('DD/MM/YYYY') } });
 };

@@ -165,9 +165,21 @@ export const Infos = () => {
                   <InputFormz id="email" label="Email (*)" value={watch('email')} errors={errors} register={register} />
                   <InputFormz id="phone" label="Số điện thoại (*)" value={watch('phone')} errors={errors} register={register} />
                   <CalendarFormz id="birthday" label="Ngày sinh (*)" value={watch('birthday')} errors={errors} register={register} />
-                  <InputFormz id="cmt" label="Chứng minh thư (*)" value={watch('cmt')} errors={errors} register={register} />
-                  <CalendarFormz id="dateOfIssue" label="Ngày Cấp (*)" value={watch('dateOfIssue')} errors={errors} register={register} />
-                  <InputFormz id="placeOfIssue" label="Nơi cấp (*)" value={watch('placeOfIssue')} errors={errors} register={register} />
+                  <InputFormz id="cmt" label="CMTND/CCCD/Thẻ căn cước (*)" value={watch('cmt')} errors={errors} register={register} />
+                  <CalendarFormz
+                    id="dateOfIssue"
+                    label="Ngày Cấp CMTND/CCCD/Thẻ căn cước (*)"
+                    value={watch('dateOfIssue')}
+                    errors={errors}
+                    register={register}
+                  />
+                  <InputFormz
+                    id="placeOfIssue"
+                    label="Nơi cấp CMTND/CCCD/Thẻ căn cước (*)"
+                    value={watch('placeOfIssue')}
+                    errors={errors}
+                    register={register}
+                  />
                   <InputFormz id="address" label="Địa chỉ thường trú (*)" value={watch('address')} errors={errors} register={register} />
                   <div className="w-full lg:w-1/2 px-2">
                     <MultiRadio
@@ -183,17 +195,19 @@ export const Infos = () => {
                     <label className="inline-block font-medium text-left">Thông tin Làm việc</label>
                     <hr />
                   </div>
-                  <InputFormz
-                    type="number"
-                    id="numberDayoff"
-                    label="Số ngày nghỉ phép còn lại (*)"
-                    value={watch('numberDayoff')}
-                    errors={errors}
-                    register={register}
-                  />
+                  {Boolean(_id) && (
+                    <InputFormz
+                      type="number"
+                      id="numberDayoff"
+                      label="Số ngày nghỉ phép còn lại (*)"
+                      value={watch('numberDayoff')}
+                      errors={errors}
+                      register={register}
+                    />
+                  )}
                   <DropdownFormz
                     id="type"
-                    label="Loại nhân sự (*)"
+                    label="Loại nhân viên (*)"
                     options={employeeTypes}
                     value={watch('type')}
                     errors={errors}
@@ -202,7 +216,7 @@ export const Infos = () => {
                   <DropdownFormz
                     id="department"
                     label="Phòng ban (*)"
-                    options={departments}
+                    options={departments?.filter((d) => d.status)}
                     value={watch('department')}
                     errors={errors}
                     onChange={(e) => setValue('department', e.target.value)}
@@ -212,7 +226,7 @@ export const Infos = () => {
                   <DropdownFormz
                     id="position"
                     label="Chức vụ (*)"
-                    options={positions}
+                    options={positions.filter(p => p.status)}
                     value={watch('position')}
                     errors={errors}
                     onChange={(e) => setValue('position', e.target.value)}
@@ -222,7 +236,7 @@ export const Infos = () => {
                   <DropdownFormz
                     id="jobPosition"
                     label="Vị trí công việc (*)"
-                    options={jobPositions}
+                    options={jobPositions.filter(j => j.status)}
                     value={watch('jobPosition')}
                     errors={errors}
                     onChange={(e) => setValue('jobPosition', e.target.value)}

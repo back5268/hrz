@@ -2,7 +2,10 @@ import { uploadFileToFirebase } from '@lib/firebase';
 import puppeteer from 'puppeteer';
 
 export const convertHTMLToPDF = async (html) => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    executablePath: '/usr/bin/microsoft-edge', // Đường dẫn tới Microsoft Edge
+    args: ['--no-sandbox'] // Tùy chọn để chạy mà không cần sandbox
+  });
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: 'networkidle0' });
   const pdfBuffer = await page.pdf({

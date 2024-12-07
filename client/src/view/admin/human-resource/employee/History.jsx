@@ -25,7 +25,7 @@ export const History = () => {
           const dataz = item.after;
           if (check) {
             note = [
-              `Loại nhân sự: ${employeeTypes.find((p) => p._id === dataz.type)?.name}`,
+              `Loại nhân viên: ${employeeTypes.find((p) => p._id === dataz.type)?.name}`,
               `Lương cơ bản: ${formatNumber(dataz.salary)} VNĐ`
             ];
           }
