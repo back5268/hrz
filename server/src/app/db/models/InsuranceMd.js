@@ -12,12 +12,13 @@ InsuranceMd.init('Insurance', {
   dependents: [
     {
       fullName: String,
-      gender: { type: Number, enum: [1, 2, 3], description: '1: Nam, 2: Nữ, 3: Khác' },
+      taxCode: { type: String },
       birthday: Date,
       phone: String,
       cmt: String,
-      address: String,
-      relation: { type: Number, enum: [1, 2, 3, 4, 5], description: '1: Vợ/Chồng, 2: Con, 3: Bố/Mẹ, 4: Anh/Chị/Em, 5: Khác' }
+      relation: { type: Number, enum: [1, 2, 3, 4, 5], description: '1: Vợ/Chồng, 2: Con, 3: Bố/Mẹ, 4: Anh/Chị/Em, 5: Khác' },
+      start: String,
+      end: String,
     }
   ],
   deletedAt: { type: Date }

@@ -226,7 +226,7 @@ export const updateEmployee = async (req, res) => {
     }
 
     if (department) {
-      await deleteTimekeepingMd({ department: dataz?.department?._id, date: { $gt: new Date() } });
+      await deleteTimekeepingMd({ account: _id, department: dataz?.department?._id, date: { $gt: new Date() } });
       const shifts = await listShiftMd({ departments: { $elemMatch: { $eq: department } } });
       if (shifts?.length > 0) {
         for (const shift of shifts) {
@@ -237,6 +237,8 @@ export const updateEmployee = async (req, res) => {
 
     res.status(201).json({ status: 1, data });
   } catch (error) {
+    console.log(error);
+    
     res.status(500).json({ status: 0, mess: error.toString() });
   }
 };

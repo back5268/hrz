@@ -17,6 +17,7 @@ export const personnelTypes = [
 ];
 
 export const dateData = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
+
 export const days = [
   { name: 'Chủ nhật', _id: 'su' },
   { name: 'Thứ 2', _id: 'mo' },
@@ -25,4 +26,11 @@ export const days = [
   { name: 'Thứ 5', _id: 'th' },
   { name: 'Thứ 6', _id: 'fr' },
   { name: 'Thứ 7', _id: 'sa' }
+];
+
+export const salaryStatus = [
+  { name: 'Chờ xác nhận', _id: 1, severity: 'warning' },
+  { name: 'Chờ trưởng phòng duyệt', _id: 2, severity: 'info' },
+  { name: 'Chờ giám đốc duyệt', _id: 3, severity: 'success' },
+  { name: 'Đã duyệt', _id: 4, severity: 'success' }
 ];

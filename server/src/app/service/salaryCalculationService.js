@@ -1,5 +1,6 @@
 import { createSalaryMd, detailAccountMd, detailInsuranceMd, detailSalaryMd, listTimekeepingMd } from '@repository';
 import { roundNumber } from '@utils';
+import moment from 'moment';
 
 export const calSoonlate = (soonLates, soonLateConfigs, monneyOfDay) => {
   let monney = 0;
@@ -19,9 +20,9 @@ export const calTax = (taxSetup, { pretaxIncome, dependent }) => {
   taxSetup.taxs.forEach((r) => {
     if (totalTax > 0 && r.from * 1000000 <= totalTax && r.to * 1000000 >= totalTax) {
       summary = (totalTax * r.value) / 100;
-    } else summary = (totalTax * (taxSetup.taxs?.[taxSetup.taxs.length - 1]?.value)) / 100;
+    } else summary = (totalTax * taxSetup.taxs?.[taxSetup.taxs.length - 1]?.value) / 100;
   });
-  summary = summary < 0 ? 0 : summary
+  summary = summary < 0 ? 0 : summary;
   return summary;
 };
 
@@ -43,7 +44,9 @@ export class Salary {
     this.account = await detailAccountMd({ _id: this.accountId }, [{ path: 'position', select: 'allowances' }]);
     this.baseSalary = this.account?.salary;
     this.allowances = this.account?.position?.allowances;
-    this.dependent = (await detailInsuranceMd({ account: this.accountId }))?.dependents?.length || 0;
+    const dependents = (await detailInsuranceMd({ account: this.accountId }))?.dependents;
+    const day = moment().format('YYYY-MM-DD');
+    this.dependent = dependents?.filter((d) => day >= d.start && day <= d.end)?.length || 0;
     this.timekeepings = await listTimekeepingMd({ account: this.accountId, date: { $gte: this.from, $lte: this.to } }, false, false, [
       { path: 'applications', select: 'type' }
     ]);
@@ -100,7 +103,8 @@ export class Salary {
       }
     });
     const numberDay = day.nomal;
-    let allowanceAmount = 0;
+    const monneyOfDay = this.baseSalary / salaryCoefficient;
+
     const bonuses = [];
     this.bonuses.forEach((b) => {
       bonuses.push({ name: b.name, summary: Math.round(b.type === 1 ? b.value : (b.value * this.baseSalary) / 100) });
@@ -108,22 +112,21 @@ export class Salary {
     const allowances = [];
     this.allowances.forEach((a) => {
       const summary = Math.round(a.type === 1 ? a.amount : (a.amount / salaryCoefficient) * numberDay);
-      allowanceAmount += summary;
       allowances.push({
         name: a.name,
         value: a.amount,
         type: a.type,
+        isTax: a.isTax,
         summary
       });
     });
-    const bonusAmount = bonuses.reduce((a, b) => a + roundNumber(b.summary) || 0, 0);
-    if (bonusAmount > 0) allowances.push({ name: 'Thưởng', summary: bonusAmount });
-    const monneyOfDay = this.baseSalary / salaryCoefficient;
+
     const mandatoryz = this.salarySetup.mandatory;
     const bhxh = Math.round((this.baseSalary * mandatoryz.bhxh) / 100);
     const bhyt = Math.round((this.baseSalary * mandatoryz.bhyt) / 100);
     const bhtn = Math.round((this.baseSalary * mandatoryz.bhtn) / 100);
     const unionDues = Math.round((this.baseSalary * mandatoryz.unionDues) / 100);
+
     const soonLateConfigs = this.salarySetup.soonLate || [];
     if (soonLateConfigs?.length > 0) {
       soonLates.forEach((s) => {
@@ -134,11 +137,21 @@ export class Salary {
         } else s.summary = 0;
       });
     } else soonLates = soonLates.map((s) => ({ ...s, summary: 0 }));
-    const officialSalary =
-      Math.round((day.holiday + day.nomal + day.ot) * monneyOfDay) - soonLates.reduce((a, b) => a + roundNumber(b.summary) || 0, 0);
+
+    const officialSalary = Math.round((day.holiday + day.nomal + day.ot) * monneyOfDay);
+    const officialSalaryz =
+      officialSalary +
+      allowances.reduce((a, b) => a + roundNumber(b.summary) || 0, 0) +
+      bonuses.reduce((a, b) => a + roundNumber(b.summary) || 0, 0) -
+      soonLates.reduce((a, b) => a + roundNumber(b.summary) || 0, 0);
     const mandatoryAmount = bhxh + bhyt + bhtn + unionDues;
-    let pretaxIncome = officialSalary - mandatoryAmount;
-    pretaxIncome = pretaxIncome < 0 ? 0 : pretaxIncome
+    let pretaxIncome =
+      officialSalaryz -
+      allowances.reduce((a, b) => {
+        if (!b.isTax) return (a += b.summary);
+        else return (a += 0);
+      }, 0) - mandatoryAmount + unionDues;
+    pretaxIncome = pretaxIncome < 0 ? 0 : pretaxIncome;
     const rates = this.taxSetup.taxs;
     const totalTax = pretaxIncome - this.taxSetup?.self - this.taxSetup?.dependent * this.dependent;
     const tax = {
@@ -148,12 +161,19 @@ export class Salary {
       rate: 0,
       summary: 0
     };
-    rates.forEach((r) => {
-      if (totalTax > 0 && r.from * 1000000 <= totalTax && r.to * 1000000 >= totalTax) {
-        tax.rate = r.value;
-        tax.summary = (totalTax * r.value) / 100;
-      }
-    });
+    if (totalTax > 0) {
+      const rateIndex = rates.findIndex((r) => r.from * 1000000 <= totalTax && r.to * 1000000 >= totalTax);
+      if (rateIndex >= 0) {
+        tax.rate = rates[rateIndex].value;
+        rates.forEach((r, index) => {
+          if (index < rateIndex) {
+            tax.summary += r.value * (r.to - r.from) * 10000;
+          } else if (index === rateIndex) {
+            tax.summary += r.value * (totalTax - r.from * 1000000) / 100;
+          }
+        });
+      } else return { status: 0, mess: 'Thu nhập tính thuế không nằm trong khoảng thiết lập hệ số thuế!' };
+    }
     const params = {
       by: this.by,
       department: this.account?.department?._id,
@@ -176,10 +196,8 @@ export class Salary {
       bonuses,
       pretaxIncome,
       tax,
-      summary: pretaxIncome - tax.summary
+      summary: officialSalaryz - mandatoryAmount - tax.summary
     };
-    console.log(params);
-    
     await createSalaryMd(params);
     return { status: true };
   }

@@ -18,6 +18,7 @@ export const previewSalaryService = async (_id, dataz) => {
   const tbody2 = tbodys[1];
   let newBody2 = '';
   const allowances = data.allowances;
+  const bonuses = data.bonuses;
   newBody2 += tbody2.querySelectorAll('tr')[0].outerHTML;
   allowances?.forEach((allowance, index) => {
     const content = tbody2.querySelectorAll('tr')[1].outerHTML;
@@ -27,6 +28,20 @@ export const previewSalaryService = async (_id, dataz) => {
         params: {
           $stt: `B.${index + 1}`,
           $ten_phu_cap: allowance.name + (!allowance.type ? '' : ` (${allowance.type === 1 ? 'Theo tháng' : 'Theo ngày công thực tế'})`),
+          $so_tien_phu_cap: formatNumber(allowance.summary)
+        },
+        content
+      })
+    );
+  });
+  bonuses?.forEach((allowance, index) => {
+    const content = tbody2.querySelectorAll('tr')[1].outerHTML;
+    allowanceAmount += allowance.summary;
+    newBody2 += replaceFistText(
+      ghepGiaTri({
+        params: {
+          $stt: `B.${index + 1 + (allowances.length || 0)}`,
+          $ten_phu_cap: allowance.name,
           $so_tien_phu_cap: formatNumber(allowance.summary)
         },
         content

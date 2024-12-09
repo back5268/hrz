@@ -51,7 +51,9 @@ export const Detail = (props) => {
               <hr />
               <div className="w-full mt-4 flex justify-between">
                 <label className="inline-block font-medium text-left">Các khoản trợ cấp / Phụ cấp</label>
-                <label className="inline-block font-medium text-left">{formatNumber(item?.allowanceAmount) + ' VNĐ'}</label>
+                <label className="inline-block font-medium text-left">
+                  {formatNumber(item?.allowances?.reduce((a, b) => a + b.summary, 0)) + ' VNĐ'}
+                </label>
               </div>
               <hr />
               <Tablez

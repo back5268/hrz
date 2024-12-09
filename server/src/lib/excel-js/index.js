@@ -105,9 +105,9 @@ export const convertToExcel = (data, options = {}) => {
 export const fitToColumn = (arrayOfArray, fromRow = 0) => {
   const result = [];
   Object.keys(arrayOfArray[fromRow]).map((value) => {
-    const item = [String(value).length * 1.25];
+    const item = [String(value).length];
     arrayOfArray.forEach((a, index) => {
-      if (index >= fromRow && a[value]) item.push(String(a[value]).length * 1.25);
+      if (index >= fromRow && a[value]) item.push(String(a[value]).length);
     });
     result.push(Math.max(...item));
   });

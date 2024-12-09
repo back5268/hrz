@@ -1,19 +1,19 @@
-const { createApplicationAdminService } = require("@service");
+const { createApplicationAdminService } = require('@service');
 
 describe('Application Service', () => {
   describe('createApplicationAdminService', () => {
     test('Tạo đơn thành công', async () => {
       const result = await createApplicationAdminService({
         body: {
-          shift: '67335af9abaf908c6e963e19',
-          type: 1,
-          reason: 'Test',
-          department: '6731bfbe64fba69397682ad3',
-          account: '67348acac5d37f058aebd17f',
-          dates: JSON.stringify(['2024-12-11'])
+          shift: '674c59660aadb53127af9529',
+          type: 2,
+          reason: 'ốm',
+          department: '674c56605fc02e2f8b4a455f',
+          account: '674c58ec0aadb53127af947f',
+          dates: JSON.stringify(['2024-12-10'])
         },
         account: {
-          _id: '673aa7f53754bf69d8f3ab97'
+          _id: '674c565b5fc02e2f8b4a453a'
         }
       });
       expect(typeof result).toBe('object');
@@ -23,15 +23,15 @@ describe('Application Service', () => {
       await expect(
         createApplicationAdminService({
           body: {
-            shift: '67335af9abaf908c6e963e19z',
-            type: 1,
-            reason: 'Test',
-            department: '6731bfbe64fba69397682ad3',
-            account: '67348acac5d37f058aebd17f',
-            dates: JSON.stringify(['2024-12-11'])
+            shift: '674c59660aadb53127af9522',
+            type: 2,
+            reason: 'ốm',
+            department: '674c56605fc02e2f8b4a455f',
+            account: '674c58ec0aadb53127af947f',
+            dates: JSON.stringify(['2024-12-10'])
           },
           account: {
-            _id: '673aa7f53754bf69d8f3ab97'
+            _id: '674c565b5fc02e2f8b4a453a'
           }
         })
       ).rejects.toThrow('Ca làm việc không tồn tại!');
@@ -41,18 +41,54 @@ describe('Application Service', () => {
       await expect(
         createApplicationAdminService({
           body: {
-            shift: '67335af9abaf908c6e963e19',
-            type: 1,
-            reason: 'Test',
-            department: '6731bfbe64fba69397682ad3',
-            account: '67348acac5d37f058aebd17f',
-            dates: JSON.stringify(['2024-12-11'])
+            shift: '674c59660aadb53127af9529',
+            type: 2,
+            reason: 'ốm',
+            department: '674c56605fc02e2f8b4a455f',
+            account: '674c58ec0aadb53127af947f',
+            dates: JSON.stringify(['2024-12-15'])
           },
           account: {
-            _id: '673aa7f53754bf69d8f3ab97'
+            _id: '674c565b5fc02e2f8b4a453a'
           }
         })
       ).rejects.toThrow('Không có lịch làm việc trong thời gian đã chọn!');
+    });
+
+    test('Nhân sự này đã dùng hết số ngày nghỉ phép năm!', async () => {
+      await expect(
+        createApplicationAdminService({
+          body: {
+            shift: '674c59660aadb53127af9529',
+            type: 1,
+            reason: 'ốm',
+            department: '674c56605fc02e2f8b4a455f',
+            account: '674c58ec0aadb53127af947f',
+            dates: JSON.stringify(['2024-12-10'])
+          },
+          account: {
+            _id: '674c565b5fc02e2f8b4a453a'
+          }
+        })
+      ).rejects.toThrow('Nhân sự này đã dùng hết số ngày nghỉ phép năm!');
+    });
+
+    test('Không tìm thấy nhân viên!', async () => {
+      await expect(
+        createApplicationAdminService({
+          body: {
+            shift: '674c59660aadb53127af9529',
+            type: 1,
+            reason: 'ốm',
+            department: '674c56605fc02e2f8b4a455f',
+            account: '674c565b5fc02e2f8b4a453b',
+            dates: JSON.stringify(['2024-12-10'])
+          },
+          account: {
+            _id: '674c565b5fc02e2f8b4a453a'
+          }
+        })
+      ).rejects.toThrow('Không tìm thấy nhân viên!');
     });
   });
 });

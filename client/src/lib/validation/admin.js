@@ -12,8 +12,8 @@ export const JobPositionValidation = yup.object({
 });
 
 export const DepartmentValidation = yup.object({
-  name: yup.string().required('Tên công việc không được bỏ trống!'),
-  code: yup.string().required('Mã công việc không được bỏ trống!')
+  name: yup.string().required('Tên phòng ban không được bỏ trống!'),
+  code: yup.string().required('Mã phòng ban không được bỏ trống!')
 });
 
 export const EmployeeValidation = yup.object({

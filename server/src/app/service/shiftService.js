@@ -51,7 +51,7 @@ export const createTimekeepingByAccount = async (account, shift) => {
       index += 1;
       const day = dateData[new Date(date).getDay()] || '';
       const dates = shift.dates;
-      const info = dates.find((d) => d.date === day);
+      const info = dates?.find((d) => d.date === day);
       if (!day || !info) continue;
       const params = {
         department: account.department,

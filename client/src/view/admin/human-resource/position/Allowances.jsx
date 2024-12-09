@@ -1,4 +1,4 @@
-import { Buttonz, Columnz, Tablez } from '@components/core';
+import { Buttonz, CheckBoxz, Columnz, Tablez } from '@components/core';
 import { allowanceTypes } from '@constant';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Dropdown } from 'primereact/dropdown';
@@ -26,7 +26,9 @@ export const Allowances = (props) => {
       <div className="flex justify-between mb-4 items-center">
         <label className="inline-block font-medium text-left">Các khoản trợ cấp</label>
         <Buttonz
-          onClick={() => setData((pre) => [...pre, { idz: (Number(data[data?.length - 1]?.idz) || 0) + 1, name: '', amount: '', type: 1 }])}
+          onClick={() =>
+            setData((pre) => [...pre, { idz: (Number(data[data?.length - 1]?.idz) || 0) + 1, name: '', amount: '', type: 1, isTax: true }])
+          }
           label="Thêm Khoản trợ cấp"
         />
       </div>
@@ -48,7 +50,7 @@ export const Allowances = (props) => {
         <Columnz
           header="Giá trị trợ cấp (VNĐ)"
           body={(item) => (
-              <InputText type="number" value={item.amount} onChange={(e) => onChange(item, 'amount', e.target.value)} className="w-full" />
+            <InputText type="number" value={item.amount} onChange={(e) => onChange(item, 'amount', e.target.value)} className="w-full" />
           )}
         />
         <Columnz
@@ -63,6 +65,20 @@ export const Allowances = (props) => {
               optionLabel="name"
               optionValue="_id"
               className="w-full"
+            />
+          )}
+        />
+        <Columnz
+          header="Trạng thái tính thuế"
+          headerStyle={{ minWidth: '10rem' }}
+          bodyStyle={{ minWidth: '10rem' }}
+          body={(item) => (
+            <CheckBoxz
+              checked={item.isTax}
+              onChange={() => {
+                if (item.isTax) onChange(item, 'isTax', false);
+                else onChange(item, 'isTax', true);
+              }}
             />
           )}
         />

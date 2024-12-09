@@ -3,6 +3,7 @@ import {
   detailSalary,
   downloadSalary,
   exportSalary,
+  exportSummarySalary,
   getListSalary,
   previewSalary,
   updateStatusSalary
@@ -18,3 +19,4 @@ salaryRouter.delete('/deleteSalary', deleteSalary);
 salaryRouter.put('/updateStatusSalary', updateStatusSalary);
 salaryRouter.get('/download', downloadSalary);
 salaryRouter.get('/exportSalary', exportSalary);
+salaryRouter.get('/exportSummarySalary', exportSummarySalary);

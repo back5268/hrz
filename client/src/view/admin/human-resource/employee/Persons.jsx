@@ -1,6 +1,7 @@
 import { Buttonz, Columnz, Inputz, Tablez } from '@components/core';
 import { relations } from '@constant';
 import { TrashIcon } from '@heroicons/react/24/outline';
+import { databaseDate } from '@lib/helper';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
@@ -27,7 +28,9 @@ export const Contacts = (props) => {
       <div className="flex justify-between mb-4 items-center">
         <label className="inline-block font-medium text-left">Liên hệ trong trường hợp khẩn cấp</label>
         <Buttonz
-          onClick={() => setData((pre) => [...pre, { idz: (Number(data[data?.length - 1]?.idz) || 0) + 1, fullName: '', phone: '', address: '' }])}
+          onClick={() =>
+            setData((pre) => [...pre, { idz: (Number(data[data?.length - 1]?.idz) || 0) + 1, fullName: '', phone: '', address: '' }])
+          }
           label="Thêm người liên hệ"
         />
       </div>
@@ -114,7 +117,9 @@ export const Dependents = (props) => {
       <div className="flex justify-between mb-4 items-center">
         <label className="inline-block font-medium text-left">Thông tin người phụ thuộc</label>
         <Buttonz
-          onClick={() => setData((pre) => [...pre, { idz: (Number(data[data?.length - 1]?.idz) || 0) + 1, fullName: '', cmt: '', phone: '' }])}
+          onClick={() =>
+            setData((pre) => [...pre, { idz: (Number(data[data?.length - 1]?.idz) || 0) + 1, fullName: '', cmt: '', phone: '' }])
+          }
           label="Thêm người phụ thuộc"
         />
       </div>
@@ -136,6 +141,10 @@ export const Dependents = (props) => {
           )}
         />
         <Columnz
+          header="Mã số thuế"
+          body={(item) => <InputText value={item.taxCode} onChange={(e) => onChange(item, 'taxCode', e.target.value)} className="w-full" />}
+        />
+        <Columnz
           header="Số điện thoại"
           body={(item) => (
             <InputText type="number" value={item.phone} onChange={(e) => onChange(item, 'phone', e.target.value)} className="w-full" />
@@ -144,17 +153,29 @@ export const Dependents = (props) => {
         <Columnz
           header="Ngày sinh"
           body={(item) => (
-            <Calendar value={new Date(item.birthday)} onChange={(e) => onChange(item, 'birthday', e.target.value)} className="w-full" />
+            <Calendar value={new Date(item.birthday)} onChange={(e) => onChange(item, 'birthday', databaseDate(e.target.value, 'date'))} className="w-full" />
           )}
         />
         <Columnz
-          header="CMTND/CCCD"
+          header="CMTND/CCCD/Thẻ căn cước"
           body={(item) => (
-            <InputText type="number" value={item.cmt} onChange={(e) => onChange(item, 'cmt', e.target.value)} className="w-full" />
+            <InputText type="number" value={item.cmt} onChange={(e) => onChange(item, 'cmt', databaseDate(e.target.value, 'date'))} className="w-full" />
           )}
         />
         <Columnz
-          header="Quan hệ"
+          header="Thời điểm bắt đầu tính giảm trừ"
+          body={(item) => (
+            <Calendar value={new Date(item.start)} onChange={(e) => onChange(item, 'start', databaseDate(e.target.value, 'date'))} className="w-full" />
+          )}
+        />
+        <Columnz
+          header="Thời điểm kết thúc tính giảm trừ"
+          body={(item) => (
+            <Calendar value={new Date(item.end)} onChange={(e) => onChange(item, 'end', e.target.value)} className="w-full" />
+          )}
+        />
+        <Columnz
+          header="Quan hệ với người nộp thuế"
           headerStyle={{ minWidth: '10rem' }}
           bodyStyle={{ minWidth: '10rem' }}
           body={(item) => (

@@ -170,8 +170,12 @@ export const PendingPayslip = () => {
           )}
         />
         <Columnz header="Lương theo ngày công" body={(e) => formatNumber(e.officialSalary)} />
-        <Columnz header="Trợ cấp/ Phụ cấp" body={(e) => formatNumber(e.allowances?.reduce((a, b) => a + b.summary, 0))} />
-        <Columnz header="Các khoản trừ" body={(e) => formatNumber(e.mandatoryAmount)} />
+        <Columnz
+          header="Tổng phụ cấp, thu nhập phát sinh"
+          body={(e) => formatNumber(e.allowances?.reduce((a, b) => a + b.summary, 0) + e.bonuses?.reduce((a, b) => a + b.summary, 0))}
+        />
+        <Columnz header="Phạt đi muộn về sớm" body={(e) => formatNumber(e.soonLates?.reduce((a, b) => a + b.summary, 0))} />
+        <Columnz header="Các khoản trừ bắt buộc" body={(e) => formatNumber(e.mandatoryAmount)} />
         <Columnz header="Thuế thu nhập" body={(e) => formatNumber(e.tax.summary)} />
         <Columnz header="Lương thực nhận" body={(e) => formatNumber(e.summary)} />
         <Columnz header="Trạng thái" body={(e) => Body(salaryStatus, e.status)} />

@@ -1,11 +1,11 @@
-import { getListMonthInfoApi, getListSalaryApi, previewSalaryApi, downloadSalaryApi, exportSalaryApi } from '@api';
+import { getListMonthInfoApi, getListSalaryApi, previewSalaryApi, downloadSalaryApi, exportSalaryApi, exportSummarySalaryApi } from '@api';
 import { DataTable, FormList, DataFilter, Body } from '@components/base';
 import { Columnz, Dropdownzz } from '@components/core';
 import { useGetParams } from '@hooks';
 import { useGetApi } from '@lib/react-query';
 import React, { useState } from 'react';
 import { Detail } from './Detail';
-import { useDataState } from '@store';
+import { useDataState, useToastState } from '@store';
 import { formatDate, formatNumber } from '@lib/helper';
 import { ArrowDownTrayIcon, PrinterIcon } from '@heroicons/react/24/outline';
 import { salaryStatus } from '@constant';
@@ -16,8 +16,10 @@ export const Salary = ({ _id }) => {
   const [filter, setFilter] = useState({});
   const [open, setOpen] = useState(false);
   const { isLoading, data } = useGetApi(getListSalaryApi, { account: _id, ...params }, 'salary');
+  const [loading, setLoading] = useState(false);
   const { data: months } = useGetApi(getListMonthInfoApi, params, 'months');
   const { departments, accounts } = useDataState();
+  const { showToast } = useToastState();
 
   const onPreviewSalary = async (item) => {
     const response = await previewSalaryApi({ _id: item._id });
@@ -27,6 +29,19 @@ export const Salary = ({ _id }) => {
   const downloadSalary = async (item) => {
     const response = await downloadSalaryApi({ _id: item._id });
     if (response) window.open(response, '_blank');
+  };
+
+  const onExport = async () => {
+    setLoading(true);
+    const response = await exportSummarySalaryApi({ ...params, page: undefined, limit: undefined });
+    setLoading(false);
+    if (response) {
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(response);
+      downloadLink.download = 'phieu_luong_chi_tiet.xlsx';
+      downloadLink.click();
+      showToast({ title: `Export chi tiết thành công!`, severity: 'success' });
+    }
   };
 
   return (
@@ -71,14 +86,27 @@ export const Salary = ({ _id }) => {
       <DataTable
         hideParams={_id}
         title="phiếu lương"
-        loading={isLoading}
+        loading={isLoading || loading}
         data={data?.documents}
         total={data?.total}
         params={params}
         setParams={setParams}
         baseActions={['detail', 'export']}
         setShow={setOpen}
-        headerInfo={{ exportApi: exportSalaryApi }}
+        headerInfo={{
+          exportApi: exportSalaryApi,
+          moreHeader: [
+            {
+              children: () => (
+                <div className="flex gap-2 justify-center items-center">
+                  <ArrowDownTrayIcon className="w-5 h-5 stroke-2" />
+                  <span>Báo cáo chi tiết</span>
+                </div>
+              ),
+              onClick: () => onExport()
+            }
+          ]
+        }}
         actionsInfo={{
           onViewDetail: (item) => setOpen(item._id),
           moreActions: [
@@ -119,8 +147,12 @@ export const Salary = ({ _id }) => {
           )}
         />
         <Columnz header="Lương theo ngày công" body={(e) => formatNumber(e.officialSalary)} />
-        <Columnz header="Trợ cấp/ Phụ cấp" body={(e) => formatNumber(e.allowances?.reduce((a, b) => a + b.summary, 0))} />
-        <Columnz header="Các khoản trừ" body={(e) => formatNumber(e.mandatoryAmount)} />
+        <Columnz
+          header="Tổng phụ cấp, thu nhập phát sinh"
+          body={(e) => formatNumber(e.allowances?.reduce((a, b) => a + b.summary, 0) + e.bonuses?.reduce((a, b) => a + b.summary, 0))}
+        />
+        <Columnz header="Phạt đi muộn về sớm" body={(e) => formatNumber(e.soonLates?.reduce((a, b) => a + b.summary, 0))} />
+        <Columnz header="Các khoản trừ bắt buộc" body={(e) => formatNumber(e.mandatoryAmount)} />
         <Columnz header="Thuế thu nhập" body={(e) => formatNumber(e.tax.summary)} />
         <Columnz header="Lương thực nhận" body={(e) => formatNumber(e.summary)} />
         <Columnz header="Trạng thái" body={(e) => Body(salaryStatus, e.status)} />

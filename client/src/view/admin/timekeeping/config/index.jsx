@@ -5,6 +5,7 @@ import { useToastState } from '@store';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { TrashIcon } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
 
 const getTimeWarning = () => {
   const times = [];
@@ -146,12 +147,16 @@ export const TimekeepingConfig = () => {
                 <div className="p-2">
                   <div className="flex justify-between items-center">
                     <label className="inline-block font-medium text-left mb-2">Vị trí chấm công cho phép</label>
-                    <Buttonz
-                      onClick={() => setData((pre) => [...pre, { idz: (pre[pre.length - 1]?.idz || 1) + 1, type: 1 }])}
-                      variant="outlined"
-                      label="Thêm mới"
-                      className="mb-2"
-                    />
+                    <div className="flex gap-2 items-center">
+                      <a href="https://www.latlong.net/" target="_blank">
+                        <Buttonz outlined label="Lấy vị trí" className="mb-2" />
+                      </a>
+                      <Buttonz
+                        onClick={() => setData((pre) => [...pre, { idz: (pre[pre.length - 1]?.idz || 1) + 1, type: 1 }])}
+                        label="Thêm mới"
+                        className="mb-2"
+                      />
+                    </div>
                   </div>
                   <hr />
                 </div>
@@ -180,7 +185,7 @@ export const TimekeepingConfig = () => {
                         onClick={() => setData((pre) => pre.filter((p) => p.idz !== datum.idz))}
                         severity="danger"
                         outlined
-                        className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+                        className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
                         icon={<TrashIcon className="w-5" />}
                       />
                     </div>

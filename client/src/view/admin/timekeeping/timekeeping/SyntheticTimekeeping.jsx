@@ -166,14 +166,14 @@ export const SyntheticTimekeeping = () => {
                 <div className="flex justify-start items-center gap-4">
                   <div className="h-12 w-12">
                     <img
-                      alt={account.fullName}
-                      src={account.avatar || '/images/avatar.jpg'}
+                      alt={account?.fullName}
+                      src={account?.avatar || '/images/avatar.jpg'}
                       className="rounded-md h-12 w-12 object-cover"
                     />
                   </div>
                   <div className="flex flex-col text-left gap-1 text-primary">
-                    <span className="font-semibold">{account.fullName}</span>
-                    <span className="font-semibold">{account.staffCode}</span>
+                    <span className="font-semibold">{account?.fullName}</span>
+                    <span className="font-semibold">{account?.staffCode}</span>
                   </div>
                 </div>
               );

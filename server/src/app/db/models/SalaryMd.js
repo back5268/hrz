@@ -29,16 +29,10 @@ SalaryMd.init('Salary', {
       name: String,
       value: { type: Number, min: 0 },
       type: { type: Number, enum: [1, 2], description: '1: Trợ cấp theo tháng, 2: Trợ cấp theo ngày công' },
-      summary: { type: Number, min: 0 }
+      summary: { type: Number, min: 0 },
+      isTax: Boolean
     }
   ],
-  mandatory: {
-    bhxh: { value: Number, summary: Number },
-    bhyt: { value: Number, summary: Number },
-    bhtn: { value: Number, summary: Number },
-    unionDues: { value: Number, summary: Number }
-  },
-  mandatoryAmount: { type: Number },
   soonLates: [
     {
       date: { type: String, min: 0 },
@@ -52,6 +46,13 @@ SalaryMd.init('Salary', {
       summary: { type: Number, min: 0 }
     }
   ],
+  mandatory: {
+    bhxh: { value: Number, summary: Number },
+    bhyt: { value: Number, summary: Number },
+    bhtn: { value: Number, summary: Number },
+    unionDues: { value: Number, summary: Number }
+  },
+  mandatoryAmount: { type: Number },
   pretaxIncome: { type: Number },
   tax: { self: Number, dependent: { value: Number, quantity: Number }, total: Number, rate: Number, summary: Number },
   summary: { type: Number, min: 0, required: true },

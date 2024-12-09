@@ -4,7 +4,6 @@ import { Infos } from './Info';
 import { History } from './History';
 import { Contracts } from './Contracts';
 import { useParams } from 'react-router-dom';
-import { Application } from '@view/admin/approval';
 import { Salary } from '@view/admin/payroll';
 
 export const DetailEmployee = () => {
@@ -22,9 +21,6 @@ export const DetailEmployee = () => {
           </TabPanel>
           <TabPanel header="Thông tin hợp đồng">
             <Contracts />
-          </TabPanel>
-          <TabPanel header="Đơn từ">
-            <Application _id={_id} />
           </TabPanel>
           <TabPanel header="Phiếu lương">
             <Salary _id={_id} />

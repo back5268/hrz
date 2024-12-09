@@ -146,15 +146,6 @@ export const SalarySetup = (props) => {
                     className="!w-6/12 h-full"
                   />
                 </div>
-                <InputFormz
-                  type="number"
-                  id="salaryCoefficient"
-                  label="Hệ số tính lương (*)"
-                  value={watch('salaryCoefficient')}
-                  errors={errors}
-                  register={register}
-                  className="!w-6/12"
-                />
               </div>
               <div className="w-4/12 flex flex-wrap">
                 <div className="mb-4 w-full mt-4 px-2">

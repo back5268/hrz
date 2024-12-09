@@ -35,7 +35,7 @@ export const SoonLate = ({ data = {}, setData = () => {} }) => {
               onClick={() => setData((pre) => pre.filter((p) => p.idz !== datum.idz))}
               severity="danger"
               outlined
-              className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+              className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
               icon={<TrashIcon className="w-5" />}
             />
           </div>
@@ -107,7 +107,7 @@ export const Taxs = ({ data = {}, setData = () => {} }) => {
               onClick={() => setData((pre) => pre.filter((p) => p.idz !== datum.idz))}
               severity="danger"
               outlined
-              className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+              className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
               icon={<TrashIcon className="w-5" />}
             />
           </div>
@@ -201,7 +201,6 @@ export const Holidays = ({ data = {}, setData = () => {} }) => {
           <label className="inline-block font-medium text-left mb-2">Danh sách ngày lễ</label>
           <Buttonz
             onClick={() => setData((pre) => [...pre, { idz: (pre[pre.length - 1]?.idz || 1) + 1 }])}
-            variant="outlined"
             label="Thêm mới"
             className="mb-2"
           />
@@ -215,7 +214,7 @@ export const Holidays = ({ data = {}, setData = () => {} }) => {
               onClick={() => setData((pre) => pre.filter((p) => p.idz !== datum.idz))}
               severity="danger"
               outlined
-              className="!p-0 h-10 w-10 flex justify-center items-center rounded-full"
+              className="!p-0 h-10 w-10 flex justify-center items-center !rounded-full"
               icon={<TrashIcon className="w-5" />}
             />
           </div>

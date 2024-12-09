@@ -40,7 +40,7 @@ export const detailBonusService = async (req) => {
 export const updateBonusService = async (req) => {
   const { error, value } = validateData(updateBonusValid, req.body);
   if (error) throw new Error(error);
-  let { type, value: valuez } = value;
+  let { _id, type, value: valuez } = value;
   const dataz = await detailBonusMd({ _id });
   if (!dataz) throw new Error('Khoản thưởng không tồn tại!');
   type = type ? type : dataz.type;

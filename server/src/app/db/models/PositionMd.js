@@ -11,7 +11,8 @@ PositionMd.init('Position', {
     {
       name: String,
       amount: Number,
-      type: { type: Number, enum: [1, 2], description: '1: Trợ cấp theo tháng, 2: Trợ cấp theo ngày làm việc thực tế' }
+      type: { type: Number, enum: [1, 2], description: '1: Trợ cấp theo tháng, 2: Trợ cấp theo ngày làm việc thực tế' },
+      isTax: Boolean
     }
   ],
   status: { type: Number, enum: [0, 1], default: 1, description: '0: Đã khóa, 1: Hoạt động' },

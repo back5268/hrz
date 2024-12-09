@@ -6,3 +6,4 @@ export const previewSalaryApi = (params) => getData('/web/salary/previewSalary',
 export const updateStatusSalaryApi = (params) => putData('/web/salary/updateStatusSalary', params);
 export const downloadSalaryApi = (params) => getData('/web/salary/download', params);
 export const exportSalaryApi = (params) => getData('/web/salary/exportSalary', params, true);
+export const exportSummarySalaryApi = (params) => getData('/web/salary/exportSummarySalary', params, true);
