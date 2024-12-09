@@ -1,18 +1,19 @@
-import { getListApplicationApi, getListShiftInfoApi } from '@/api';
-import { Buttonz, Loadingz } from '@/components/core';
+import { getListAccountInfoApi, getListApplicationApi, getListShiftInfoApi } from '@/api';
+import { Loadingz } from '@/components/core';
 import { applicationStatus, applicationTypes } from '@/constants';
 import { formatDate } from '@/lib/helper';
 import { useGetApi } from '@/lib/react-query';
 import { themeColor } from '@/theme';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Dimensions, FlatList, Pressable, Text, View } from 'react-native';
+import { FlatList, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { TabBar, TabView } from 'react-native-tab-view';
 
-const Scene = ({ status, shifts }) => {
+const Application = () => {
   const [render, setRender] = useState(false);
-  const { isLoading, data } = useGetApi(getListApplicationApi, { render, status }, `application${status || ''}`);
+  const { isLoading, data } = useGetApi(getListApplicationApi, { render }, 'application');
+  const { data: shifts } = useGetApi(getListShiftInfoApi, {}, 'shifts');
+  const { data: accounts } = useGetApi(getListAccountInfoApi, {}, 'accounts');
   if (isLoading) return <Loadingz />;
 
   return (
@@ -28,6 +29,7 @@ const Scene = ({ status, shifts }) => {
           const type = applicationTypes.find((a) => a._id === item.type);
           const shift = shifts?.find((s) => s._id === item.shift);
           const status = applicationStatus.find((a) => a._id === item.status);
+          const account = item.updatedBy ? accounts?.find((a) => a._id === item.updatedBy) || {} : {};
           const dates = item.dates;
           const dateTitle =
             dates.length > 1
@@ -52,6 +54,7 @@ const Scene = ({ status, shifts }) => {
                 {item.updatedBy && (
                   <>
                     <Text className="leading-6">Ghi chú duyệt: {item.note}</Text>
+                    <Text className="leading-6">Người duyệt: {account.fullName}</Text>
                     <Text className="leading-6">Thời gian duyệt: {formatDate(item.createdAt)}</Text>
                   </>
                 )}
@@ -64,48 +67,6 @@ const Scene = ({ status, shifts }) => {
         }}
       />
     </SafeAreaView>
-  );
-};
-
-const Application = () => {
-  const { data: shifts } = useGetApi(getListShiftInfoApi, {}, 'shifts');
-  const layout = Dimensions.get('window');
-  const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    { key: 1, title: 'Tất cả', status: 0 },
-    { key: 2, title: 'Chờ duyệt', status: 1 },
-    { key: 3, title: 'Đã duyệt', status: 2 },
-    { key: 4, title: 'Từ chối', status: 3 },
-    { key: 5, title: 'Hủy', status: 4 }
-  ]);
-
-  const renderScene = ({ route }) => {
-    if (!route || !route.key) return null;
-    return <Scene key={route.key} status={route.status} shifts={shifts} />;
-  };
-
-  return (
-    <TabView
-      navigationState={{ index, routes }}
-      renderScene={renderScene}
-      onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
-      renderTabBar={(props) => (
-        <TabBar
-          {...props}
-          scrollEnabled
-          style={{ backgroundColor: themeColor.surfaceVariant, height: 60 }}
-          indicatorStyle={{ backgroundColor: themeColor.outline, height: 4 }}
-          labelStyle={{ color: themeColor.outline, fontWeight: '600' }}
-          tabStyle={{
-            height: 60,
-            justifyContent: 'center',
-            width: 120
-          }}
-          getLabelText={({ route }) => route.title}
-        />
-      )}
-    />
   );
 };
 

@@ -162,8 +162,6 @@ export const updateApplicationService = async (req) => {
   const dataz = await detailApplicationMd({ _id });
   if (!dataz) throw new Error('Đơn không tồn tại!');
   const data = await updateApplicationMd({ _id }, { updatedBy: req.account._id, ...value });
-  console.log(dataz, dataz.type);
-
   if (status === 2) {
     if (dataz.type === 9) {
       if (dataz.month && dataz.account) await deleteSalaryMd({ account: dataz.account, month: dataz.month, status: 1 });

@@ -46,7 +46,7 @@ const Other = () => {
         <View className="flex flex-row items-center justify-start my-16 ml-8">
           <View className="w-20 h-20 rounded-lg flex justify-center items-center">
             <Image
-              source={!userInfo?.avatar ? { uri: userInfo?.avatar } : images.avatar}
+              source={userInfo?.avatar ? { uri: userInfo?.avatar } : images.avatar}
               className="w-full h-full rounded-lg"
               resizeMode="cover"
             />
