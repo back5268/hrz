@@ -5,7 +5,7 @@ const taxSetup = {
   dependent: 4400000,
   taxs: [
     {
-      from: 1,
+      from: 0,
       to: 5,
       value: 5
     },
@@ -42,34 +42,46 @@ const taxSetup = {
   ]
 };
 
+
+
 describe('CalSoonLate', () => {
   test('Tổng lương trước thuế nhỏ hơn giá trị giảm trừ bản thân', () => {
-    const result = calTax(taxSetup, { pretaxIncome: 11000000, dependent: 2 });
+    const result = calTax(taxSetup, { pretaxIncome: 11000000, number: 0 });
     expect(result).toBe(0);
   });
 
-  test('Tổng lương trước thuế bằng giá trị giảm trừ bản thân', () => {
-    const result = calTax(taxSetup, { pretaxIncome: 11000000, dependent: 2 });
-    expect(result).toBe(0);
+  test('Thu nhập đóng thuế mức 1', () => {
+    const result = calTax(taxSetup, { pretaxIncome: 13000000, number: 0 });
+    expect(result).toBe(100000);
   });
 
-  test('Tổng lương trước thuế bằng giá trị giảm trừ bản thân và giảm trừ phụ thuộc', () => {
-    const result = calTax(taxSetup, { pretaxIncome: 11000000 + 2 * 4400000, dependent: 2 });
-    expect(result).toBe(0);
+  test('Thu nhập đóng thuế biên mức 2', () => {
+    const result = calTax(taxSetup, { pretaxIncome: 16000000, number: 0 });
+    expect(result).toBe(250000);
   });
 
-  test('Hệ số thuế mức 1', () => {
-    const result = calTax(taxSetup, { pretaxIncome: 11000000 + 2 * 4400000 + 4000000, dependent: 2 });
-    expect(result).toBe(1400000);
+  test('Thu nhập đóng thuế biên mức 3', () => {
+    const result = calTax(taxSetup, { pretaxIncome: 21000000, number: 0 });
+    expect(result).toBe(750000);
   });
 
-  test('Hệ số thuế mức 3', () => {
-    const result = calTax(taxSetup, { pretaxIncome: 11000000 + 2 * 4400000 + 12000000, dependent: 2 });
-    expect(result).toBe(4200000);
+  test('Thu nhập đóng thuế mức 4', () => {
+    const result = calTax(taxSetup, { pretaxIncome: 31000000, number: 0 });
+    expect(result).toBe(2350000);
   });
 
-  test('Hệ số thuế ngoài mức', () => {
-    const result = calTax(taxSetup, { pretaxIncome: 11000000 + 2 * 4400000 + 10000000000, dependent: 2 });
-    expect(result).toBe(3500000000);
+  test('Thu nhập đóng thuế mức 5', () => {
+    const result = calTax(taxSetup, { pretaxIncome: 63000000, number: 0 });
+    expect(result).toBe(9750000);
+  });
+
+  test('Thu nhập đóng thuế mức 6', () => {
+    const result = calTax(taxSetup, { pretaxIncome: 95400000, number: 1 });
+    expect(result).toBe(18150000);
+  });
+
+  test('Thu nhập đóng thuế mức 7', () => {
+    const result = calTax(taxSetup, { pretaxIncome: 104200000, number: 2 });
+    expect(result).toBe(19690000);
   });
 });

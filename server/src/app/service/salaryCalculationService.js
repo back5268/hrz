@@ -14,15 +14,22 @@ export const calSoonlate = (soonLates, soonLateConfigs, monneyOfDay) => {
   return monney;
 };
 
-export const calTax = (taxSetup, { pretaxIncome, dependent }) => {
-  const totalTax = pretaxIncome - taxSetup?.self - taxSetup?.dependent * dependent;
+export const calTax = (taxSetup, { pretaxIncome, number }) => {
+  const totalTax = pretaxIncome - taxSetup?.self - taxSetup?.dependent * number;
+  const rates = taxSetup.taxs;
   let summary = 0;
-  taxSetup.taxs.forEach((r) => {
-    if (totalTax > 0 && r.from * 1000000 <= totalTax && r.to * 1000000 >= totalTax) {
-      summary = (totalTax * r.value) / 100;
-    } else summary = (totalTax * taxSetup.taxs?.[taxSetup.taxs.length - 1]?.value) / 100;
-  });
-  summary = summary < 0 ? 0 : summary;
+  if (totalTax > 0) {
+    const rateIndex = rates.findIndex((r) => r.from * 1000000 <= totalTax && r.to * 1000000 >= totalTax);
+    if (rateIndex >= 0) {
+      rates.forEach((r, index) => {
+        if (index < rateIndex) {
+          summary += r.value * (r.to - r.from) * 10000;
+        } else if (index === rateIndex) {
+          summary += (r.value * (totalTax - r.from * 1000000)) / 100;
+        }
+      });
+    } else return 'Thu nhập tính thuế không nằm trong khoảng thiết lập hệ số thuế!';
+  }
   return summary;
 };
 
@@ -150,7 +157,9 @@ export class Salary {
       allowances.reduce((a, b) => {
         if (!b.isTax) return (a += b.summary);
         else return (a += 0);
-      }, 0) - mandatoryAmount + unionDues;
+      }, 0) -
+      mandatoryAmount +
+      unionDues;
     pretaxIncome = pretaxIncome < 0 ? 0 : pretaxIncome;
     const rates = this.taxSetup.taxs;
     const totalTax = pretaxIncome - this.taxSetup?.self - this.taxSetup?.dependent * this.dependent;
@@ -169,7 +178,7 @@ export class Salary {
           if (index < rateIndex) {
             tax.summary += r.value * (r.to - r.from) * 10000;
           } else if (index === rateIndex) {
-            tax.summary += r.value * (totalTax - r.from * 1000000) / 100;
+            tax.summary += (r.value * (totalTax - r.from * 1000000)) / 100;
           }
         });
       } else return { status: 0, mess: 'Thu nhập tính thuế không nằm trong khoảng thiết lập hệ số thuế!' };
