@@ -5,7 +5,7 @@ const pdf = require('html-pdf');
 export const convertHTMLToPDF = async (html) => {
   try {
     const pdfFilePath = await new Promise((resolve, reject) => {
-      pdf.create(html, { format: 'A4' }).toFile('./output.pdf', (err, res) => {
+      pdf.create(html, { format: 'A4', border: '12mm' }).toFile('./output.pdf', (err, res) => {
         if (err) return reject(err);
         resolve(res.filename);
       });
@@ -19,8 +19,6 @@ export const convertHTMLToPDF = async (html) => {
     });
 
     fs.unlinkSync(pdfFilePath);
-    console.log(pdfBuffer);
-    
     const uploadResult = await uploadFileToFirebase({ buffer: pdfBuffer, originalname: 'file.pdf' });
     return uploadResult;
   } catch (error) {
