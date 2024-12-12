@@ -53,7 +53,16 @@ export const TimekeepingConfig = () => {
 
   useEffect(() => {
     if (item) {
-      if (item.locations) setData(item.locations.map((i, index) => ({ ...i, idz: index + 1 })));
+      if (item.locations)
+        setData(
+          item.locations.map((i, index) => ({
+            ...i,
+            idz: index + 1,
+            location: i.location || '',
+            latitude: i.latitude || '',
+            longitude: i.longitude || ''
+          }))
+        );
       for (const key in defaultValues) {
         setValue(key, item[key]);
       }
@@ -70,6 +79,8 @@ export const TimekeepingConfig = () => {
   };
 
   const onSubmit = async (value) => {
+    if (data.find((d) => !d.location || !d.latitude || !d.longitude))
+      return showToast({ title: 'Vui lòng nhập đủ thông tin vị trí, latitude, longitude!', severity: 'warning' });
     const params = {
       type: 1,
       detail: {
@@ -152,7 +163,12 @@ export const TimekeepingConfig = () => {
                         <Buttonz outlined label="Lấy vị trí" className="mb-2" />
                       </a>
                       <Buttonz
-                        onClick={() => setData((pre) => [...pre, { idz: (pre[pre.length - 1]?.idz || 1) + 1, type: 1 }])}
+                        onClick={() =>
+                          setData((pre) => [
+                            ...pre,
+                            { idz: (pre[pre.length - 1]?.idz || 1) + 1, type: 1, location: '', longitude: '', latitude: '' }
+                          ])
+                        }
                         label="Thêm mới"
                         className="mb-2"
                       />
@@ -163,19 +179,19 @@ export const TimekeepingConfig = () => {
                 {data.map((datum, index) => (
                   <div key={index} className="w-full flex flex-wrap items-center">
                     <Inputzz
-                      label="Vị trí"
+                      label="Vị trí (*)"
                       value={datum.location}
                       onChange={(e) => onChange('location', e.target.value, datum.idz)}
                       className="w-full md:w-6/12 lg:w-3/12"
                     />
                     <Inputzz
-                      label="Longitude"
+                      label="Longitude (*)"
                       value={datum.longitude}
                       onChange={(e) => onChange('longitude', e.target.value, datum.idz)}
                       className="w-full md:w-6/12 lg:w-3/12"
                     />
                     <Inputzz
-                      label="Latitude"
+                      label="Latitude (*)"
                       value={datum.latitude}
                       onChange={(e) => onChange('latitude', e.target.value, datum.idz)}
                       className="w-full md:w-6/12 lg:w-3/12"

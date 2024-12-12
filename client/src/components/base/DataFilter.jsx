@@ -11,7 +11,7 @@ export const DataFilter = (props) => {
     const query = {};
     const queryParams = new URLSearchParams(search);
     for (let [key, value] of queryParams.entries()) {
-      query[key] = Number(value) || value;
+      query[key] = Number(value) || Number(value) === 0 ? Number(value) : value;
     }
     setFilter((pre) => ({ ...pre, ...query, page: undefined, limit: undefined }));
   }, [search]);

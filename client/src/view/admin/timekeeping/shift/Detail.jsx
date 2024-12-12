@@ -19,7 +19,7 @@ const defaultValues = {
 };
 
 const convertTimeToDate = (time) => {
-  return new Date(`2024-01-01 ${time}:00`)
+  return new Date(`2024-01-01 ${time}:00`);
 };
 
 const databaseDateToTime = (date) => {
@@ -48,7 +48,7 @@ export const DetailShift = () => {
 
   useEffect(() => {
     if ((isUpdate && item) || (isDuplicate && itemz)) {
-      const dataz = item || (itemz ? { ...itemz, name: itemz.name + '(Copy)', code: itemz.code + ' (Copy)', } : {})
+      const dataz = item || (itemz ? { ...itemz, name: itemz.name + '(Copy)', code: itemz.code + ' (Copy)' } : {});
       if (dataz.dateStart) setValue('dateStart', new Date(dataz.dateStart));
       if (dataz.dateEnd) setValue('dateEnd', new Date(dataz.dateEnd));
       if (dataz.dates)
@@ -79,11 +79,10 @@ export const DetailShift = () => {
         timeBreakEnd: databaseDateToTime(date.timeBreakEnd)
       }))
     };
+    if (newData.dateEnd && new Date(newData.dateEnd) < new Date(newData.dateStart)) return 'Ngày kết thúc phải lớn hơn ngày áp dụng!';
     if (isUpdate) {
-      if (newData.dateEnd && new Date(newData.dateEnd) < new Date()) return "Ngày kết thúc phải lớn hơn ngày hiện tại!"
-      return { ...checkEqualProp(newData, item), _id }
-    }
-    else return newData;
+      return { ...checkEqualProp(newData, item), _id };
+    } else return newData;
   };
 
   return (
@@ -99,7 +98,14 @@ export const DetailShift = () => {
       <div className="flex flex-wrap w-full">
         <InputFormz id="name" label="Tên ca làm việc (*)" value={watch('name')} errors={errors} register={register} />
         <InputFormz id="code" label="Mã ca làm việc (*)" value={watch('code')} errors={errors} register={register} />
-        <CalendarFormz id="dateStart" label="Ngày áp dụng (*)" disabled={isUpdate} value={watch('dateStart')} errors={errors} register={register} />
+        <CalendarFormz
+          id="dateStart"
+          label="Ngày áp dụng (*)"
+          disabled={isUpdate}
+          value={watch('dateStart')}
+          errors={errors}
+          register={register}
+        />
         <CalendarFormz id="dateEnd" label="Ngày kết thúc" value={watch('dateEnd')} errors={errors} register={register} />
         <MultiSelectFormz
           id="departments"

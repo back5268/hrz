@@ -46,7 +46,7 @@ export const ForgotPassword = () => {
           SendOtpApi={sendOtpForgotPasswordApi}
         />
         {isSend && <InputPassword id="password" label="Mật khẩu (*)" value={watch('password')} register={register} errors={errors} />}
-        <Buttonz type="submit" loading={isPending} label="Xác nhận" />
+        <Buttonz type="submit" loading={isPending} disabled={!isSend} label="Xác nhận" />
       </form>
     </AuthWrapper>
   );

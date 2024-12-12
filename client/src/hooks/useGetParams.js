@@ -9,8 +9,8 @@ export const useGetParams = () => {
   for (let [key, value] of queryParams.entries()) {
     if (value.includes(',')) {
       const array = value.split(',');
-      params[key] = array.map((a) => Number(a) || a);
-    } else params[key] = Number(value) || value;
+      params[key] = array.map((a) => (Number(a) || Number(a) === 0 ? Number(a) : a));
+    } else params[key] = Number(value) || Number(value) === 0 ? Number(value) : value;
   }
   return params;
 };

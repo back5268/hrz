@@ -3,13 +3,13 @@ import { SalaryCalculationz } from './SalaryCalculation';
 import { SalarySetup } from './SalarySetup';
 import { TaxSetup } from './TaxSetup';
 import { Buttonz, Calendarzz, Cardz, Columnz, Dropdownzz, ProgressSpinnerz, Tagz } from '@components/core';
-import { useGetParams } from '@hooks';
 import { getListSalaryLogApi } from '@api';
 import { useGetApi } from '@lib/react-query';
 import { DataFilter, DataTable, TimeBody, UserBody } from '@components/base';
 import { salaryLogStatus } from '@constant';
 import { Detail } from './Detail';
 import { socket } from '@lib/socket-io';
+import { databaseDate } from '@lib/helper';
 
 const handleParams = (params) => {
   if (Array.isArray(params.dates) && params.dates.length > 0) {
@@ -19,12 +19,11 @@ const handleParams = (params) => {
   return { ...params, dates: undefined };
 };
 export const SalaryCalculation = () => {
-  const initParams = useGetParams();
   const [open, setOpen] = useState(false);
   const [taxOpen, setTaxOpen] = useState(false);
   const [salaryOpen, setSalaryOpen] = useState(false);
   const [calculationOpen, setCalculationOpen] = useState(false);
-  const [params, setParams] = useState(initParams);
+  const [params, setParams] = useState({ page: 1, limit: 10 });
   const [filter, setFilter] = useState({});
   const { isLoading, data } = useGetApi(getListSalaryLogApi, handleParams(params), 'salary-log');
 
@@ -75,6 +74,7 @@ export const SalaryCalculation = () => {
         />
       </DataFilter>
       <DataTable
+        hideParams
         title="lịch sử tính lương"
         loading={isLoading}
         data={data?.documents}
@@ -103,7 +103,7 @@ export const SalaryCalculation = () => {
               <Tagz severity={severity} className="text-center w-full">
                 <div className="flex justify-center items-center gap-2">
                   {e.status === 1 && <ProgressSpinnerz style={{ width: '20px', height: '20px' }} strokeWidth="4" />}
-                  <span className='my-[2px]'>{title}</span>
+                  <span className="my-[2px]">{title}</span>
                 </div>
               </Tagz>
             );
