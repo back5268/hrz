@@ -56,6 +56,7 @@ const defaultValues = {
   numberDayoff: 0
 };
 
+const date = new Date()
 export const Infos = () => {
   const navigate = useNavigate();
   const { showToast } = useToastState();
@@ -164,7 +165,15 @@ export const Infos = () => {
                   <InputFormz id="fullName" label="Tên Nhân viên (*)" value={watch('fullName')} errors={errors} register={register} />
                   <InputFormz id="email" label="Email (*)" value={watch('email')} errors={errors} register={register} />
                   <InputFormz id="phone" label="Số điện thoại (*)" value={watch('phone')} errors={errors} register={register} />
-                  <CalendarFormz id="birthday" label="Ngày sinh (*)" value={watch('birthday')} errors={errors} register={register} />
+                  <CalendarFormz
+                    id="birthday"
+                    label="Ngày sinh (*)"
+                    value={watch('birthday')}
+                    errors={errors}
+                    register={register}
+                    maxDate={new Date()}
+                    minDate={new Date(date.getFullYear() - 18, date.getMonth(), date.getDate())}
+                  />
                   <InputFormz id="cmt" label="CMTND/CCCD/Thẻ căn cước (*)" value={watch('cmt')} errors={errors} register={register} />
                   <CalendarFormz
                     id="dateOfIssue"
@@ -172,6 +181,7 @@ export const Infos = () => {
                     value={watch('dateOfIssue')}
                     errors={errors}
                     register={register}
+                    maxDate={new Date()}
                   />
                   <InputFormz
                     id="placeOfIssue"
@@ -226,7 +236,7 @@ export const Infos = () => {
                   <DropdownFormz
                     id="position"
                     label="Chức vụ (*)"
-                    options={positions.filter(p => p.status)}
+                    options={positions.filter((p) => p.status)}
                     value={watch('position')}
                     errors={errors}
                     onChange={(e) => setValue('position', e.target.value)}
@@ -236,7 +246,7 @@ export const Infos = () => {
                   <DropdownFormz
                     id="jobPosition"
                     label="Vị trí công việc (*)"
-                    options={jobPositions.filter(j => j.status)}
+                    options={jobPositions.filter((j) => j.status)}
                     value={watch('jobPosition')}
                     errors={errors}
                     onChange={(e) => setValue('jobPosition', e.target.value)}
@@ -283,7 +293,7 @@ export const Infos = () => {
               </div>
             </div>
           </AccordionTab>
-          <AccordionTab header="Thông tin liên hệ">
+          <AccordionTab header="Thông tin thêm">
             <div className="flex flex-wrap">
               <DropdownFormz
                 id="maritalStatus"
@@ -332,7 +342,7 @@ export const Infos = () => {
                 onChange={(e) => setValue('taxAuth', e.target.value)}
               />
             </div>
-            <UploadFiles max={5} label="File đính kèm" files={taxFiles} setFiles={setTaxFiles} />
+            <UploadFiles max={5} label="File đính kèm bảo hiểm xã hội, thuế" files={taxFiles} setFiles={setTaxFiles} />
             <Dependents data={dependents} setData={setDependents} />
           </AccordionTab>
           <AccordionTab header="Trình độ học vấn">
@@ -368,14 +378,14 @@ export const Infos = () => {
                 errors={errors}
                 register={register}
               />
-              <UploadFiles max={5} label="File đính kèm" files={educationFiles} setFiles={setEducationFiles} />
+              <UploadFiles max={5} label="File đính kèm trình độ học vấn" files={educationFiles} setFiles={setEducationFiles} />
             </div>
           </AccordionTab>
           <AccordionTab header="Tình trạng sức khỏe">
             <div className="flex flex-wrap">
               <InputFormz id="healthStatus" label="Tình trạng sức khỏe" value={watch('healthStatus')} errors={errors} register={register} />
               <InputFormz id="pathology" label="Bệnh lý" value={watch('pathology')} errors={errors} register={register} />
-              <UploadFiles max={5} label="File đính kèm" files={healthFiles} setFiles={setHealthFiles} />
+              <UploadFiles max={5} label="File đính kèm tình trạng sức khỏe" files={healthFiles} setFiles={setHealthFiles} />
             </div>
           </AccordionTab>
         </Accordion>

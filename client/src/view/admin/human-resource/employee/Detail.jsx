@@ -27,7 +27,11 @@ export const DetailEmployee = () => {
           </TabPanel>
         </TabView>
       ) : (
-        <Infos />
+        <>
+          <h2 className="font-bold uppercase leading-normal mb-2 p-2 text-primary">Thêm mới nhân viên</h2>
+          <hr />
+          <Infos />
+        </>
       )}
     </Cardz>
   );

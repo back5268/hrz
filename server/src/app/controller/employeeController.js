@@ -161,8 +161,7 @@ export const updateEmployee = async (req, res) => {
     }
     if (req.files?.['avatar']?.length > 0) {
       await deleteFace(_id);
-      const { status, mess } = await registerFace(_id, value.fullName || dataz.fullName, req.files['avatar'][0]);
-      if (!status && mess) return res.json({ status: 0, mess });
+      await registerFace(_id, value.fullName || dataz.fullName, req.files['avatar'][0]);
       for (const file of req.files['avatar']) {
         value.avatar = await uploadFileToFirebase(file);
       }
@@ -298,8 +297,7 @@ export const createEmployee = async (req, res) => {
     });
 
     if (req.files?.['avatar']?.length > 0) {
-      const { status, mess } = await registerFace(data._id, value.fullName, req.files['avatar'][0]);
-      if (!status && mess) return res.json({ status: 0, mess });
+      await registerFace(data._id, value.fullName, req.files['avatar'][0]);
     }
     if (department) {
       const shifts = await listShiftMd({ departments: { $elemMatch: { $eq: department } } });

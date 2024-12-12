@@ -29,11 +29,19 @@ export const EmployeeValidation = yup.object({
   department: yup.string().required('Phòng ban không được bỏ trống!'),
   position: yup.string().required('Chức vụ không được bỏ trống!'),
   jobPosition: yup.string().required('Vị trí công việc không được bỏ trống!'),
-  bankAccount: yup.string().required('Số tài khoản không được bỏ trống!'),
+  bankAccount: yup
+    .string()
+    .required('Số tài khoản không được bỏ trống!')
+    .min(6, 'Số tài khoản phải có ít nhất 6 ký tự!')
+    .max(15, 'Số tài khoản không được vượt quá 15 ký tự!'),
   bank: yup.string().required('Ngân hàng không được bỏ trống!'),
   nationality: yup.string().required('Quốc tịch không được bỏ trống!'),
   dateIn: yup.string().required('Ngày vào không được bỏ trống!'),
-  salary: yup.number().required('Lương cơ bản không được bỏ trống!').typeError('Lương cơ bản không được bỏ trống!')
+  salary: yup
+    .number()
+    .required('Lương cơ bản không được bỏ trống!')
+    .typeError('Lương cơ bản không được bỏ trống!')
+    .max(1000000000, 'Lương cơ bản không được lớn hơn 1 tỷ!')
 });
 
 export const ContractValidation = yup.object({
