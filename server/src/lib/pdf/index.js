@@ -9,15 +9,13 @@ export const convertHTMLToPDF = async (html) => {
         resolve(buffer);
       });
     });
-
-    // Gửi buffer sang Firebase
     const uploadedUrl = await uploadFileToFirebase({
       buffer: pdfBuffer,
       mimetype: 'application/pdf',
       originalname: 'output.pdf'
     });
 
-    return uploadedUrl; // Trả về URL của file đã upload
+    return uploadedUrl;
   } catch (error) {
     console.error('Error in convertHTMLToPDF:', error);
     throw error;

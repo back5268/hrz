@@ -1,4 +1,4 @@
-import { convertHTMLToPDF } from '@lib/pdf';
+import { convertHTMLToPDF } from '@lib/puppeteer';
 import { createContractValid, detailContractValid, listContractValid, updateContractValid } from '@lib/validation';
 import {
   createContractMd,

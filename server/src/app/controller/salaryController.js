@@ -1,6 +1,6 @@
 import { salaryStatus } from '@constant';
 import { convertToExcel } from '@lib/excel-js';
-import { convertHTMLToPDF } from '@lib/pdf';
+import { convertHTMLToPDF } from '@lib/puppeteer';
 import {
   deleteSalarysValid,
   detailSalaryValid,

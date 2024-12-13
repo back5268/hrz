@@ -78,8 +78,6 @@ export const updateShift = async (req, res) => {
       const checkCode = await detailShiftMd({ code });
       if (checkCode) return res.json({ status: 0, mess: 'Mã ca làm việc đã tồn tại!' });
     }
-    if (dateEnd && new Date(dateEnd) < new Date())
-      return res.json({ status: 0, mess: 'Ngày kết thúc phải lớn hơn ngày hiện tại!' });
     const data = await updateShiftMd({ _id }, { updatedBy: req.account._id, name, code, dateEnd });
     if (dateEnd) {
       if (new Date(dateEnd) > new Date(dataz.dateEnd))
