@@ -236,7 +236,7 @@ export const Infos = () => {
                   <DropdownFormz
                     id="position"
                     label="Chức vụ (*)"
-                    options={positions.filter((p) => p.status)}
+                    options={positions?.filter((p) => p.status)}
                     value={watch('position')}
                     errors={errors}
                     onChange={(e) => setValue('position', e.target.value)}
@@ -246,7 +246,7 @@ export const Infos = () => {
                   <DropdownFormz
                     id="jobPosition"
                     label="Vị trí công việc (*)"
-                    options={jobPositions.filter((j) => j.status)}
+                    options={jobPositions?.filter((j) => j.status)}
                     value={watch('jobPosition')}
                     errors={errors}
                     onChange={(e) => setValue('jobPosition', e.target.value)}

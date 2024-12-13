@@ -1,26 +1,25 @@
 import { uploadFileToFirebase } from '@lib/firebase';
-const fs = require('fs');
 const pdf = require('html-pdf');
 
 export const convertHTMLToPDF = async (html) => {
   try {
-    const pdfFilePath = await new Promise((resolve, reject) => {
-      pdf.create(html, { format: 'A4', border: '12mm' }).toFile('./src/public/pdf/output.pdf', (err, res) => {
+    const pdfBuffer = await new Promise((resolve, reject) => {
+      pdf.create(html, { format: 'A4', border: '12mm' }).toBuffer((err, buffer) => {
         if (err) return reject(err);
-        resolve(res.filename);
+        resolve(buffer);
       });
     });
 
-    const pdfBuffer = await new Promise((resolve, reject) => {
-      fs.readFile(pdfFilePath, (err, data) => {
-        if (err) return reject(err);
-        resolve(data);
-      });
+    // Gửi buffer sang Firebase
+    const uploadedUrl = await uploadFileToFirebase({
+      buffer: pdfBuffer,
+      mimetype: 'application/pdf',
+      originalname: 'output.pdf'
     });
-    fs.unlinkSync(pdfFilePath);
-    const uploadResult = await uploadFileToFirebase({ buffer: pdfBuffer, originalname: 'file.pdf' });
-    return uploadResult;
+
+    return uploadedUrl; // Trả về URL của file đã upload
   } catch (error) {
+    console.error('Error in convertHTMLToPDF:', error);
     throw error;
   }
 };
