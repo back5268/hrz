@@ -35,7 +35,7 @@ export const DetailBonus = (props) => {
   useEffect(() => {
     if (isUpdate) {
       for (const key in defaultValues) {
-        setValue(key, item[key]);
+        setValue(key, Number(item[key]) || item[key]);
       }
     }
   }, [item]);
