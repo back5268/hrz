@@ -14,7 +14,7 @@ NotifyMd.init('Notify', {
   content: { type: String, required: true },
   type: {
     type: Number,
-    enum: [1, 2, 3, 4],
+    enum: [1, 2, 3, 4, 5],
     required: true,
     description: '1: Cảnh báo chấm công, 2: Tạo đơn từ, 3: Duyệt đơn từ, 4: Có phiếu lương cần xác nhận'
   },

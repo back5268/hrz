@@ -12,6 +12,7 @@ const defaultValues = {
   month: '',
   departments: [],
   accounts: [],
+  value: ''
 };
 
 export const DetailBonus = (props) => {

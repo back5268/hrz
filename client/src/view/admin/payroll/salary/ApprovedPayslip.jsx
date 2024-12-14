@@ -6,7 +6,7 @@ import {
   downloadApprovedPayslipApi
 } from '@api';
 import { DataTable, FormList, DataFilter, Body } from '@components/base';
-import { Columnz, Dropdownzz } from '@components/core';
+import { Buttonz, Columnz, Dialogz, Dropdownzz, Inputzz } from '@components/core';
 import { useGetParams } from '@hooks';
 import { useGetApi } from '@lib/react-query';
 import React, { useState } from 'react';
@@ -21,6 +21,8 @@ export const ApprovedPayslip = () => {
   const [params, setParams] = useState(initParams);
   const [filter, setFilter] = useState({});
   const [open, setOpen] = useState(false);
+  const [openz, setOpenz] = useState(false);
+  const [reason, setReason] = useState('');
   const [select, setSelect] = useState([]);
   const { isLoading, data } = useGetApi(getListApprovedPayslipApi, params, 'approved-payslip');
   const { data: months } = useGetApi(getListMonthInfoApi, params, 'months');
@@ -28,16 +30,22 @@ export const ApprovedPayslip = () => {
   const [loading, setLoading] = useState(false);
   const { showToast } = useToastState();
 
-  const onUpdate = async (status) => {
+  const onUpdate = async (status, reason) => {
     if (!(select?.length > 0)) return showToast({ title: 'Vui lòng chọn phiếu lương', severity: 'warning' });
     setLoading(true);
-    const response = await updateStatusPendingPayslipApi({ _ids: select?.map((s) => s._id), status });
+    const response = await updateStatusPendingPayslipApi({ _ids: select?.map((s) => s._id), status, reason });
     setLoading(false);
     if (response) {
       showToast({ title: status === 4 ? 'Duyệt phiếu lương thành công' : 'Từ chối phiếu lương thành công', severity: 'success' });
+      setOpenz(false)
       setParams((pre) => ({ ...pre, render: !pre.render }));
       setSelect([]);
     }
+  };
+
+  const onUpdatez = async () => {
+    if (!(select?.length > 0)) return showToast({ title: 'Vui lòng chọn phiếu lương', severity: 'warning' });
+    setOpenz(true);
   };
 
   const onPreviewPayslip = async (item) => {
@@ -53,6 +61,20 @@ export const ApprovedPayslip = () => {
   return (
     <FormList title="Phiếu lương chờ giám đốc duyệt">
       <Detail open={open} setOpen={setOpen} data={data?.documents} accounts={accounts} />
+      <Dialogz width="600px" header="Lý do từ chối" open={openz} setOpen={setOpenz}>
+        <Inputzz value={reason} onChange={(e) => setReason(e.target.value)} label="Lý do từ chối (*)" className='!w-full' />
+        <hr className="my-4" />
+        <div className="flex gap-4 justify-end">
+          <Buttonz outlined color="red" label="Hủy" onClick={() => setOpenz(false)} />
+          <Buttonz
+            label="Xác nhận"
+            onClick={async () => {
+              if (!reason) return showToast({ title: 'Vui lòng lập lý do', severity: 'error' });
+              await onUpdate(2, reason);
+            }}
+          />
+        </div>
+      </Dialogz>
       <DataFilter setParams={setParams} filter={filter} setFilter={setFilter} className="lg:w-1/4">
         <Dropdownzz
           value={filter.department}
@@ -108,7 +130,7 @@ export const ApprovedPayslip = () => {
                   <span>Từ chối</span>
                 </div>
               ),
-              onClick: () => onUpdate(2),
+              onClick: () => onUpdatez(1),
               severity: 'danger'
             }
           ]

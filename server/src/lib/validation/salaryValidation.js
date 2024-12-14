@@ -13,7 +13,8 @@ export const detailSalaryValid = {
 
 export const updateStatusSalaryValid = {
   _ids: 'json',
-  status: 'number'
+  status: 'number',
+  reason: { type: 'string', allowNull: true }
 };
 
 export const sendSalaryValid = {

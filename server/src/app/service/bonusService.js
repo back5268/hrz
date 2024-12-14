@@ -23,7 +23,7 @@ export const deleteBonusService = async (req) => {
   const { _id } = value;
   const data = await detailBonusMd({ _id });
   if (!data) throw new Error('Khoản thưởng không tồn tại!');
-  const salary = await detailSalaryMd({ bonuses: { $elemMatch: { $eq: _id } } });
+  const salary = await detailSalaryMd({ bonuses: { $elemMatch: { _id } } });
   if (salary) throw new Error('Khoản thưởng đã được áp dụng tính lương không thể xóa!');
   return await deleteBonusMd({ _id });
 };
@@ -46,7 +46,7 @@ export const updateBonusService = async (req) => {
   type = type ? type : dataz.type;
   valuez = valuez ? valuez : dataz.value;
   if (type === 2 && valuez > 100) if (!data) throw new Error('Khoản thưởng theo % lương cơ bản giá trị không thể lớn hơn 100!');
-  const salary = await detailSalaryMd({ bonuses: { $elemMatch: { $eq: _id } } });
+  const salary = await detailSalaryMd({ bonuses: { $elemMatch: { _id } } });
   if (salary) throw new Error('Khoản thưởng đã được áp dụng tính lương không thể cập nhật!');
   const data = await updateBonusMd({ _id }, { updatedBy: req.account._id, ...value });
   return data;

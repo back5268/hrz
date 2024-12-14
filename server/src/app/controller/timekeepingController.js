@@ -304,9 +304,21 @@ export const importTimekeeping = async (req, res) => {
             continue;
           }
           for (const timekeeping of timekeepings) {
+            if (!timekeeping) continue;
+            const logs = await listTimekeepingLogMd({ account: account._id, date });
+            const log1 = logs[logs.length - 1];
+            const log2 = logs[0];
+            let times = [log1?.time, log2?.time, checkInTime, checkInTime || checkOutTime].filter(b => b)
+            times = times.sort((a, b) => {
+              const [hourA, minuteA] = a.split(":").map(Number); // Tách giờ và phút cho a
+              const [hourB, minuteB] = b.split(":").map(Number); // Tách giờ và phút cho b
+              return hourA - hourB || minuteA - minuteB;
+            });
+            const checkInTimez = times[0]
+            const checkOutTimez = times[times.length - 1]
             await updateTimekeepingMd(
               { _id: timekeeping._id },
-              { ...calTimekeeping(timekeeping, checkInTime, checkOutTime || checkInTime) }
+              { ...calTimekeeping(timekeeping, checkInTimez, checkOutTimez) }
             );
           }
         }

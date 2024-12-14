@@ -107,7 +107,16 @@ export const updateStatusSalary = async (req, res) => {
   try {
     const { error, value } = validateData(updateStatusSalaryValid, req.body);
     if (error) return res.json({ status: 0, mess: error });
-    const { _ids, status } = value;
+    const { _ids, status, reason } = value;
+    if (reason) {
+      const notify = await createNotifyMd({
+        account: '674c58330aadb53127af937a',
+        content: `Phiếu lương bị từ chối với lý do: "${reason}"`,
+        type: 5,
+        data: {}
+      });
+      ioSk.emit(`notify_674c58330aadb53127af937a`, { data: notify });
+    }
     if (Array.isArray(_ids)) {
       await updateSalaryMd({ _id: { $in: _ids } }, { status });
       if (status === 4) {

@@ -14,11 +14,11 @@ export const getListMonthInfo = async (req, res) => {
     const date = moment();
     const data = []
     const _id = date.format('YYYYMM');
-    data.push({ _id, name: _id });
+    data.push({ _id: Number(_id), name: _id });
     for (let i = 0; i < 12; i++) {
       date.subtract(1, 'months');
       const _id = date.format('YYYYMM');
-      data.push({ _id, name: _id });
+      data.push({ _id: Number(_id), name: _id });
     }
     res.status(200).json({ status: 1, data });
   } catch (error) {
