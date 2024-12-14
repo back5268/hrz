@@ -5,7 +5,7 @@ export class BonusMd extends ModelBase {}
 BonusMd.init('Bonus', {
   updatedBy: { type: String },
   name: { type: String, required: true },
-  month: { type: String, required: true },
+  month: { type: Number, required: true },
   departments: [{ type: String, required: true }],
   accounts: [{ type: String, required: true }],
   value: { type: Number, required: true, min: 0 },
