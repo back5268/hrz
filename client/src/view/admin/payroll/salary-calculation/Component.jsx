@@ -130,7 +130,7 @@ export const Taxs = ({ data = {}, setData = () => {} }) => {
           <Inputzz
             min="1"
             type="number"
-            label="Thuế suất (*)"
+            label="Thuế suất (%) (*)"
             value={datum.value}
             onChange={(e) => onChange('value', e.target.value, datum.idz)}
             className="w-full md:w-6/12 lg:w-[20%]"

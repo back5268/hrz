@@ -102,11 +102,11 @@ export class Salary {
         if (index >= 0) soonLates[index].value += value;
         else soonLates.push({ date: t.date, value });
       }
-      salaryCoefficient += roundNumber(t.totalWork);
-      if (t.summary && t.summary > 0) {
+      salaryCoefficient += t.type === 1 ? roundNumber(t.totalWork) : 0 
+      if (t.totalWork && t.totalWork > 0) {
         if (t.type === 1) {
           day.nomal += roundNumber(t.totalWork);
-        } else day.ot += roundNumber(t.summary);
+        } else day.ot += roundNumber(t.totalWork);
       }
     });
     const numberDay = day.nomal;
@@ -114,7 +114,7 @@ export class Salary {
 
     const bonuses = [];
     this.bonuses.forEach((b) => {
-      bonuses.push({ name: b.name, summary: Math.round(b.type === 1 ? b.value : (b.value * this.baseSalary) / 100) });
+      bonuses.push({ _id: b._id, name: b.name, summary: Math.round(b.type === 1 ? b.value : (b.value * this.baseSalary) / 100) });
     });
     const allowances = [];
     this.allowances.forEach((a) => {

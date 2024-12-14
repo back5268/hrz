@@ -42,6 +42,7 @@ SalaryMd.init('Salary', {
   ],
   bonuses: [
     {
+      _id: { type: String, min: 0 },
       name: { type: String, min: 0 },
       summary: { type: Number, min: 0 }
     }

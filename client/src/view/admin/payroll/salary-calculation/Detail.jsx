@@ -44,7 +44,7 @@ export const Detail = (props) => {
         </div>
         <hr className="my-4" />
         <div className="flex gap-4 justify-end">
-          <Buttonz outlined color="red" label="Trờ lại" onClick={() => setOpen(false)} />
+          <Buttonz outlined color="red" label="Trở lại" onClick={() => setOpen(false)} />
           <Buttonz label="Xác nhận" type="submit" onClick={() => setOpen(false)} />
         </div>
       </form>

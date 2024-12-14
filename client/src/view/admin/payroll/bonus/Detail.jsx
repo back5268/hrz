@@ -6,15 +6,12 @@ import { FormDetail } from '@components/base';
 import { checkEqualProp } from '@lib/helper';
 import { createBonusApi, updateBonusApi } from '@api';
 import { DropdownFormz, InputFormz, MultiSelectFormz } from '@components/core';
-import { bonusTypes } from '@constant';
 
 const defaultValues = {
   name: '',
   month: '',
   departments: [],
   accounts: [],
-  value: '',
-  type: ''
 };
 
 export const DetailBonus = (props) => {
@@ -75,13 +72,6 @@ export const DetailBonus = (props) => {
           filter
         />
         <InputFormz min={0} type="number" id="value" label="Giá trị (*)" value={watch('value')} errors={errors} register={register} />
-        <DropdownFormz
-          label="Loại thưởng (*)"
-          options={bonusTypes}
-          value={watch('type')}
-          errors={errors}
-          onChange={(e) => setValue('type', e.target.value)}
-        />
         <MultiSelectFormz
           label="Phòng ban áp dụng (*)"
           options={departments}

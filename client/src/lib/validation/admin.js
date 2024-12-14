@@ -91,7 +91,6 @@ export const BonusValidation = yup.object({
   departments: yup.array().required('Phòng ban áp dụng không được bỏ trống!'),
   accounts: yup.array().required('Nhân viên áp dụng không được bỏ trống!'),
   value: yup.string().required('Giá trị áp dụng thưởng không được bỏ trống!'),
-  type: yup.string().required('Loại thưởng không được bỏ trống!')
 });
 
 export const SalarySetupValidation = yup.object({

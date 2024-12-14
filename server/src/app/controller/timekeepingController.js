@@ -375,25 +375,22 @@ export const checkTimekeepingApp = async (req, res) => {
       });
       if (!checkLocation) return res.json({ status: 1, data: { mess: 'Vị trí chấm công không đúng!' } });
     } else return res.json({ status: 1, data: { mess: 'Vị trí chấm công không đúng!' } });
-    const { status, mess, data } = await checkFace(req.file);
-    console.log(String(data));
-     
+    const { status, data } = await checkFace(req.file);
     if (status && String(data) === String(req.account?._id)) {
       const date = databaseDate(value.date, 'date');
+      const data = await createTimekeepingLogMd({
+        ...value,
+        account: req.account?._id,
+        department: req.account?.department?._id,
+        date
+      });
       await checkTimekeepingRp({ account: req.account?._id, date, time: value.time });
       res.json({
         status: 1,
-        data: await createTimekeepingLogMd({
-          ...value,
-          account: req.account?._id,
-          department: req.account?.department?._id,
-          date
-        })
+        data
       });
     } else res.json({ status: 1, data: { mess: 'Khuôn mặt không đúng!' } });
   } catch (error) {
-    console.log(error);
-    
     res.status(500).json({ status: 0, mess: error.toString() });
   }
 };

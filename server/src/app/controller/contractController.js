@@ -62,14 +62,14 @@ export const updateContract = async (req, res) => {
         $or: [
           {
             signedDate: {
-              $gte: signedDate,
-              $lte: expiredDate
+              $gt: signedDate,
+              $lt: expiredDate
             }
           },
           {
             expiredDate: {
-              $gte: signedDate,
-              $lte: expiredDate
+              $gt: signedDate,
+              $lt: expiredDate
             }
           }
         ],
@@ -112,14 +112,14 @@ export const createContract = async (req, res) => {
       $or: [
         {
           signedDate: {
-            $gte: signedDate,
-            $lte: expiredDate
+            $gt: signedDate,
+            $lt: expiredDate
           }
         },
         {
           expiredDate: {
-            $gte: signedDate,
-            $lte: expiredDate
+            $gt: signedDate,
+            $lt: expiredDate
           }
         }
       ],

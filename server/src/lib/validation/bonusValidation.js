@@ -19,7 +19,6 @@ export const updateBonusValid = {
   departments: { type: 'json', allowNull: true },
   accounts: { type: 'json', allowNull: true },
   value: { type: 'number', allowNull: true },
-  type: { type: 'number', allowNull: true }
 };
 
 export const createBonusValid = {
@@ -28,5 +27,4 @@ export const createBonusValid = {
   departments: 'json',
   accounts: 'json',
   value: 'number',
-  type: 'number'
 };
