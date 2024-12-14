@@ -11,7 +11,7 @@ import { Accounts } from './Component';
 import { databaseDate } from '@lib/helper';
 
 const defaultValues = {
-  month: String(moment().format('YYYYMM')),
+  month: Number(moment().format('YYYYMM')),
   departments: [],
   accounts: []
 };
@@ -55,7 +55,7 @@ export const SalaryCalculationz = (props) => {
   };
 
   return (
-    <Dialogz className="w-[1200px]" header="Tính toáng công lương" open={open} setOpen={setOpenz}>
+    <Dialogz className="w-[1200px]" header="Tính toán công lương" open={open} setOpen={setOpenz}>
       <form onSubmit={handleSubmit(onSubmit)} className="border-t border-border">
         <div className="w-full h-bodyModal overflow-scroll">
           <div className="relative w-full mt-4">
