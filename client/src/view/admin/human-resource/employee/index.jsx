@@ -112,7 +112,7 @@ export const Employee = () => {
         total={data?.total}
         params={params}
         setParams={setParams}
-        baseActions={['create', 'detail', 'delete']}
+        baseActions={['create', 'detail']}
         actionsInfo={{
           onViewDetail: (item) => navigate(`/employee/detail/${item._id}`),
           deleteApi: deleteEmployeeApi,
