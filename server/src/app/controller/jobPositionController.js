@@ -42,7 +42,7 @@ export const deleteJobPosition = async (req, res) => {
     const data = await detailJobPositionMd({ _id });
     if (!data) return res.json({ status: 0, mess: 'Vị trí công việc không tồn tại!' });
     const accounts = await listAccountMd({ jobPosition: _id });
-    if (accounts.length > 0) res.json({ status: 0, mess: 'Vị trí công việc đã được áp dụng cho nhân viên, không thể xóa!' });
+    if (accounts.length > 0) return res.json({ status: 0, mess: 'Vị trí công việc đã được áp dụng cho nhân viên, không thể xóa!' });
     res.status(201).json({ status: 1, data: await deleteJobPositionMd({ _id }) });
   } catch (error) {
     res.status(500).json({ status: 0, mess: error.toString() });
