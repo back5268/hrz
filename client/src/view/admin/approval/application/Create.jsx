@@ -75,11 +75,11 @@ export const CreateApplication = (props) => {
     }
     if ([6].includes(type)) {
       if (!value.date) return showToast({ title: 'Ngày không được bỏ trống!', severity: 'error' });
-      // else if (new Date(value.date) < new Date()) {
-      //   return showToast({ title: 'Ngày không được nhỏ hơn ngày hiện tại!', severity: 'error' });
-      // }
-      // else if (!value.fromTime) return showToast({ title: 'Thời gian bắt đầu không được bỏ trống!', severity: 'error' });
-      // else if (!value.toTime) return showToast({ title: 'Thời gian kết thúc không được bỏ trống!', severity: 'error' });
+      else if (new Date(value.date) < new Date()) {
+        return showToast({ title: 'Ngày không được nhỏ hơn ngày hiện tại!', severity: 'error' });
+      }
+      else if (!value.fromTime) return showToast({ title: 'Thời gian bắt đầu không được bỏ trống!', severity: 'error' });
+      else if (!value.toTime) return showToast({ title: 'Thời gian kết thúc không được bỏ trống!', severity: 'error' });
       else {
         params.dates = [databaseDate(value.date, 'date')];
         params.fromTime = databaseDate(value.fromTime, 'timez');
