@@ -1,8 +1,9 @@
 import { exportScheduleApi, getListScheduleApi } from '@api';
 import { DataFilter, FormList } from '@components/base';
-import { Buttonz, Dropdownzz } from '@components/core';
-import { sheduleTypes, days } from '@constant';
+import { Buttonz, Dialogz, Dropdownzz } from '@components/core';
+import { sheduleTypes, days, applicationTypes } from '@constant';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import { formatDate } from '@lib/helper';
 import { useGetApi } from '@lib/react-query';
 import { useDataState, useToastState } from '@store';
 import { themeColor } from '@theme';
@@ -102,6 +103,7 @@ export const Schedule = () => {
   const [filter, setFilter] = useState({ year: new Date().getFullYear() });
   const { isLoading, data } = useGetApi(getListScheduleApi, handleParams(params), 'schedule');
   const { showToast } = useToastState();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setWeekData(getWeekData(filter.year));
@@ -144,6 +146,25 @@ export const Schedule = () => {
 
   return (
     <FormList title="Lịch làm việc">
+      <Dialogz width="800px" header="Đơn từ" open={open} setOpen={setOpen}>
+        <hr className="mb-4" />
+        {Array.isArray(open) &&
+          open.map((o, index) => {
+            return (
+              <div key={index} className="w-full flex flex-col gap-1 my-4 p-4 bg-primaryContainer/50 rounded-md">
+                <span>Loại đơn: {applicationTypes.find((a) => a._id === o.type)?.name}</span>
+                <span>Lý do tạo đơn: {o.reason}</span>
+                <span>Thời gian tạo: {formatDate(o.createdAt)}</span>
+                <span>Thời gian duyệt: {formatDate(o.updatedAt)}</span>
+                <span>Người duyệt: {accounts?.find(a => a._id === o.updatedBy)?.fullName}</span>
+              </div>
+            );
+          })}
+        <hr className="my-4" />
+        <div className="flex gap-4 justify-end">
+          <Buttonz outlined color="red" label="Đóng" onClick={() => setOpen(false)} />
+        </div>
+      </Dialogz>
       <DataFilter
         setParams={setParams}
         filter={filter}
@@ -267,11 +288,13 @@ export const Schedule = () => {
               body={(e) =>
                 e[work._id]?.map((w, index) => (
                   <div
+                    onClick={() => (w.applications?.length > 0 ? setOpen(w.applications) : () => {})}
                     key={index}
                     className="h-8 flex justify-center items-center"
                     style={{
-                      backgroundColor: w.type === 2 ? themeColor.primaryContainer : '',
-                      color: w.type === 2 ? themeColor.primary : ''
+                      backgroundColor: w.applications?.length > 0 ? themeColor.primaryContainer : '',
+                      color: w.applications?.length > 0 ? themeColor.primary : '',
+                      cursor: w.applications?.length > 0 ? 'pointer' : ''
                     }}
                   >
                     {w.title}

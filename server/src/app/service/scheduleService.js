@@ -33,8 +33,8 @@ export const handSchedule = async (data = []) => {
         }
         const title = `${datum.timeStart} - ${datum.timeEnd}`;
         const day = days[moment(datum.date).day()];
-        if (object[day._id]) object[day._id].push({ type: datum.type, title, totalWork: datum.totalWork, totalTime: datum.totalTime });
-        else object[day._id] = [{ type: datum.type, title, totalWork: datum.totalWork, totalTime: datum.totalTime }];
+        if (object[day._id]) object[day._id].push({ type: datum.type, title, totalWork: datum.totalWork, totalTime: datum.totalTime, applications: datum.applications });
+        else object[day._id] = [{ type: datum.type, title, totalWork: datum.totalWork, totalTime: datum.totalTime, applications: datum.applications }];
       });
       dataz.push({ ...n, ...object, shift, totalTime, totalTimeOt, totalWork, totalWorkOt });
     });
@@ -56,6 +56,6 @@ export const getListScheduleService = async (req) => {
       $gte: fromDate,
       $lte: toDate
     };
-  const data = await listTimekeepingMd(where);
+  const data = await listTimekeepingMd(where, false, false, [{ path: 'applications' }]);
   return await handSchedule(data);
 };
