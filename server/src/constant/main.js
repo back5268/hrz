@@ -10,7 +10,7 @@ export const VALIDATE_TYPE = {
   DATETIME: 'datetime'
 };
 
-export const personnelTypes = [
+export const employeeTypes = [
   { name: 'Nhân viên chính thức', _id: 1 },
   { name: 'Thử việc', _id: 2 },
   { name: 'Thực tập sinh', _id: 3 }

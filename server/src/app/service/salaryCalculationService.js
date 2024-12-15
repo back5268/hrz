@@ -102,7 +102,7 @@ export class Salary {
         if (index >= 0) soonLates[index].value += value;
         else soonLates.push({ date: t.date, value });
       }
-      salaryCoefficient += t.type === 1 ? roundNumber(t.totalWork) : 0 
+      salaryCoefficient += t.type === 1 ? roundNumber(t.totalWork) : 0;
       if (t.totalWork && t.totalWork > 0) {
         if (t.type === 1) {
           day.nomal += roundNumber(t.totalWork);
@@ -128,6 +128,7 @@ export class Salary {
       });
     });
 
+    const checkTTS = [2, 3].includes(this.account.type);
     const mandatoryz = this.salarySetup.mandatory;
     const bhxh = Math.round((this.baseSalary * mandatoryz.bhxh) / 100);
     const bhyt = Math.round((this.baseSalary * mandatoryz.bhyt) / 100);
@@ -151,7 +152,7 @@ export class Salary {
       allowances.reduce((a, b) => a + roundNumber(b.summary) || 0, 0) +
       bonuses.reduce((a, b) => a + roundNumber(b.summary) || 0, 0) -
       soonLates.reduce((a, b) => a + roundNumber(b.summary) || 0, 0);
-    const mandatoryAmount = bhxh + bhyt + bhtn + unionDues;
+    const mandatoryAmount = checkTTS ? 0 : bhxh + bhyt + bhtn + unionDues;
     let pretaxIncome =
       officialSalaryz -
       allowances.reduce((a, b) => {
@@ -171,17 +172,22 @@ export class Salary {
       summary: 0
     };
     if (totalTax > 0) {
-      const rateIndex = rates.findIndex((r) => r.from * 1000000 <= totalTax && r.to * 1000000 >= totalTax);
-      if (rateIndex >= 0) {
-        tax.rate = rates[rateIndex].value;
-        rates.forEach((r, index) => {
-          if (index < rateIndex) {
-            tax.summary += r.value * (r.to - r.from) * 10000;
-          } else if (index === rateIndex) {
-            tax.summary += (r.value * (totalTax - r.from * 1000000)) / 100;
-          }
-        });
-      } else return { status: 0, mess: 'Thu nhập tính thuế không nằm trong khoảng thiết lập hệ số thuế!' };
+      if (checkTTS) {
+        tax.rate = 10
+        tax.summary = totalTax * 0.1
+      } else {
+        const rateIndex = rates.findIndex((r) => r.from * 1000000 <= totalTax && r.to * 1000000 >= totalTax);
+        if (rateIndex >= 0) {
+          tax.rate = rates[rateIndex].value;
+          rates.forEach((r, index) => {
+            if (index < rateIndex) {
+              tax.summary += r.value * (r.to - r.from) * 10000;
+            } else if (index === rateIndex) {
+              tax.summary += (r.value * (totalTax - r.from * 1000000)) / 100;
+            }
+          });
+        } else return { status: 0, mess: 'Thu nhập tính thuế không nằm trong khoảng thiết lập hệ số thuế!' };
+      }
     }
     const params = {
       by: this.by,
@@ -194,12 +200,19 @@ export class Salary {
       day,
       officialSalary,
       allowances,
-      mandatory: {
-        bhxh: { value: mandatoryz.bhxh, summary: bhxh },
-        bhyt: { value: mandatoryz.bhyt, summary: bhyt },
-        bhtn: { value: mandatoryz.bhtn, summary: bhtn },
-        unionDues: { value: mandatoryz.unionDues, summary: unionDues }
-      },
+      mandatory: checkTTS
+        ? {
+            bhxh: { value: 0, summary: 0 },
+            bhyt: { value: 0, summary: 0 },
+            bhtn: { value: 0, summary: 0 },
+            unionDues: { value: 0, summary: 0 }
+          }
+        : {
+            bhxh: { value: mandatoryz.bhxh, summary: bhxh },
+            bhyt: { value: mandatoryz.bhyt, summary: bhyt },
+            bhtn: { value: mandatoryz.bhtn, summary: bhtn },
+            unionDues: { value: mandatoryz.unionDues, summary: unionDues }
+          },
       mandatoryAmount,
       soonLates,
       bonuses,
